@@ -30,12 +30,20 @@ class City
 
     }
 
-    public function locatin($flag)
+    public function locatin($cityId)
     {
 
         $sql = " SELECT c.city_name , o.name FROM ostan o , city c WHERE o.id = ( SELECT c.ostan_id WHERE c.city_id = ? )";
         $result = $this->con->prepare($sql);
-        $result->bind_param('i',$flag);
+        $result->bind_param('i',$cityId);
+        $result->execute();
+        return $result->get_result();
+    }
+
+    public function cityId($phone){
+        $sql = "SELECT u.city_id FROM user u WHERE u.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('i',$phone);
         $result->execute();
         return $result->get_result();
     }

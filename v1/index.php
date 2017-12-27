@@ -14,6 +14,7 @@ require 'present/PresentOstan.php';
 require 'present/PresentCity.php';
 require 'present/PresentUser.php';
 require 'present/PresentSmsCode.php';
+require 'present/PresenterTeacher.php';
 
 
 $app = new \Slim\App;
@@ -71,6 +72,20 @@ $app->get('/checkedSmsCode/{phone}/{code}', function (Request $request, Response
 $app->get('/logOut/{phone}', function (Request $request, Response $response) {
 
     $response->getBody()->write(PresentUser::logOut($request->getAttribute('phone')));
+
+});
+
+$app->get('/addTeacher/{phone}/{landPhone}/{address}/{subject}/{tozihat}/{type}',function (Request $req,Response $res){
+
+    $phone = $req->getAttribute('phone');
+    $landPhone = $req->getAttribute('landPhone');
+    $address = $req->getAttribute('address');
+    $subject = $req->getAttribute('subject');
+    $tozihat = $req->getAttribute('tozihat');
+    $type = $req->getAttribute('type');
+
+    $result = PresenterTeacher::addTeacher($phone,$landPhone,$address,$subject,$tozihat,$type);
+    $res->getBody()->write($result);
 
 });
 

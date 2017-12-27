@@ -27,16 +27,18 @@ class User
         $status = 1;
         $sql = "INSERT INTO $this->tableName (phone,status) VALUES(?,?)";
         $result = $this->con->prepare($sql);
-        $result->bind_param("ii", $phone,$status);
+        $result->bind_param("ii", $phone, $status);
         if ($result->execute()) {
             return (int)1;
         } else {
 
             $sql = "UPDATE $this->tableName u SET status = ? WHERE u.phone = ?";
-            $result =$this->con->prepare($sql);
-            $result->bind_param('ii',$status,$phone);
+            $result = $this->con->prepare($sql);
+            $result->bind_param('ii', $status, $phone);
             $result->execute();
-            return (int)-1;
+            if ($this->checkedTypeUser($phone) == 0)
+                return (int)2;
+            return (int)3;
         }
 
     }
@@ -62,16 +64,35 @@ class User
         return $result->get_result();
     }
 
-    public function logOut($phone){
-        $v = 0;
+    public function logOut($phone)
+    {
+        $status = 0;
         $sql = "UPDATE $this->tableName u SET status = ? WHERE u.phone = ?";
-        $result =$this->con->prepare($sql);
-        $result->bind_param('ii',$v,$phone);
+        $result = $this->con->prepare($sql);
+        $result->bind_param('ii', $status, $phone);
         if ($result->execute()) {
             return (int)1;
         } else {
             return (int)0;
         }
+    }
+
+    public function changeUser($phone, $type)
+    {
+
+        $sql = "UPDATE $this->tableName u SET u.type = ? WHERE u.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('ii', $type, $phone);
+        return $result->execute();
+    }
+
+    function checkedTypeUser($phone)
+    {
+        $sql = "SELECT u.type FROM $this->tableName u WHERE u.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('i', $phone);
+        $result->execute();
+        return $result->get_result()->fetch_assoc()['type'];
     }
 
 }

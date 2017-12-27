@@ -21,9 +21,14 @@ class Teacher
         mysqli_query($this->con, "SET NAMES 'utf8'");
         mysqli_set_charset($this->con, "UTF8");
     }
+    public function addTeacher($phone,$landPhone,$address,$definitionDate,$subject,$cityId,$tozihat,$type){
 
-    public function addTeacher($phone, $address, $subject, $cityId, $startDate,$tozihat,$type){
+        $sql = "INSERT INTO $this->tableName (`phone`,`land_phone`, `type`, `address`, `subject`,`definition_date`, `tozihat`, `city_id`) VALUES (?,?,?,?,?,?,?,?)";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('iiissssi',$phone,$landPhone,$type,$address,$subject,$definitionDate,$tozihat,$cityId);
+        if($result->execute())
+            return 1;
+        return 0;
 
-        $sql = "INSERT INTO $this->$this->tableName (`phone`, `type`, `address`, `madrak`, `subject`, `vaziat`, `start_date`, `taied_date`, `end_date`, `tozihat`, `city_id`) VALUES ('123', '0', 'jk', '0', 'kj', '0', '2017-12-07', NULL, NULL, 'ty', '2');";
     }
 }

@@ -19,6 +19,7 @@ class PresentCity
             $city['ostanId'] = $row['ostan_id'];
             $city['cityId'] = $row['city_id'];
             $res[] = $city;
+
         }
         if($res){
             return json_encode($res);
