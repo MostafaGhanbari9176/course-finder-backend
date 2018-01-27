@@ -77,7 +77,7 @@ class User
         }
     }
 
-    public function changeUser($phone, $type)
+    public function changeUserType($phone, $type)
     {
 
         $sql = "UPDATE $this->tableName u SET u.type = ? WHERE u.phone = ?";

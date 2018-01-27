@@ -75,7 +75,7 @@ $app->get('/logOut/{phone}', function (Request $request, Response $response) {
 
 });
 
-$app->get('/addTeacher/{phone}/{landPhone}/{address}/{subject}/{tozihat}/{type}',function (Request $req,Response $res){
+$app->get('/addTeacher/{phone}/{landPhone}/{address}/{subject}/{tozihat}/{type}/{cityId}',function (Request $req,Response $res){
 
     $phone = $req->getAttribute('phone');
     $landPhone = $req->getAttribute('landPhone');
@@ -83,9 +83,9 @@ $app->get('/addTeacher/{phone}/{landPhone}/{address}/{subject}/{tozihat}/{type}'
     $subject = $req->getAttribute('subject');
     $tozihat = $req->getAttribute('tozihat');
     $type = $req->getAttribute('type');
-
-    $result = PresenterTeacher::addTeacher($phone,$landPhone,$address,$subject,$tozihat,$type);
-    $res->getBody()->write($result);
+    $cityID = $req->getAttribute('cityId');
+    $result = PresenterTeacher::addTeacher($phone,$landPhone,$address,$subject,$tozihat,$type, $cityID);
+   $res->getBody()->write($result);
 
 });
 

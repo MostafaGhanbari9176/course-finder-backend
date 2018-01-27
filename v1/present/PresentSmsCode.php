@@ -32,13 +32,7 @@ class PresentSmsCode
 
         if ($res == $code) {
             $res = array();
-            if(PresentSmsCode::logIn($phone)==-1) {
-
-                $res["code"] = -1;
-
-            }else{
-                $res["code"] = 1;
-            }
+            $res["code"] = PresentSmsCode::logIn($phone);
             $message = array();
             $message[] = $res;
         } else {
