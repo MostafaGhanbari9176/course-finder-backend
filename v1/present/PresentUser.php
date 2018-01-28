@@ -53,7 +53,7 @@ class PresentUser
             return json_encode($res);
         } else {
             $res['erorr'] = "ok";
-            $res['emopty'] = "ok";
+            $res['empoty'] = "ok";
             return json_encode($res);
         }
     }

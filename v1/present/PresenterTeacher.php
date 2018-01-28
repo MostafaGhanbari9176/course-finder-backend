@@ -30,6 +30,43 @@ class PresenterTeacher
         return json_encode($message);
     }
 
+    public static function getTeacher($phone){
+        $teacher = new Teacher();
+        $rezult = $teacher->getTeacher($phone);
+        $res = array();
+        while($row = $rezult->fetch_assoc()){
+            $teacher = array();
+            $teacher['phone'] = $row['phone'];
+            $teacher['landPhone'] = $row['land_phone'];
+            $teacher['type'] = $row['type'];
+            $teacher['address'] = $row['address'];
+            $teacher['madrak'] = $row['madrak'];
+            $teacher['subject'] = $row['subject'];
+            $teacher['cityId'] = $row['city_id'];
+            $teacher['location'] = PresentUser::location($row['city_id']);
+            $res[] = $teacher;
+        }
+        if ($res) {
+            return json_encode($res);
+        } else {
+            $res['erorr'] = "ok";
+            $res['empoty'] = "ok";
+            return json_encode($res);
+        }
+    }
+
+    public static function updateTeacher($phone, $landPhone, $madrak, $subject, $address, $cityId){
+        $teacher = new Teacher();
+        $rezult = $teacher->updateTeacher($phone, $landPhone, $subject, $address, $cityId, $madrak);
+        $res = array();
+        $res['code'] = $rezult;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+
+
+    }
+
     static function getDate(){
        return date("Y/m/d");
     }
@@ -41,4 +78,5 @@ class PresenterTeacher
         return $row['city_id'];
 
     }
+
 }

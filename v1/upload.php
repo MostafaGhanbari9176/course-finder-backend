@@ -13,7 +13,7 @@ if(isset($_POST["submit"])) {
 if (file_exists($target_file)) {
     $res['code'] = 1;
     $res['message'] = "Sorry, file already exists.";
-
+    apc_delete_file($target_file);
     echo json_encode($res);
     $uploadOk = 0;
 }

@@ -89,6 +89,24 @@ $app->get('/addTeacher/{phone}/{landPhone}/{address}/{subject}/{tozihat}/{type}/
 
 });
 
+$app->get('/getTeacher/{phone}',function (Request $req, Response $res){
+
+     $res->getBody()->write(PresenterTeacher::getTeacher($req->getAttribute('phone')));
+});
+
+$app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madrak}',function (Request $req, Response $res){
+
+    $phone = $req->getAttribute('phone');
+    $landPhone = $req->getAttribute('landPhone');
+    $subject = $req->getAttribute('subject');
+    $address = $req->getAttribute('address');
+    $cityId = $req->getAttribute('cityId');
+    $madrak = $req->getAttribute('madrak');
+
+    $res->getBody()->write(PresenterTeacher::updateTeacher($phone, $landPhone, $madrak, $subject, $address, $cityId));
+
+});
+
 $app->run();
 
 

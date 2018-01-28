@@ -27,14 +27,14 @@ class User
         $status = 1;
         $sql = "INSERT INTO $this->tableName (phone,status) VALUES(?,?)";
         $result = $this->con->prepare($sql);
-        $result->bind_param("ii", $phone, $status);
+        $result->bind_param("si", $phone, $status);
         if ($result->execute()) {
             return (int)1;
         } else {
 
             $sql = "UPDATE $this->tableName u SET status = ? WHERE u.phone = ?";
             $result = $this->con->prepare($sql);
-            $result->bind_param('ii', $status, $phone);
+            $result->bind_param('is', $status, $phone);
             $result->execute();
             if ($this->checkedTypeUser($phone) == 0)
                 return (int)2;
@@ -47,7 +47,7 @@ class User
     {
         $sql = "UPDATE $this->tableName u SET phone = ?, name = ?, family = ?, status = ?, type = ?, city_id = ?, api_code = ? WHERE u.phone = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param("issiiiii", $phone, $name, $family, $status, $type, $cityID, $apiCode, $phone);
+        $result->bind_param("sssiiiii", $phone, $name, $family, $status, $type, $cityID, $apiCode, $phone);
         if ($result->execute()) {
             return (int)1;
         } else {
@@ -59,7 +59,7 @@ class User
     {
         $sql = "SELECT * FROM $this->tableName u WHERE u.phone = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param("i", $phone);
+        $result->bind_param("s", $phone);
         $result->execute();
         return $result->get_result();
     }
@@ -69,7 +69,7 @@ class User
         $status = 0;
         $sql = "UPDATE $this->tableName u SET status = ? WHERE u.phone = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('ii', $status, $phone);
+        $result->bind_param('is', $status, $phone);
         if ($result->execute()) {
             return (int)1;
         } else {
@@ -82,7 +82,7 @@ class User
 
         $sql = "UPDATE $this->tableName u SET u.type = ? WHERE u.phone = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('ii', $type, $phone);
+        $result->bind_param('is', $type, $phone);
         return $result->execute();
     }
 
@@ -90,7 +90,7 @@ class User
     {
         $sql = "SELECT u.type FROM $this->tableName u WHERE u.phone = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('i', $phone);
+        $result->bind_param('s', $phone);
         $result->execute();
         return $result->get_result()->fetch_assoc()['type'];
     }
