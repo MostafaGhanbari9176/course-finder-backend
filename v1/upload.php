@@ -1,55 +1,44 @@
 <?php
-$target_dir = "uploads/";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-$uploadOk = 1;
-$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-// Check if image file is a actual image or fake image
+$target_dir_tabaghe = "uploads/tabaghe/";
+$target_dir_teacher = "uploads/teacher/";
+$target_dir_madrak = "uploads/madrak/";
+$target_dir_course = "uploads/course/";
+$target_file = "";
+$result = 0;
 $res = array();
-if(isset($_POST["submit"])) {
-    //$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-
-}
-// Check if file already exists
 if (file_exists($target_file)) {
-    $res['code'] = 1;
-    $res['message'] = "Sorry, file already exists.";
-    apc_delete_file($target_file);
-    echo json_encode($res);
-    $uploadOk = 0;
+    unlink($target_file);
 }
-// Check file size
-if ($_FILES["fileToUpload"]["size"] > 5000000) {
-    $res['code'] = 1;
-    $res['message'] = "Sorry, your file is too large.";
-
-    echo json_encode($res);
-    $uploadOk = 0;
+if ($_FILES["fileToUpload"]["size"] > 500000) {
+    $result = 2;
 }
-// Allow certain file formats
-/*if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-    && $imageFileType != "gif" ) {
-    $res['code'] = 1;
-    $res['message'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+if ($result == 2) {
+    if (isset($_FILES['tabaghe']['name'])) {
+        $target_file = $target_dir_tabaghe . basename($_FILES["tabaghe"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        move_uploaded_file($_FILES["tabaghe"]["tmp_name"], $target_file);
+        $result = 1;
 
-    echo json_encode($res);
-    $uploadOk = 0;
-}*/
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk == 0) {
-
-// if everything is ok, try to upload file
-} else {
-    move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file);
-
-    /*if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-        $res['code'] = 1;
-        $res['message'] = "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
-
-        echo json_encode($res);
-    } else {
-        $res['code'] = 1;
-        $res['message'] = "Sorry, there was an error uploading your file.";
-
-        echo json_encode($res);
-    }*/
+    } else if (isset($_FILES['teacher']['name'])) {
+        $target_file = $target_dir_teacher . basename($_FILES["teacher"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        move_uploaded_file($_FILES["teacher"]["tmp_name"], $target_file);
+        $result = 1;
+    } else if (isset($_FILES['madrak']['name'])) {
+        $target_file = $target_dir_madrak . basename($_FILES["madrak"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        move_uploaded_file($_FILES["madrak"]["tmp_name"], $target_file);
+        $result = 1;
+    } else if (isset($_FILES['course']['name'])) {
+        $target_file = $target_dir_course . basename($_FILES["course"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        move_uploaded_file($_FILES["course"]["tmp_name"], $target_file);
+        $result = 1;
+    }
 }
+$res = array();
+$res["code"] = $result;
+$message = array();
+$message[] = $res;
+echo json_encode($message);
+

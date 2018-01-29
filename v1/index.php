@@ -15,6 +15,8 @@ require 'present/PresentCity.php';
 require 'present/PresentUser.php';
 require 'present/PresentSmsCode.php';
 require 'present/PresenterTeacher.php';
+require 'present/PresentTabaghe.php';
+require 'Present/PresentCourse.php';
 
 
 $app = new \Slim\App;
@@ -107,6 +109,42 @@ $app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madr
 
 });
 
+$app->get('/getTabaghe/{uperId}',function (Request $req, Response $res){
+
+    $uperId = $req->getAttribute('uperId');
+    $res->getBody()->write(PresentTabaghe::getTabaghe($uperId));
+});
+
+$app->get('/addCourse/{teacher_id}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{old_range}',function (Request $req, Response $res){
+    $teacher_id = $req->getAttribute('teacher_id');
+    $subject = $req->getAttribute('subject');
+    $tabaghe_id = $req->getAttribute('tabaghe_id');
+    $type = $req->getAttribute('type');
+    $capacity = $req->getAttribute('capacity');
+    $mony = $req->getAttribute('mony');
+    $sharayet = $req->getAttribute('sharayet');
+    $old_range = $req->getAttribute('old_range');
+    $tozihat = $req->getAttribute('tozihat');
+    $start_date = $req->getAttribute('start_date');
+    $end_date = $req->getAttribute('end_date');
+    $day = $req->getAttribute('day');
+    $hours = $req->getAttribute('hours');
+
+    $resuelt = PresentCourse::addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $old_range);
+    $res->getBody()->write($resuelt);
+});
+
+$app->get('/getAllCourse',function (Request $req, Response $res){
+    $res->getBody()->write(PresentCourse::getAllCourse());
+});
+
+$app->get('/getCourseById/{id}',function (Request $req, Response $res){
+    $res->getBody()->write(PresentCourse::getCourseById($req->getAttribute('id')));
+});
+
+$app->get('/getCourseByTeacherId/{id}',function (Request $req, Response $res){
+    $res->getBody()->write(PresentCourse::getCourseByTeacherId($req->getAttribute('id')));
+});
 $app->run();
 
 

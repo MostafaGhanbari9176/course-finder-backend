@@ -1,0 +1,76 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: RCC1
+ * Date: 1/29/2018
+ * Time: 1:15 PM
+ */
+require_once 'uses/DBConnection.php';
+
+class Course
+{
+    private $conn;
+    private $tablename = 'cource';
+    public function __construct()
+    {
+        $db = new DBConnection();
+        $this->conn = $db->connect();
+        mysqli_query($this->conn, "SET NAMES 'utf8'");
+        mysqli_set_charset($this->conn, "UTF8");
+    }
+
+    public function addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $old_range){
+        $sql = "INSERT INTO $this->tablename (teacher_id, subject, tabaghe_id, type, capacity, mony, sharayet, tozihat, start_date, end_date, day, hours, old_range) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $rezult = $this->conn->prepare($sql);
+        $rezult->bind_param('ssiiiissssssi',$teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $old_range);
+        if($rezult->execute())
+            return 1;
+        return 0;
+    }
+
+    public function getAllCourse(){
+
+        $sql = "SELECT * FROM $this->tablename";
+        $result = $this->conn->prepare($sql);
+        if($result->execute())
+            return $result->get_result();
+        return 0;
+    }
+
+    public function getCourseById($id){
+        $sql = "SELECT * FROM $this->tablename c WHERE c.cource_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('i',$id);
+        if($result->execute())
+            return $result->get_result();
+        return 0;
+    }
+
+    public function getCourseByTeacherId($teacherId){
+        $sql = "SELECT * FROM $this->tablename c WHERE c.teacher_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('i',$teacherId);
+        if($result->execute())
+            return $result->get_result();
+        return 0;
+    }
+
+    public function getTeacherSubject($id){
+        $sql = "SELECT t.subject FROM teacher t WHERE t.phone = (SELECT c.teacher_id FROM $this->tablename c WHERE c.cource_id = ?)";
+        $resuelt = $this->conn->prepare($sql);
+        $resuelt->bind_param('i',$id);
+        if($resuelt->execute())
+            return $resuelt->get_result()->fetch_assoc()['subject'];
+        return 0;
+    }
+
+    public function getTabaghe($id){
+        $sql = "SELECT t.subject FROM tabaghe t WHERE t.id = (SELECT c.tabaghe_id FROM $this->tablename c WHERE c.cource_id = ?)";
+        $resuelt = $this->conn->prepare($sql);
+        $resuelt->bind_param('i',$id);
+        if($resuelt->execute())
+            return $resuelt->get_result()->fetch_assoc()['subject'];
+        return 0;
+    }
+
+}
