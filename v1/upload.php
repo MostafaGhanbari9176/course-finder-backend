@@ -9,10 +9,26 @@ $res = array();
 if (file_exists($target_file)) {
     unlink($target_file);
 }
-if ($_FILES["fileToUpload"]["size"] > 500000) {
-    $result = 2;
+
+if (isset($_FILES['tabaghe']['name'])) {
+    if ($_FILES["tabaghe"]["size"] > 500000) {
+        $result = 2;
+    }
+
+} else if (isset($_FILES['teacher']['name'])) {
+    if ($_FILES["teacher"]["size"] > 500000) {
+        $result = 2;
+    }
+} else if (isset($_FILES['madrak']['name'])) {
+    if ($_FILES["madrak"]["size"] > 500000) {
+        $result = 2;
+    }
+} else if (isset($_FILES['course']['name'])) {
+    if ($_FILES["course"]["size"] > 500000) {
+        $result = 2;
+    }
 }
-if ($result == 2) {
+if ($result != 2) {
     if (isset($_FILES['tabaghe']['name'])) {
         $target_file = $target_dir_tabaghe . basename($_FILES["tabaghe"]["name"]);
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
