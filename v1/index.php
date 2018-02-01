@@ -17,6 +17,7 @@ require 'present/PresentSmsCode.php';
 require 'present/PresenterTeacher.php';
 require 'present/PresentTabaghe.php';
 require 'Present/PresentCourse.php';
+require 'Present/PresentSabtenam.php';
 
 
 $app = new \Slim\App;
@@ -77,7 +78,7 @@ $app->get('/logOut/{phone}', function (Request $request, Response $response) {
 
 });
 
-$app->get('/addTeacher/{phone}/{landPhone}/{address}/{subject}/{tozihat}/{type}/{cityId}',function (Request $req,Response $res){
+$app->get('/addTeacher/{phone}/{landPhone}/{address}/{subject}/{tozihat}/{type}/{cityId}', function (Request $req, Response $res) {
 
     $phone = $req->getAttribute('phone');
     $landPhone = $req->getAttribute('landPhone');
@@ -86,17 +87,17 @@ $app->get('/addTeacher/{phone}/{landPhone}/{address}/{subject}/{tozihat}/{type}/
     $tozihat = $req->getAttribute('tozihat');
     $type = $req->getAttribute('type');
     $cityID = $req->getAttribute('cityId');
-    $result = PresenterTeacher::addTeacher($phone,$landPhone,$address,$subject,$tozihat,$type, $cityID);
-   $res->getBody()->write($result);
+    $result = PresenterTeacher::addTeacher($phone, $landPhone, $address, $subject, $tozihat, $type, $cityID);
+    $res->getBody()->write($result);
 
 });
 
-$app->get('/getTeacher/{phone}',function (Request $req, Response $res){
+$app->get('/getTeacher/{phone}', function (Request $req, Response $res) {
 
-     $res->getBody()->write(PresenterTeacher::getTeacher($req->getAttribute('phone')));
+    $res->getBody()->write(PresenterTeacher::getTeacher($req->getAttribute('phone')));
 });
 
-$app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madrak}',function (Request $req, Response $res){
+$app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madrak}', function (Request $req, Response $res) {
 
     $phone = $req->getAttribute('phone');
     $landPhone = $req->getAttribute('landPhone');
@@ -109,13 +110,13 @@ $app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madr
 
 });
 
-$app->get('/getTabaghe/{uperId}',function (Request $req, Response $res){
+$app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
 
     $uperId = $req->getAttribute('uperId');
     $res->getBody()->write(PresentTabaghe::getTabaghe($uperId));
 });
 
-$app->get('/addCourse/{teacher_id}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{old_range}',function (Request $req, Response $res){
+$app->get('/addCourse/{teacher_id}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{old_range}', function (Request $req, Response $res) {
     $teacher_id = $req->getAttribute('teacher_id');
     $subject = $req->getAttribute('subject');
     $tabaghe_id = $req->getAttribute('tabaghe_id');
@@ -134,17 +135,39 @@ $app->get('/addCourse/{teacher_id}/{subject}/{tabaghe_id}/{type}/{capacity}/{mon
     $res->getBody()->write($resuelt);
 });
 
-$app->get('/getAllCourse',function (Request $req, Response $res){
+$app->get('/getAllCourse', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getAllCourse());
 });
 
-$app->get('/getCourseById/{id}',function (Request $req, Response $res){
+$app->get('/getCourseById/{id}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getCourseById($req->getAttribute('id')));
 });
 
-$app->get('/getCourseByTeacherId/{id}',function (Request $req, Response $res){
+$app->get('/getCourseByTeacherId/{id}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getCourseByTeacherId($req->getAttribute('id')));
 });
+
+$app->get('/checkedServer', function (Request $req, Response $res) {
+    $rezuelt = array();
+    $rezuelt["code"] = 1;
+    $message = array();
+    $message[] = $rezuelt;
+    $res->getBody()->write(json_encode($message));
+});
+
+$app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}',function (Request $req, Response $res){
+    $idCourse = $req->getAttribute('idCourse');
+    $idTeacher = $req->getAttribute('idTeacher');
+    $idUser = $req->getAttribute('idUser');
+    $res->getBody()->write(PresentSabtenam::add($idCourse, $idTeacher, $idUser));
+
+});
+
+$app->get('/getUserCourse/{id}',function (Request $req, Response $res){
+    $id = $req->getAttribute('id');
+    $res->getBody()->write(PresentSabtenam::getByUserId($id));
+});
+
 $app->run();
 
 
