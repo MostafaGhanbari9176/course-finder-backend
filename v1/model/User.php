@@ -43,11 +43,11 @@ class User
 
     }
 
-    public function updateUser($phone, $name, $family, $status, $type, $cityID, $apiCode)
+    public function updateUser($phone, $name)
     {
-        $sql = "UPDATE $this->tableName u SET phone = ?, name = ?, family = ?, status = ?, type = ?, city_id = ?, api_code = ? WHERE u.phone = ?";
+        $sql = "UPDATE $this->tableName u SET name = ? WHERE u.phone = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param("sssiiiii", $phone, $name, $family, $status, $type, $cityID, $apiCode, $phone);
+        $result->bind_param("ss", $name, $phone);
         if ($result->execute()) {
             return (int)1;
         } else {

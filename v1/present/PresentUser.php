@@ -21,10 +21,10 @@ class PresentUser
         return json_encode($message);
     }
 
-    public static function updateUser($phone, $name, $family, $status, $type, $cityID, $apiCode)
+    public static function updateUser($phone, $name)
     {
         $model = new User();
-        $result = $model->updateUser($phone, $name, $family, $status, $type, $cityID, $apiCode);
+        $result = $model->updateUser($phone, $name);
         $res = array();
         $res["code"] = $result;
         $message = array();

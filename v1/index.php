@@ -43,17 +43,10 @@ $app->get('/getCity/{flag}', function (Request $request, Response $response) {
     $response->getBody()->write($result);
 });
 
-$app->get('/updateUser/{phone}/{name}/{family}/{status}/{type}/{cityId}/{apiCode}', function (Request $req, Response $res) {
-
+$app->get('/updateUser/{phone}/{name}', function (Request $req, Response $res) {
     $phone = $req->getAttribute('phone');
     $name = $req->getAttribute('name');
-    $family = $req->getAttribute('family');
-    $status = $req->getAttribute('status');
-    $type = $req->getAttribute('type');
-    $cityId = $req->getAttribute('cityId');
-    $apiCode = $req->getAttribute('apiCode');
-
-    $result = PresentUser::updateUser($phone, $name, $family, $status, $type, $cityId, $apiCode);
+    $result = PresentUser::updateUser($phone, $name);
     $res->getBody()->write($result);
 });
 
@@ -78,16 +71,16 @@ $app->get('/logOut/{phone}', function (Request $request, Response $response) {
 
 });
 
-$app->get('/addTeacher/{phone}/{landPhone}/{address}/{subject}/{tozihat}/{type}/{cityId}', function (Request $req, Response $res) {
+$app->get('/addTeacher/{phone}/{landPhone}/{subject}/{tozihat}/{type}/{lat}/{lon}', function (Request $req, Response $res) {
 
     $phone = $req->getAttribute('phone');
     $landPhone = $req->getAttribute('landPhone');
-    $address = $req->getAttribute('address');
+    $lat = $req->getAttribute('lat');
     $subject = $req->getAttribute('subject');
     $tozihat = $req->getAttribute('tozihat');
     $type = $req->getAttribute('type');
-    $cityID = $req->getAttribute('cityId');
-    $result = PresenterTeacher::addTeacher($phone, $landPhone, $address, $subject, $tozihat, $type, $cityID);
+    $long = $req->getAttribute('lon');
+    $result = PresenterTeacher::addTeacher($phone, $landPhone, $subject, $tozihat, $type, $lat, $long);
     $res->getBody()->write($result);
 
 });

@@ -10,13 +10,13 @@ require_once 'model/City.php';
 class PresenterTeacher
 {
 
-    public static function addTeacher($phone,$landPhone,$address,$subject,$tozihat,$type, $cityId){
+    public static function addTeacher($phone,$landPhone,$subject,$tozihat,$type, $lat, $lon){
 
         $model = new User();
         $res = array();
         if($model->changeUserType($phone,1)){
             $teacher = new Teacher();
-            $result = $teacher->addTeacher($phone,$landPhone,$address,self::getDate(),$subject,$cityId,$tozihat,$type);
+            $result = $teacher->addTeacher($phone,$landPhone,self::getDate(),$subject,$tozihat,$type,$lat, $lon);
             $res["code"] = $result;
             if($result==0)
                 $model->changeUserType($phone,0);
