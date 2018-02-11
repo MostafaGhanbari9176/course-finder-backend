@@ -12,8 +12,11 @@ class PresentSmsCode
 
     public static function creatAndSaveSmsCode($phone)
     {
-        $model = new SmsCode();
-        $result = $model->saveSmsCode($phone, rand(100000, 999999));
+        if (((new SmsCode())->getCounter($phone)) < 3) {
+            $model = new SmsCode();
+            $result = $model->saveSmsCode($phone, rand(100000, 999999));
+        } else
+            $result = 0;
         $res = array();
         $res["code"] = $result;
         $message = array();
@@ -25,28 +28,10 @@ class PresentSmsCode
     {
         $model = new SmsCode();
         $getCode = $model->getSmsCode($phone);
-        $res = 0;
-        while ($row = $getCode->fetch_assoc()) {
-            $res = $row['verify_code'];
-        }
-
-        if ($res == $code) {
-            $res = array();
-            $res["code"] = PresentSmsCode::logIn($phone);
-            $message = array();
-            $message[] = $res;
+        if ($getCode == $code) {
+            return true;
         } else {
-            $res = array();
-            $res["code"] = 0;
-            $message = array();
-            $message[] = $res;
+            return false;
         }
-        return json_encode($message);
-    }
-
-    static function logIn($phone)
-    {
-        $model = new User();
-        return $model->logIn($phone);
     }
 }

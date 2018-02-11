@@ -7,6 +7,7 @@
  */
 require_once 'model/Teacher.php';
 require_once 'model/City.php';
+require_once 'model/User.php';
 class PresenterTeacher
 {
 
@@ -30,20 +31,18 @@ class PresenterTeacher
         return json_encode($message);
     }
 
-    public static function getTeacher($phone){
+    public static function getTeacher($ac){
         $teacher = new Teacher();
-        $rezult = $teacher->getTeacher($phone);
+        $rezult = $teacher->getTeacher((new User())->getPhoneByAc($ac));
         $res = array();
         while($row = $rezult->fetch_assoc()){
             $teacher = array();
-            $teacher['phone'] = $row['phone'];
             $teacher['landPhone'] = $row['land_phone'];
             $teacher['type'] = $row['type'];
-            $teacher['address'] = $row['address'];
-            $teacher['madrak'] = $row['madrak'];
+            $teacher['m'] = $row['madrak'];
             $teacher['subject'] = $row['subject'];
-            $teacher['cityId'] = $row['city_id'];
-            $teacher['location'] = PresentUser::location($row['city_id']);
+            $teacher['lt'] = $row['lat'];
+            $teacher['lg'] = $row['lon'];
             $res[] = $teacher;
         }
         if ($res) {

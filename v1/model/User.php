@@ -21,26 +21,32 @@ class User
 
     }
 
-    public function logIn($phone)
+    public function logUp($phone, $name, $apiCode)
+    {
+        $status = 1;
+        $sql = "INSERT INTO $this->tableName (phone, status, name, api_code) VALUES(?,?,?,?)";
+        $result = $this->con->prepare($sql);
+        $result->bind_param("siss", $phone, $status, $name, $apiCode);
+        if ($result->execute()) {
+            return true;
+        } else
+            return false;
+    }
+
+    public function logIn($phone, $apiCode)
     {
 
+        if($this->getUser($phone)->fetch_assoc()['name'] == null)
+            return 0;
         $status = 1;
-        $sql = "INSERT INTO $this->tableName (phone,status) VALUES(?,?)";
+        $sql = "UPDATE $this->tableName u SET status = ? , api_code = ? WHERE u.phone = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param("si", $phone, $status);
-        if ($result->execute()) {
+        $result->bind_param('iss', $status, $apiCode, $phone);
+        if(!$result->execute())
+            return 0;
+        if ($this->checkedTypeUser($phone) == 0)
             return (int)1;
-        } else {
-
-            $sql = "UPDATE $this->tableName u SET status = ? WHERE u.phone = ?";
-            $result = $this->con->prepare($sql);
-            $result->bind_param('is', $status, $phone);
-            $result->execute();
-            if ($this->checkedTypeUser($phone) == 0)
-                return (int)2;
-            return (int)3;
-        }
-
+        return (int)2;
     }
 
     public function updateUser($phone, $name)
@@ -93,6 +99,14 @@ class User
         $result->bind_param('s', $phone);
         $result->execute();
         return $result->get_result()->fetch_assoc()['type'];
+    }
+
+    public function getPhoneByAc($ac){
+        $sql = "SELECT u.phone FROM $this->tableName u WHERE u.api_code = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('s', $ac);
+        $result->execute();
+        return $result->get_result()->fetch_assoc()['phone'];
     }
 
 }

@@ -24,23 +24,51 @@ class SmsCode
 
     public function saveSmsCode($phone, $vCode)
     {
-        $sql = "INSERT INTO $this->tableName (phone ,verify_code ) VALUES (?,?)";
+        $sql = "INSERT INTO $this->tableName (phone ,code ) VALUES (?,?)";
         $result = $this->con->prepare($sql);
-        $result->bind_param('ii', $phone, $vCode);
+        $result->bind_param('si', $phone, $vCode);
         if ($result->execute()) {
             return (int)1;
         } else {
-            return (int)0;
+            $this->updateCounter($phone);
+            $sql = "UPDATE $this->tableName s SET s.code = ? WHERE s.phone = ?";
+            $result = $this->con->prepare($sql);
+            $result->bind_param('is', $vCode, $phone);
+            if ($result->execute()) {
+                return (int)1;
+            } else
+                return 0;
         }
     }
 
     public function getSmsCode($phone)
     {
-        $sql = "SELECT s.verify_code FROM $this->tableName s WHERE s.phone = ?";
+        $sql = "SELECT s.code FROM $this->tableName s WHERE s.phone = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('i', $phone);
+        $result->bind_param('s', $phone);
         $result->execute();
-        return $result->get_result();
+        return $result->get_result()->fetch_assoc()['code'];
+
+    }
+
+    public function getCounter($phone)
+    {
+        $sql = "SELECT s.counter FROM $this->tableName s WHERE s.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('s', $phone);
+        $result->execute();
+        return $result->get_result()->fetch_assoc()['counter'];
+
+    }
+
+    public function updateCounter($phone)
+    {
+        $counter = SmsCode::getCounter($phone) + 1;
+        $sql = "UPDATE $this->tableName s SET s.counter = ? WHERE s.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('is', $counter, $phone);
+        $result->execute();
+
 
     }
 

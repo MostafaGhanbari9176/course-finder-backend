@@ -28,10 +28,21 @@ $app->get('/getOstan', function (Request $req, Response $response) {
     $response->getBody()->write($result);
 });
 
-$app->get('/logIn/{phone}', function (Request $req, Response $res) {
+$app->get('/logUp/{phone}/{name}/{code}', function (Request $req, Response $res) {
 
     $phone = $req->getAttribute('phone');
-    $result = PresentUser::logIn($phone);
+    $name = $req->getAttribute('name');
+    $code = $req->getAttribute('code');
+    $result = PresentUser::logUp($phone, $name, $code);
+    $res->getBody()->write($result);
+
+});
+
+$app->get('/logIn/{phone}/{code}', function (Request $req, Response $res) {
+
+    $phone = $req->getAttribute('phone');
+    $code = $req->getAttribute('code');
+    $result = PresentUser::logIn($phone, $code);
     $res->getBody()->write($result);
 
 });
@@ -85,9 +96,9 @@ $app->get('/addTeacher/{phone}/{landPhone}/{subject}/{tozihat}/{type}/{lat}/{lon
 
 });
 
-$app->get('/getTeacher/{phone}', function (Request $req, Response $res) {
+$app->get('/getTeacher/{ac}', function (Request $req, Response $res) {
 
-    $res->getBody()->write(PresenterTeacher::getTeacher($req->getAttribute('phone')));
+    $res->getBody()->write(PresenterTeacher::getTeacher($req->getAttribute('ac')));
 });
 
 $app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madrak}', function (Request $req, Response $res) {

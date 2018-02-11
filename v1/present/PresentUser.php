@@ -9,13 +9,45 @@ require_once 'model/User.php';
 
 class PresentUser
 {
-    public static function logIn($phone)
+    public static function logUP($phone, $name, $code)//0-->badCod  1-->ok  2--> badLogUp
     {
-
-        $model = new User();
-        $result = $model->logIn($phone);
+        $apiCode = PresentUser::createApiCode($phone);
         $res = array();
-        $res["code"] = $result;
+        if (PresentSmsCode::checkedSmsCode($phone, $code)) {
+            $model = new User();
+            $result = $model->logUp($phone, $name, $apiCode);
+            if ($result) {
+                $res["code"] = 1;
+                $res["apiCode"] = $apiCode;
+            } else
+                $res["code"] = 2;
+        } else
+            $res["code"] = 0;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+    }
+
+    public static function logIn($phone, $code)//0-->badCod  1-->okAndIsUser  2-->okAndIsTeacher  3--> badLogIn
+    {
+        $apiCode = PresentUser::createApiCode($phone);
+        $res = array();
+        if (PresentSmsCode::checkedSmsCode($phone, $code)) {
+            $model = new User();
+            $result = $model->logIn($phone, $apiCode);
+            if ($result == 1) {
+                $res["name"] = (new User())->getUser($phone)->fetch_assoc()['name'];
+                $res["code"] = 1;
+                $res["apiCode"] = $apiCode;
+            } else if ($result == 2) {
+                $res["name"] = (new User())->getUser($phone)->fetch_assoc()['name'];
+                $res["code"] = 2;
+                $res["apiCode"] = $apiCode;
+            } else if ($result == 0) {
+                $res["code"] = 3;
+            }
+        } else
+            $res["code"] = 0;
         $message = array();
         $message[] = $res;
         return json_encode($message);
@@ -76,5 +108,16 @@ class PresentUser
         $result = $model->locatin($cityId);
         $row = $result->fetch_assoc();
         return $row['name'] . " , " . $row['city_name'];
+    }
+
+    public static function createApiCode($phone)
+    {
+        $apiCode = "";
+        $milliseconds = str_split(round(microtime(true) * 1000));
+        $phone = str_split($phone);
+        for ($i = count($phone) - 1; $i >= 0; $i--) {
+            $apiCode = $apiCode . $phone[$i] . $milliseconds[$i];
+        }
+        return $apiCode;
     }
 }
