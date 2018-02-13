@@ -36,13 +36,13 @@ class User
     public function logIn($phone, $apiCode)
     {
 
-        if($this->getUser($phone)->fetch_assoc()['name'] == null)
+        if ($this->getUser($phone)->fetch_assoc()['name'] == null)
             return 0;
         $status = 1;
         $sql = "UPDATE $this->tableName u SET status = ? , api_code = ? WHERE u.phone = ?";
         $result = $this->con->prepare($sql);
         $result->bind_param('iss', $status, $apiCode, $phone);
-        if(!$result->execute())
+        if (!$result->execute())
             return 0;
         if ($this->checkedTypeUser($phone) == 0)
             return (int)1;
@@ -101,12 +101,14 @@ class User
         return $result->get_result()->fetch_assoc()['type'];
     }
 
-    public function getPhoneByAc($ac){
+    public function getPhoneByAc($ac)
+    {
         $sql = "SELECT u.phone FROM $this->tableName u WHERE u.api_code = ?";
         $result = $this->con->prepare($sql);
         $result->bind_param('s', $ac);
-        $result->execute();
-        return $result->get_result()->fetch_assoc()['phone'];
+        if ($result->execute())
+            return $result->get_result()->fetch_assoc()['phone'];
+        return 0;
     }
 
 }

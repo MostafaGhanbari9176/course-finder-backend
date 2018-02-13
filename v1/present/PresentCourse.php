@@ -6,14 +6,16 @@
  * Time: 1:38 PM
  */
 require_once 'model/Course.php';
+require_once 'model/User.php';
 
 class PresentCourse
 {
 
-    public static function addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $old_range)
+    public static function addCourse($ac, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld)
     {
+        $teacher_id = (new User())->getPhoneByAc($ac);
         $course = new Course();
-        $rezult = $course->addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $old_range);
+        $rezult = $course->addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
         $res = array();
         $res['code'] = $rezult;
         $message = array();

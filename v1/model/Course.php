@@ -20,11 +20,11 @@ class Course
         mysqli_set_charset($this->conn, "UTF8");
     }
 
-    public function addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $old_range)
+    public function addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld)
     {
-        $sql = "INSERT INTO $this->tablename (teacher_id, subject, tabaghe_id, type, capacity, mony, sharayet, tozihat, start_date, end_date, day, hours, old_range) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO $this->tablename (teacher_id, subject, tabaghe_id, type, capacity, mony, sharayet, tozihat, start_date, end_date, day, hours, min_old, max_old) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $rezult = $this->conn->prepare($sql);
-        $rezult->bind_param('ssiiiissssssi', $teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $old_range);
+        $rezult->bind_param('ssiiiissssssss', $teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
         if ($rezult->execute()) {
             $sql2 = "SELECT c.cource_id FROM  $this->tablename c WHERE c.teacher_id = ?";
             $rezult2 = $this->conn->prepare($sql2);

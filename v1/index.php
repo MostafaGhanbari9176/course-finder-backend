@@ -82,16 +82,16 @@ $app->get('/logOut/{phone}', function (Request $request, Response $response) {
 
 });
 
-$app->get('/addTeacher/{phone}/{landPhone}/{subject}/{tozihat}/{type}/{lat}/{lon}', function (Request $req, Response $res) {
+$app->get('/addTeacher/{ac}/{landPhone}/{subject}/{tozihat}/{type}/{lat}/{lon}', function (Request $req, Response $res) {
 
-    $phone = $req->getAttribute('phone');
+    $ac = $req->getAttribute('ac');
     $landPhone = $req->getAttribute('landPhone');
     $lat = $req->getAttribute('lat');
     $subject = $req->getAttribute('subject');
     $tozihat = $req->getAttribute('tozihat');
     $type = $req->getAttribute('type');
     $long = $req->getAttribute('lon');
-    $result = PresenterTeacher::addTeacher($phone, $landPhone, $subject, $tozihat, $type, $lat, $long);
+    $result = PresenterTeacher::addTeacher($ac, $landPhone, $subject, $tozihat, $type, $lat, $long);
     $res->getBody()->write($result);
 
 });
@@ -120,22 +120,24 @@ $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentTabaghe::getTabaghe($uperId));
 });
 
-$app->get('/addCourse/{teacher_id}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{old_range}', function (Request $req, Response $res) {
-    $teacher_id = $req->getAttribute('teacher_id');
+$app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{minOld}/{maxOld}',  function (Request $req, Response $res) {
+    $ac = $req->getAttribute('ac');
     $subject = $req->getAttribute('subject');
     $tabaghe_id = $req->getAttribute('tabaghe_id');
     $type = $req->getAttribute('type');
     $capacity = $req->getAttribute('capacity');
     $mony = $req->getAttribute('mony');
     $sharayet = $req->getAttribute('sharayet');
-    $old_range = $req->getAttribute('old_range');
+    $minOld = $req->getAttribute('minOld');
+    $maxOld = $req->getAttribute('maxOld');
     $tozihat = $req->getAttribute('tozihat');
     $start_date = $req->getAttribute('start_date');
     $end_date = $req->getAttribute('end_date');
     $day = $req->getAttribute('day');
     $hours = $req->getAttribute('hours');
 
-    $resuelt = PresentCourse::addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $old_range);
+    $resuelt = PresentCourse::addCourse($ac, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet,
+        $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
     $res->getBody()->write($resuelt);
 });
 
@@ -159,7 +161,7 @@ $app->get('/checkedServer', function (Request $req, Response $res) {
     $res->getBody()->write(json_encode($message));
 });
 
-$app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}',function (Request $req, Response $res){
+$app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}', function (Request $req, Response $res) {
     $idCourse = $req->getAttribute('idCourse');
     $idTeacher = $req->getAttribute('idTeacher');
     $idUser = $req->getAttribute('idUser');
@@ -167,9 +169,17 @@ $app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}',function (Request $req, Re
 
 });
 
-$app->get('/getUserCourse/{id}',function (Request $req, Response $res){
+$app->get('/getUserCourse/{id}', function (Request $req, Response $res) {
     $id = $req->getAttribute('id');
     $res->getBody()->write(PresentSabtenam::getByUserId($id));
+});
+
+$app->get('/getMs/{ac}', function (Request $req, Response $res) {
+    $res->getBody()->write(PresenterTeacher::getMadrakState($req->getAttribute('ac')));
+});
+
+$app->get('/upMs/{ac}', function (Request $req, Response $res) {
+    $res->getBody()->write(PresenterTeacher::updateMadrakState($req->getAttribute('ac')));
 });
 
 $app->run();
