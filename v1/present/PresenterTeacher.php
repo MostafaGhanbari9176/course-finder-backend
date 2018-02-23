@@ -9,9 +9,9 @@ require_once 'model/Teacher.php';
 require_once 'model/City.php';
 require_once 'model/User.php';
 
+
 class PresenterTeacher
 {
-
 
 
     public static function addTeacher($ac, $landPhone, $subject, $tozihat, $type, $lat, $lon)
@@ -106,7 +106,8 @@ class PresenterTeacher
 
     static function getDate()
     {
-        return date("Y/m/d");
+
+        return gregorian_to_jalali(date("Y"), date("m"), date("d"), '-');
     }
 
     static function getCityId($phone)

@@ -18,15 +18,16 @@ require 'present/PresenterTeacher.php';
 require 'present/PresentTabaghe.php';
 require 'Present/PresentCourse.php';
 require 'Present/PresentSabtenam.php';
+require 'jdf.php';
 
 
 $app = new \Slim\App;
 
-$app->get('/getOstan', function (Request $req, Response $response) {
+/*$app->get('/getOstan', function (Request $req, Response $response) {
 
     $result = PresentOstan::getOstan();
     $response->getBody()->write($result);
-});
+});*/
 
 $app->get('/logUp/{phone}/{name}/{code}', function (Request $req, Response $res) {
 
@@ -47,24 +48,24 @@ $app->get('/logIn/{phone}/{code}', function (Request $req, Response $res) {
 
 });
 
-$app->get('/getCity/{flag}', function (Request $request, Response $response) {
+/*$app->get('/getCity/{flag}', function (Request $request, Response $response) {
 
     $flag = $request->getAttribute('flag');
     $result = PresentCity::getCity($flag);
     $response->getBody()->write($result);
-});
+});*/
 
-$app->get('/updateUser/{phone}/{name}', function (Request $req, Response $res) {
+/*$app->get('/updateUser/{phone}/{name}', function (Request $req, Response $res) {
     $phone = $req->getAttribute('phone');
     $name = $req->getAttribute('name');
     $result = PresentUser::updateUser($phone, $name);
     $res->getBody()->write($result);
-});
+});*/
 
-$app->get('/getUser/{phone}', function (Request $request, Response $response) {
+/*$app->get('/getUser/{phone}', function (Request $request, Response $response) {
     $result = PresentUser::getUser($request->getAttribute('phone'));
     $response->getBody()->write($result);
-});
+});*/
 
 $app->get('/createAndSaveSmsCode/{phone}', function (Request $request, Response $response) {
 
@@ -101,7 +102,7 @@ $app->get('/getTeacher/{ac}', function (Request $req, Response $res) {
     $res->getBody()->write(PresenterTeacher::getTeacher($req->getAttribute('ac')));
 });
 
-$app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madrak}', function (Request $req, Response $res) {
+/*$app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madrak}', function (Request $req, Response $res) {
 
     $phone = $req->getAttribute('phone');
     $landPhone = $req->getAttribute('landPhone');
@@ -112,7 +113,7 @@ $app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madr
 
     $res->getBody()->write(PresenterTeacher::updateTeacher($phone, $landPhone, $madrak, $subject, $address, $cityId));
 
-});
+});*/
 
 $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
 
@@ -149,8 +150,18 @@ $app->get('/getCourseById/{id}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getCourseById($req->getAttribute('id')));
 });
 
-$app->get('/getCourseByTeacherId/{id}', function (Request $req, Response $res) {
-    $res->getBody()->write(PresentCourse::getCourseByTeacherId($req->getAttribute('id')));
+$app->get('/getCourseByTeacherId/{ac}', function (Request $req, Response $res) {
+    $res->getBody()->write(PresentCourse::getCourseByTeacherId($req->getAttribute('ac')));
+});
+
+$app->get('/getUserCourse/{ac}', function (Request $req, Response $res) {
+    $id = $req->getAttribute('ac');
+    $res->getBody()->write(PresentCourse::getByUserId($id));
+});
+
+$app->get('/getNewCourse', function (Request $req, Response $res) {
+
+    $res->getBody()->write(PresentCourse::getNewCourse());
 });
 
 $app->get('/checkedServer', function (Request $req, Response $res) {
@@ -169,9 +180,9 @@ $app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}', function (Request $req, R
 
 });
 
-$app->get('/getUserCourse/{id}', function (Request $req, Response $res) {
-    $id = $req->getAttribute('id');
-    $res->getBody()->write(PresentSabtenam::getByUserId($id));
+$app->get('/saveComment/{ac}', function (Request $req, Response $res) {
+    $id = $req->getAttribute('ac');
+    $res->getBody()->write(PresentCourse::getByUserId($id));
 });
 
 $app->get('/getMs/{ac}', function (Request $req, Response $res) {

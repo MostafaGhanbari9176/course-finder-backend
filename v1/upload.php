@@ -19,7 +19,7 @@ if (isset($_FILES['tabaghe']['name'])) {
         $result = 2;
     }
 } else if (isset($_FILES['madrak']['name'])) {
-    if ($_FILES["madrak"]["size"] > 5000000 || $_FILES["madrak"]["size"] < 1000000) {
+    if ($_FILES["madrak"]["size"] > 5000000 || $_FILES["madrak"]["size"] < 100000) {
         $result = 2;
     }
 } else if (isset($_FILES['course']['name'])) {
