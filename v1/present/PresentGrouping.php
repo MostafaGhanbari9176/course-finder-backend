@@ -7,7 +7,7 @@
  */
 
 require_once 'model/Tabaghe.php';
-class PresentTabaghe
+class PresentGrouping
 {
     public static function getTabaghe($uperId){
         $tabaghe = new Tabaghe();
@@ -24,9 +24,7 @@ class PresentTabaghe
             return json_encode($res);
         } else {
             $tabaghe = array();
-            $tabaghe['id'] = -1;
-            $tabaghe['subject'] = -1;
-            $tabaghe['uperId'] = -1;
+            $tabaghe['empty'] = 1;
             $res[] = $tabaghe;
             return json_encode($res);
         }

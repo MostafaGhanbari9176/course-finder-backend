@@ -22,7 +22,7 @@ class Course
 
     public function addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld)
     {
-        $sql = "INSERT INTO $this->tablename (teacher_id, subject, tabaghe_id, type, capacity, mony, sharayet, tozihat, definition_date, start_date, end_date, day, hours, min_old, max_old) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO $this->tablename (teacher_id, subject, tabaghe_id, type, capacity, mony, sharayet, tozihat, definition_date, start_date, end_date, day, hours, min_old, max_old) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $rezult = $this->conn->prepare($sql);
         $rezult->bind_param('ssiiiisssssssii', $teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, date("Y/m/d"), $start_date, $end_date, $day, $hours, $minOld, $maxOld);
         if ($rezult->execute()) {
@@ -80,13 +80,13 @@ class Course
         return 0;
     }
 
-    public function getTabaghe($id)
+    public function getCourseByGroupingId($groupingId)
     {
-        $sql = "SELECT t.subject FROM tabaghe t WHERE t.id = (SELECT c.tabaghe_id FROM $this->tablename c WHERE c.cource_id = ?)";
-        $resuelt = $this->conn->prepare($sql);
-        $resuelt->bind_param('i', $id);
-        if ($resuelt->execute())
-            return $resuelt->get_result()->fetch_assoc()['subject'];
+        $sql = "SELECT * FROM $this->tablename c WHERE c.tabaghe_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('i', $groupingId);
+        if ($result->execute())
+            return $result->get_result();
         return 0;
     }
 

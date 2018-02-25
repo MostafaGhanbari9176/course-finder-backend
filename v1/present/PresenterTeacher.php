@@ -58,6 +58,28 @@ class PresenterTeacher
         }
     }
 
+    public static function getAllTeacher()
+    {
+        $teacher = new Teacher();
+        $rezult = $teacher->getAllTeacher();
+        $res = array();
+        while ($row = $rezult->fetch_assoc()) {
+            $teacher = array();
+            $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
+            $teacher['subject'] = $row['subject'];
+            $teacher['lt'] = $row['lat'];
+            $teacher['lg'] = $row['lon'];
+            $res[] = $teacher;
+        }
+        if ($res) {
+            return json_encode($res);
+        } else {
+            $res['erorr'] = "ok";
+            $res['empoty'] = "ok";
+            return json_encode($res);
+        }
+    }
+
     public static function updateTeacher($phone, $landPhone, $madrak, $subject, $address, $cityId)
     {
         $teacher = new Teacher();

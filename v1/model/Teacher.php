@@ -41,6 +41,14 @@ class Teacher
         return 0;
     }
 
+    public function getAllTeacher(){
+        $sql = "SELECT * FROM $this->tableName ";
+        $rezult = $this->con->prepare($sql);
+        if($rezult->execute())
+            return $rezult->get_result();
+        return 0;
+    }
+
     public function getMadrakState($phone){
         $sql = "SELECT t.madrak FROM $this->tableName t WHERE phone = ?";
         $rezult = $this->con->prepare($sql);

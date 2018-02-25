@@ -15,7 +15,7 @@ require 'present/PresentCity.php';
 require 'present/PresentUser.php';
 require 'present/PresentSmsCode.php';
 require 'present/PresenterTeacher.php';
-require 'present/PresentTabaghe.php';
+require 'present/PresentGrouping.php';
 require 'Present/PresentCourse.php';
 require 'Present/PresentSabtenam.php';
 require 'jdf.php';
@@ -102,6 +102,11 @@ $app->get('/getTeacher/{ac}', function (Request $req, Response $res) {
     $res->getBody()->write(PresenterTeacher::getTeacher($req->getAttribute('ac')));
 });
 
+$app->get('/getAllTeacher', function (Request $req, Response $res) {
+
+    $res->getBody()->write(PresenterTeacher::getAllTeacher());
+});
+
 /*$app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madrak}', function (Request $req, Response $res) {
 
     $phone = $req->getAttribute('phone');
@@ -118,7 +123,7 @@ $app->get('/getTeacher/{ac}', function (Request $req, Response $res) {
 $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
 
     $uperId = $req->getAttribute('uperId');
-    $res->getBody()->write(PresentTabaghe::getTabaghe($uperId));
+    $res->getBody()->write(PresentGrouping::getTabaghe($uperId));
 });
 
 $app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{minOld}/{maxOld}',  function (Request $req, Response $res) {
@@ -142,27 +147,49 @@ $app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{shar
     $res->getBody()->write($resuelt);
 });
 
+$app->get('/getCourseByFilter/{minOld}/{maxOld}/{startDate}/{endDate}/{Grouping}/{days}',  function (Request $req, Response $res) {
+
+    $minOld = $req->getAttribute('minOld');
+    $maxOld = $req->getAttribute('maxOld');
+    $start_date = $req->getAttribute('startDate');
+    $end_date = $req->getAttribute('endDate');
+    $group = $req->getAttribute('Grouping');
+    $day = $req->getAttribute('days');
+    $resuelt = PresentCourse::searchCourse($minOld, $maxOld, $start_date, $end_date, $group, $day);
+    $res->getBody()->write($resuelt);
+});
+
 $app->get('/getAllCourse', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getAllCourse());
-});
+});/////////////////***
 
 $app->get('/getCourseById/{id}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getCourseById($req->getAttribute('id')));
-});
+});//////////////////**
 
 $app->get('/getCourseByTeacherId/{ac}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getCourseByTeacherId($req->getAttribute('ac')));
-});
+});/////////////**
 
 $app->get('/getUserCourse/{ac}', function (Request $req, Response $res) {
     $id = $req->getAttribute('ac');
     $res->getBody()->write(PresentCourse::getByUserId($id));
+});/////////////**
+
+$app->get('/getCourseByGroupingId/{id}', function (Request $req, Response $res) {
+    $id = $req->getAttribute('id');
+    $res->getBody()->write(PresentCourse::getCourseByGroupingId($id));
 });
 
-$app->get('/getNewCourse', function (Request $req, Response $res) {
+/*$app->get('/getNewCourse', function (Request $req, Response $res) {
 
     $res->getBody()->write(PresentCourse::getNewCourse());
 });
+
+$app->get('/getFullCapacityCourse', function (Request $req, Response $res) {
+
+    $res->getBody()->write(PresentCourse::getNewCourse());
+});*/
 
 $app->get('/checkedServer', function (Request $req, Response $res) {
     $rezuelt = array();
@@ -191,6 +218,10 @@ $app->get('/getMs/{ac}', function (Request $req, Response $res) {
 
 $app->get('/upMs/{ac}', function (Request $req, Response $res) {
     $res->getBody()->write(PresenterTeacher::updateMadrakState($req->getAttribute('ac')));
+});
+
+$app->get('/test', function (Request $req, Response $res) {
+    $res->getBody()->write(stripos("شنبه-یکشنبه","شنبه"));
 });
 
 $app->run();

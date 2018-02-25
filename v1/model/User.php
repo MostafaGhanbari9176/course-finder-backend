@@ -111,4 +111,14 @@ class User
         return 0;
     }
 
+    public function getAcByPhone($phone)
+    {
+        $sql = "SELECT u.api_code FROM $this->tableName u WHERE u.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('s', $phone);
+        if ($result->execute())
+            return $result->get_result()->fetch_assoc()['api_code'];
+        return 0;
+    }
+
 }

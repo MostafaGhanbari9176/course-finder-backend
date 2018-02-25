@@ -28,4 +28,24 @@ class Tabaghe
         return 0;
     }
 
+    public function getGroupingSubjectByCourseId($id)
+    {
+        $sql = "SELECT t.subject FROM tabaghe t WHERE t.id = (SELECT c.tabaghe_id FROM cource c WHERE c.cource_id = ?)";
+        $resuelt = $this->con->prepare($sql);
+        $resuelt->bind_param('i', $id);
+        if ($resuelt->execute())
+            return $resuelt->get_result()->fetch_assoc()['subject'];
+        return 0;
+    }
+
+    public function getGroupingSubjectByGroupId($id)
+    {
+        $sql = "SELECT t.subject FROM tabaghe t WHERE t.id = ?";
+        $resuelt = $this->con->prepare($sql);
+        $resuelt->bind_param('i', $id);
+        if ($resuelt->execute())
+            return $resuelt->get_result()->fetch_assoc()['subject'];
+        return 0;
+    }
+
 }
