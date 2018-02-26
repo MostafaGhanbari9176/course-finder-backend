@@ -38,4 +38,13 @@ class Sabtenam
             return $result->get_result();
         return 0;
     }
+
+    public function getByUserIdAndCourseId($teacherId, $courseId){
+        $sql = "SELECT c.user_id FROM $this->tableName c WHERE c.cource_id = ? && c.teacher_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('is', $courseId, $teacherId);
+        if ($result->execute())
+            return $result->get_result();
+        return 0;
+    }
 }

@@ -35,6 +35,7 @@ class PresentCourse
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
             $course = array();
+            $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
@@ -142,7 +143,7 @@ class PresentCourse
         while ($row = $resuelt->fetch_assoc()) {
             $course = array();
             $course['id'] = $row['cource_id'];
-            $course['idTeacher'] = $row['teacher_id'];
+            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
             $course['CourseName'] = $row['subject'];
             $course['type'] = $row['type'];//
             $course['capacity'] = $row['capacity'];//
@@ -353,6 +354,7 @@ class PresentCourse
             $course['startDate'] = $sD;
             $course['minOld'] = $miOld;
             $course['maxOld'] = $maOld;*/
+            $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
@@ -390,7 +392,7 @@ class PresentCourse
             if (stripos($day, $d) != 0)
                 continue;
             $course = array();
-
+            $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
@@ -425,7 +427,7 @@ class PresentCourse
             if (!($startDate <= $eD && $eD <= $endDate))
                 continue;
             $course = array();
-
+            $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
@@ -463,6 +465,7 @@ class PresentCourse
             if (stripos($day, $d) != 0)
                 continue;
             $course = array();
+            $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);

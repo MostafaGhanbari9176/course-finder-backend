@@ -6,6 +6,7 @@
  * Time: 1:03 PM
  */
 require_once 'model/User.php';
+require_once 'model/Sabtenam.php';
 
 class PresentUser
 {
@@ -53,6 +54,28 @@ class PresentUser
         return json_encode($message);
     }
 
+    public static function getRegistrationsName($courseId, $acTeacher)
+    {
+        $idTeacher = (new User())->getPhoneByAc($acTeacher);
+        $sabtenam = new Sabtenam();
+        $resuelt1 = $sabtenam->getByUserIdAndCourseId($idTeacher, $courseId);
+        $res = array();
+        while ($row = $resuelt1->fetch_assoc()) {
+            $user['name'] = (new User())->getUser($row['user_id'])->fetch_assoc()['name'];
+            $user['apiCode'] = (new User())->getUser($row['user_id'])->fetch_assoc()['api_code'];
+            $res[] = $user;
+        }
+        if ($res) {
+            return json_encode($res);
+        } else {
+            $user = array();
+            $user['empty'] = 1;
+            $res[] = $user;
+            return json_encode($res);
+        }
+
+    }
+
     public static function updateUser($phone, $name)
     {
         $model = new User();
@@ -84,8 +107,10 @@ class PresentUser
         if ($res) {
             return json_encode($res);
         } else {
-            $res['erorr'] = "ok";
-            $res['empoty'] = "ok";
+            $user = array();
+            $user['erorr'] = "ok";
+            $user['empoty'] = "ok";
+            $res[] = $user;
             return json_encode($res);
         }
     }

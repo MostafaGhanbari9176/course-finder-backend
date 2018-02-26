@@ -207,6 +207,14 @@ $app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}', function (Request $req, R
 
 });
 
+$app->get('/getRegistrationsName/{idCourse}/{idTeacher}', function (Request $req, Response $res) {
+
+    $idCourse = $req->getAttribute('idCourse');
+    $acTeacher = $req->getAttribute('idTeacher');
+    $res->getBody()->write(PresentUser::getRegistrationsName($idCourse, $acTeacher));
+
+});
+
 $app->get('/saveComment/{ac}', function (Request $req, Response $res) {
     $id = $req->getAttribute('ac');
     $res->getBody()->write(PresentCourse::getByUserId($id));

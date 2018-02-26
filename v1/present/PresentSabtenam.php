@@ -10,12 +10,14 @@ require_once 'model/User.php';
 
 class PresentSabtenam
 {
-    public static function add($idCourse, $idTeacher, $idUser)
+    public static function add($idCourse, $acTeacher, $acUser)
     {
+        $idTeacher = (new User())->getPhoneByAc($acTeacher);
+        $idUser = (new User())->getPhoneByAc($acUser);
         $result = 2;
         if (self::checkValieded($idUser, $idCourse)) {
             $sabtenam = new Sabtenam();
-            $result = $sabtenam->add($idCourse, $idTeacher, $idUser, self::getDate());
+            $result = $sabtenam->add($idCourse, $idTeacher, $idUser, getJDate(null));
         }
         $res = array();
         $res["code"] = $result;
@@ -23,7 +25,6 @@ class PresentSabtenam
         $message[] = $res;
         return json_encode($message);
     }
-
 
     public static function checkValieded($idUser, $idCourse)
     {
@@ -36,8 +37,7 @@ class PresentSabtenam
         return true;
     }
 
-    static function getDate()
-    {
-        return date("Y/m/d");
-    }
+
+
+
 }
