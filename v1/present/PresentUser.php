@@ -61,8 +61,8 @@ class PresentUser
         $resuelt1 = $sabtenam->getByUserIdAndCourseId($idTeacher, $courseId);
         $res = array();
         while ($row = $resuelt1->fetch_assoc()) {
-            $user['name'] = (new User())->getUser($row['user_id'])->fetch_assoc()['name'];
-            $user['apiCode'] = (new User())->getUser($row['user_id'])->fetch_assoc()['api_code'];
+            $user['name'] = (new User())->getUserName($row['user_id']);
+            $user['apiCode'] = (new User())->getAcByPhone($row['user_id']);
             $res[] = $user;
         }
         if ($res) {

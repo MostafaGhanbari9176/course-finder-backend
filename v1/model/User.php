@@ -121,4 +121,13 @@ class User
         return 0;
     }
 
+    public function getUserName($phone){
+
+        $sql = "SELECT u.name FROM $this->tableName u WHERE u.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param("s", $phone);
+        $result->execute();
+        return $result->get_result()->fetch_assoc()['name'];
+    }
+
 }

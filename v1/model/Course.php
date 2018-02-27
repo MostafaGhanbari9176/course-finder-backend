@@ -50,6 +50,17 @@ class Course
         return 0;
     }
 
+    public function getCourseName($courceId)
+    {
+
+        $sql = "SELECT c.subject FROM $this->tablename c WHERE c.cource_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('i', $courceId);
+        $result->execute();
+        return $result->get_result()->fetch_assoc()['subject'];
+
+    }
+
     public function getCourseById($id)
     {
         $sql = "SELECT * FROM $this->tablename c WHERE c.cource_id = ?";

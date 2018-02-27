@@ -19,6 +19,7 @@ require 'present/PresentGrouping.php';
 require 'Present/PresentCourse.php';
 require 'Present/PresentSabtenam.php';
 require 'jdf.php';
+require 'present/PresentSmsBox.php';
 
 
 $app = new \Slim\App;
@@ -226,6 +227,38 @@ $app->get('/getMs/{ac}', function (Request $req, Response $res) {
 
 $app->get('/upMs/{ac}', function (Request $req, Response $res) {
     $res->getBody()->write(PresenterTeacher::updateMadrakState($req->getAttribute('ac')));
+});
+
+$app->get('/saveSms/{text}/{tsId}/{rsId}/{courseId}/{howSending}',function (Request $req, Response $res){
+
+    $text = $req->getAttribute('text');
+    $tsId = $req->getAttribute('tsId');
+    $rsId = $req->getAttribute('rsId');
+    $courseId = $req->getAttribute('courseId');
+    $howSending = $req->getAttribute('howSending');
+    $res->getBody()->write(PresentSmsBox::saveSms($text, $tsId, $rsId, $courseId, $howSending));
+
+});
+
+$app->get('/getRsSms/{rsId}',function (Request $req, Response $res){
+
+    $rsId = $req->getAttribute('rsId');
+    $res->getBody()->write(PresentSmsBox::getRsSms($rsId));
+
+});
+
+$app->get('/getTsSms/{tsId}',function (Request $req, Response $res){
+
+    $tsId = $req->getAttribute('tsId');
+    $res->getBody()->write(PresentSmsBox::getTsSms($tsId));
+
+});
+
+$app->get('/upDateSeen/{id}',function (Request $req, Response $res){
+
+    $id = $req->getAttribute('id');
+    $res->getBody()->write(PresentSmsBox::upDateSeen($id));
+
 });
 
 $app->get('/test', function (Request $req, Response $res) {

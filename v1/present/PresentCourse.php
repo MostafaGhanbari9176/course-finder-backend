@@ -288,7 +288,14 @@ class PresentCourse
             }
         }
 
-        return json_encode($res);
+        if ($res) {
+            return json_encode($res);
+        } else {
+            $course = array();
+            $course['empty'] = 1;
+            $res[] = $course;
+            return json_encode($res);
+        }
     }
 
     static function creatGroupingArr($id)
