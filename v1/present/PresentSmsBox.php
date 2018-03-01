@@ -92,4 +92,14 @@ class PresentSmsBox
         return json_encode($message);
     }
 
+    public static function deleteSms($id){
+        $model = new SmsBox();
+        $result = $model->deleteSms($id);
+        $res = array();
+        $res['code'] = $result;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+    }
+
 }

@@ -261,6 +261,14 @@ $app->get('/upDateSeen/{id}',function (Request $req, Response $res){
 
 });
 
+
+$app->get('/deleteSms/{id}',function (Request $req, Response $res){
+
+    $id = $req->getAttribute('id');
+    $res->getBody()->write(PresentSmsBox::deleteSms($id));
+
+});
+
 $app->get('/test', function (Request $req, Response $res) {
     $res->getBody()->write(stripos("شنبه-یکشنبه","شنبه"));
 });

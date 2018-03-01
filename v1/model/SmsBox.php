@@ -60,4 +60,14 @@ class SmsBox
 
     }
 
+    public function deleteSms($id){
+
+        $sql = "DELETE FROM $this->tableName WHERE id = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('i', $id);
+        if($result->execute())
+            return 1;
+        return 0;
+    }
+
 }
