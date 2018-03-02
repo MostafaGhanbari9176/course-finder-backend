@@ -35,8 +35,11 @@ class PresentSmsBox
         while ($row = $result->fetch_assoc()) {
             $sms = array();
             $sms['id'] = $row['id'];
-            $sms['tsId'] = $row['ts_id'];
+            $sms['tsId'] = (new User())->getAcByPhone($row['ts_id']);
             $sms['text'] = $row['text'];
+            $sms['date'] = $row['date'];
+            $sms['seen'] = $row['seen_flag'];
+            $sms['courseId'] = $row['course_id'];
             if ($row['how_sending'] == 0)
                 $sms['tsName'] = (new User())->getUserName($row['ts_id']);
             else
@@ -63,12 +66,15 @@ class PresentSmsBox
         while ($row = $result->fetch_assoc()) {
             $sms = array();
             $sms['id'] = $row['id'];
-            $sms['rsId'] = $row['rs_id'];
+            $sms['rsId'] = (new User())->getAcByPhone($row['rs_id']);
             $sms['text'] = $row['text'];
-            if ($row['how_sending'] == 0)
+            $sms['date'] = $row['date'];
+            $sms['seen'] = $row['seen_flag'];
+            $sms['courseId'] = $row['course_id'];
+//            if ($row['how_sending'] == 0)
                 $sms['rsName'] = (new User())->getUserName($row['rs_id']);
-            else
-                $sms['rsName'] = "آموزشگاه ".(new Teacher())->getTeacherName($row['rs_id']);
+/*            else
+                $sms['rsName'] = "آموزشگاه ".(new Teacher())->getTeacherName($row['rs_id']);*/
             $sms['courseName'] = (new Course())->getCourseName($row['course_id']);
             $res[] = $sms;
         }
