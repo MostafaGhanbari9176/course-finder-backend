@@ -37,6 +37,17 @@ class PresentSabtenam
         return true;
     }
 
+    public static function updateCanceledFlag($sabteNameId, $code)
+    {
+        $model = new Sabtenam();
+        $resuelt = $model->updatecanceledFlag($sabteNameId ,$code);
+        $res = array();
+        $res['code'] = $resuelt;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+    }
+
 
 
 

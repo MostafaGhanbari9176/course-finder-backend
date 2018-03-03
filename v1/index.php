@@ -269,8 +269,26 @@ $app->get('/deleteSms/{id}',function (Request $req, Response $res){
 
 });
 
+$app->get('/updateDeletedFlag/{courseId}/{code}',function (Request $req, Response $res){
+
+    $id = $req->getAttribute('courseId');
+    $code = $req->getAttribute('code');
+    $res->getBody()->write(PresentCourse::updateDeletedFlag($id,$code));
+
+});
+
+$app->get('/updateCanceledFlag/{sabtenamId}/{code}',function (Request $req, Response $res){
+
+    $id = $req->getAttribute('sabtenamId');
+    $code = $req->getAttribute('code');
+    $res->getBody()->write(PresentSabtenam::updateCanceledFlag($id, $code));
+
+});
+
+
+
 $app->get('/test', function (Request $req, Response $res) {
-    $res->getBody()->write(stripos("شنبه-یکشنبه","شنبه"));
+    $res->getBody()->write(stripos("@godhelot1#gmail.com","@"));
 });
 
 $app->run();

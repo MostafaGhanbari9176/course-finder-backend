@@ -50,6 +50,17 @@ class Course
         return 0;
     }
 
+    public function updateDeletedFlag($courseId, $code)
+    {
+
+        $sql = "UPDATE $this->tablename c SET is_deleted = ? WHERE c.cource_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('ii',$code,$courseId);
+        if ($result->execute())
+            return 1;
+        return 0;
+    }
+
     public function getCourseName($courceId)
     {
 

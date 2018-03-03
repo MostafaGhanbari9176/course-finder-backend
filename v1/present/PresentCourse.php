@@ -34,6 +34,8 @@ class PresentCourse
         $resuelt = $course->getAllCourse();
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
+            if ($row['is_deleted'] != 0)
+                continue;
             $course = array();
             $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
@@ -135,6 +137,17 @@ class PresentCourse
             }
         }*/
 
+    public static function updateDeletedFlag($courseId, $code)
+    {
+        $model = new Course();
+        $resuelt = $model->updateDeletedFlag($courseId ,$code);
+        $res = array();
+        $res['code'] = $resuelt;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+    }
+
     public static function getCourseById($id)
     {
         $course = new Course();
@@ -215,27 +228,21 @@ class PresentCourse
         $resuelt1 = $sabtenam->getByUserId($phone);
 
         $res = array();
-        while ($courseId = $resuelt1->fetch_assoc()) {
+        while ($sabtenam = $resuelt1->fetch_assoc()) {
             $course = new Course();
-            $resuelt = $course->getCourseById($courseId['cource_id']);
+            $resuelt = $course->getCourseById($sabtenam['cource_id']);
+
             while ($row = $resuelt->fetch_assoc()) {
+                if ($row['is_deleted'] == 2 ||  $sabtenam['is_canceled'] == 2)
+                    continue;
                 $course = array();
                 $course['id'] = $row['cource_id'];
-                $course['idTeacher'] = $row['teacher_id'];
+                $course['isCanceled'] = $sabtenam['is_canceled'];
+                $course['sabtenamId'] = (new Sabtenam())->getSabtenamIdByUserIdAndCourseId($sabtenam['user_id'], $row['cource_id']);
                 $course['CourseName'] = $row['subject'];
-                $course['type'] = $row['type'];//
-                $course['capacity'] = $row['capacity'];//
-                $course['mony'] = $row['mony'];//
-                $course['sharayet'] = $row['sharayet'];//
-                $course['tozihat'] = $row['tozihat'];//
-                $course['endDate'] = $row['end_date'];//
-                $course['day'] = $row['day'];//
-                $course['hours'] = $row['hours'];//
-                $course['range'] = $row['min_old'];//
-                $course['idTabaghe'] = $row['tabaghe_id'];//
                 $course['startDate'] = $row['start_date'];
+                $course['isDeleted'] = $row['is_deleted'];
                 $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
-                $course['tabaghe'] = (new Tabaghe())->getGroupingSubjectByCourseId($row['cource_id']);
                 $res[] = $course;
             }
         }
@@ -357,10 +364,10 @@ class PresentCourse
             if (!($startDate <= $eD && $eD <= $endDate))
                 continue;
             $course = array();
-/*            $course['endDate'] = $eD;
-            $course['startDate'] = $sD;
-            $course['minOld'] = $miOld;
-            $course['maxOld'] = $maOld;*/
+            /*            $course['endDate'] = $eD;
+                        $course['startDate'] = $sD;
+                        $course['minOld'] = $miOld;
+                        $course['maxOld'] = $maOld;*/
             $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
