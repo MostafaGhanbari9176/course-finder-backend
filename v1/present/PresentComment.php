@@ -13,7 +13,6 @@ class PresentComment
     public static function saveComment($userId, $teacherId, $courseId, $rat, $comment)
     {
         if (!(self::checkAvailable($userId, $courseId))) {
-
             $model = new Comment();
             $result = $model->saveComment($userId, $teacherId, $courseId, $rat, $comment, self::getDate());
         } else {

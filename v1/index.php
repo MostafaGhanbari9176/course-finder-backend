@@ -208,6 +208,13 @@ $app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}', function (Request $req, R
 
 });
 
+$app->get('/checkSabtenam/{idCourse}/{idUser}', function (Request $req, Response $res) {
+    $idCourse = $req->getAttribute('idCourse');
+    $idUser = $req->getAttribute('idUser');
+    $res->getBody()->write(PresentSabtenam::checkValieded($idUser, $idCourse));
+
+});
+
 $app->get('/getRegistrationsName/{idCourse}/{idTeacher}', function (Request $req, Response $res) {
 
     $idCourse = $req->getAttribute('idCourse');

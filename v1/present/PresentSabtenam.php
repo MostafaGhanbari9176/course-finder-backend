@@ -14,11 +14,8 @@ class PresentSabtenam
     {
         $idTeacher = (new User())->getPhoneByAc($acTeacher);
         $idUser = (new User())->getPhoneByAc($acUser);
-        $result = 2;
-        if (self::checkValieded($idUser, $idCourse)) {
-            $sabtenam = new Sabtenam();
-            $result = $sabtenam->add($idCourse, $idTeacher, $idUser, getJDate(null));
-        }
+        $sabtenam = new Sabtenam();
+        $result = $sabtenam->add($idCourse, $idTeacher, $idUser, getJDate(null));
         $res = array();
         $res["code"] = $result;
         $message = array();
@@ -26,29 +23,36 @@ class PresentSabtenam
         return json_encode($message);
     }
 
-    public static function checkValieded($idUser, $idCourse)
+    public static function checkValieded($acUser, $idCourse)
     {
+        $idUser = (new User())->getPhoneByAc($acUser);
         $sabtenam = new Sabtenam();
         $resuelt1 = $sabtenam->getByUserId($idUser);
+        $result = 0;
         while ($row = $resuelt1->fetch_assoc()) {
-            if ($idCourse == $row['cource_id'])
-                return false;
+            if ($idCourse == $row['cource_id']) {
+                $result = 1;
+                break;
+            }
         }
-        return true;
+        $res = array();
+        $res["code"] = $result;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+
     }
 
     public static function updateCanceledFlag($sabteNameId, $code)
     {
         $model = new Sabtenam();
-        $resuelt = $model->updatecanceledFlag($sabteNameId ,$code);
+        $resuelt = $model->updatecanceledFlag($sabteNameId, $code);
         $res = array();
         $res['code'] = $resuelt;
         $message = array();
         $message[] = $res;
         return json_encode($message);
     }
-
-
 
 
 }
