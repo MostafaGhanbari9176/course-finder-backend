@@ -7,6 +7,7 @@
  */
 require_once 'model/Sabtenam.php';
 require_once 'model/User.php';
+require_once 'model/Comment.php';
 
 class PresentSabtenam
 {
@@ -28,13 +29,15 @@ class PresentSabtenam
         $idUser = (new User())->getPhoneByAc($acUser);
         $sabtenam = new Sabtenam();
         $resuelt1 = $sabtenam->getByUserId($idUser);
-        $result = 0;
+        $result = -1;
         while ($row = $resuelt1->fetch_assoc()) {
             if ($idCourse == $row['cource_id']) {
-                $result = 1;
+                $result = (new Comment())->getRatByCourseIdAndUserId($idCourse, $idUser);
                 break;
             }
         }
+        if ($result == null)
+            $result = 0;
         $res = array();
         $res["code"] = $result;
         $message = array();

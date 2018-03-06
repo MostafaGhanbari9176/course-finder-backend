@@ -18,6 +18,7 @@ require 'present/PresenterTeacher.php';
 require 'present/PresentGrouping.php';
 require 'Present/PresentCourse.php';
 require 'Present/PresentSabtenam.php';
+require 'Present/PresentComment.php';
 require 'jdf.php';
 require 'present/PresentSmsBox.php';
 
@@ -223,9 +224,30 @@ $app->get('/getRegistrationsName/{idCourse}/{idTeacher}', function (Request $req
 
 });
 
-$app->get('/saveComment/{ac}', function (Request $req, Response $res) {
-    $id = $req->getAttribute('ac');
-    $res->getBody()->write(PresentCourse::getByUserId($id));
+$app->get('/saveComment/{commentText}/{userId}/{courseId}/{teacherId}/{teacherRat}/{courseRat}', function (Request $req, Response $res) {
+    $commentText = $req->getAttribute('commentText');
+    $userId = $req->getAttribute('userId');
+    $courseId = $req->getAttribute('courseId');
+    $teacherId = $req->getAttribute('teacherId');
+    $teacherRat = $req->getAttribute('teacherRat');
+    $courseRat = $req->getAttribute('courseRat');
+    $res->getBody()->write(PresentComment::saveComment($commentText, $userId, $courseId, $teacherId, $teacherRat, $courseRat));
+});
+
+$app->get('/updateComment/{id}/{commentText}/{userId}/{courseId}/{teacherId}/{teacherRat}/{courseRat}', function (Request $req, Response $res) {
+    $id = $req->getAttribute('id');
+    $commentText = $req->getAttribute('commentText');
+    $userId = $req->getAttribute('userId');
+    $courseId = $req->getAttribute('courseId');
+    $teacherId = $req->getAttribute('teacherid');
+    $teacherRat = $req->getAttribute('teacherRat');
+    $courseRat = $req->getAttribute('courseRat');
+    $res->getBody()->write(PresentComment::upDateComment($id, $commentText, $userId, $courseId, $teacherId, $teacherRat, $courseRat));
+});
+
+$app->get('/getCommentByTeacherId/{teacherId}', function(Request $req, Response $res){
+    $teacherId = $req->getAttribute('teacherId');
+    $res->getBody()->write(PresentComment::getCommentByTeacherId($teacherId));
 });
 
 $app->get('/getMs/{ac}', function (Request $req, Response $res) {

@@ -42,6 +42,7 @@ class PresenterTeacher
         while ($row = $rezult->fetch_assoc()) {
             $teacher = array();
             $teacher['landPhone'] = $row['land_phone'];
+            $teacher['phone'] = $row['phone'];
             $teacher['type'] = $row['type'];
             $teacher['m'] = $row['madrak'];
             $teacher['subject'] = $row['subject'];
