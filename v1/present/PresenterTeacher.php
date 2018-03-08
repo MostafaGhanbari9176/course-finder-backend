@@ -8,7 +8,7 @@
 require_once 'model/Teacher.php';
 require_once 'model/City.php';
 require_once 'model/User.php';
-require_once 'present/PresentComment.php';
+
 
 
 class PresenterTeacher
@@ -37,6 +37,7 @@ class PresenterTeacher
 
     public static function getTeacher($ac)
     {
+
         $teacher = new Teacher();
         $rezult = $teacher->getTeacher((new User())->getPhoneByAc($ac));
         $res = array();
@@ -56,7 +57,7 @@ class PresenterTeacher
             return json_encode($res);
         } else {
             $res['erorr'] = "ok";
-            $res['empoty'] = "ok";
+            $res['empty'] = "ok";
             return json_encode($res);
         }
     }

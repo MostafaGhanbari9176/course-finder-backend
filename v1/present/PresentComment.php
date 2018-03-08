@@ -97,6 +97,7 @@ require_once 'model/Course.php';
 
     public static function calculateTeacherRat($acTeacher)
     {
+
         $teacherId = (new User())->getPhoneByAc($acTeacher);
         $comment = new Comment();
         $resuelt = $comment->getTeacherRat($teacherId);

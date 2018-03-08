@@ -224,7 +224,7 @@ $app->get('/getRegistrationsName/{idCourse}/{idTeacher}', function (Request $req
 
 });
 
-$app->get('/saveComment/{commentText}/{userId}/{courseId}/{teacherId}/{teacherRat}/{courseRat}', function (Request $req, Response $res) {
+$app->get('/saveComment/{commentText}/{userId}/{courseId}/{teacherId}/{teacherRat}', function (Request $req, Response $res) {
     $commentText = $req->getAttribute('commentText');
     $userId = $req->getAttribute('userId');
     $courseId = $req->getAttribute('courseId');

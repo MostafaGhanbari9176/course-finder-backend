@@ -35,7 +35,7 @@ class comment
     {
         $sql = "INSERT INTO $this->tableName (course_id, user_id, teacher_id, course_rat) VALUES (?,?,?,?)";
         $rezult = $this->con->prepare($sql);
-        $rezult->bind_param('issi', $commentText, $courseId, $userId, $teacherId, $courseRat);
+        $rezult->bind_param('issi',$courseId, $userId, $teacherId, $courseRat);
         if ($rezult->execute())
             return 1;
         return 0;
@@ -46,7 +46,7 @@ class comment
         $vaziat = 0;
         $sql = "UPDATE $this->tableName c SET user_id = ?, course_id= ?, teacher_id = ?, teacher_rat = ?, comment_text = ?, cm_date = ?, vaziat = ? WHERE c.id = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('sisiisisi', $userId, $courseId, $teacherId, $teacherRat, $commentText, $id, $date, $vaziat);
+        $result->bind_param('sisissii', $userId, $courseId, $teacherId, $teacherRat, $commentText, $date, $vaziat, $id);
         if ($result->execute())
             return 1;
         return 0;
