@@ -1,13 +1,14 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: M-gh
+ * User: RCC1
  * Date: 27-Dec-17
  * Time: 4:56 PM
  */
 require_once 'model/Teacher.php';
 require_once 'model/City.php';
 require_once 'model/User.php';
+require_once 'present/PresentComment.php';
 
 
 class PresenterTeacher
@@ -42,6 +43,7 @@ class PresenterTeacher
         while ($row = $rezult->fetch_assoc()) {
             $teacher = array();
             $teacher['landPhone'] = $row['land_phone'];
+            $teacher['teacherRat'] = PresentComment::calculateTeacherRat($ac);
             $teacher['phone'] = $row['phone'];
             $teacher['type'] = $row['type'];
             $teacher['m'] = $row['madrak'];
@@ -106,7 +108,7 @@ class PresenterTeacher
         return json_encode($message);
     }
 
-    public static function getMadrakState($ac)
+    public static function getMadrakStateAndRat($ac)
     {
         $phone = (new User())->getPhoneByAc($ac);
         $teacher = new Teacher();
@@ -114,12 +116,16 @@ class PresenterTeacher
         $res = array();
         if ($rezult == -1) {
             $res['ms'] = base64_encode((base64_encode("error")));
+            $res['code'] = -1;
         } else if ($rezult == 0) {
             $res['ms'] = base64_encode((base64_encode("notbar")));
+            $res['code'] = -1;
         } else if ($rezult == 1) {
             $res['ms'] = base64_encode((base64_encode("yesbarnotok")));
+            $res['code'] = -1;
         } else if ($rezult == 2) {
             $res['ms'] = base64_encode((base64_encode("barok")));
+            $res['code'] = (new PresentComment())->calculateTeacherRat($ac);
         }
         //  $res['code'] = $rezult;
         $message = array();

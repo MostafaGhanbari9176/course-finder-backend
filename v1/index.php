@@ -230,11 +230,11 @@ $app->get('/saveComment/{commentText}/{userId}/{courseId}/{teacherId}/{teacherRa
     $courseId = $req->getAttribute('courseId');
     $teacherId = $req->getAttribute('teacherId');
     $teacherRat = $req->getAttribute('teacherRat');
-    $courseRat = $req->getAttribute('courseRat');
-    $res->getBody()->write(PresentComment::saveComment($commentText, $userId, $courseId, $teacherId, $teacherRat, $courseRat));
+
+    $res->getBody()->write(PresentComment::saveComment($commentText, $userId, $courseId, $teacherId, $teacherRat));
 });
 
-$app->get('/updateComment/{id}/{commentText}/{userId}/{courseId}/{teacherId}/{teacherRat}/{courseRat}', function (Request $req, Response $res) {
+/*$app->get('/updateComment/{id}/{commentText}/{userId}/{courseId}/{teacherId}/{teacherRat}/{courseRat}', function (Request $req, Response $res) {
     $id = $req->getAttribute('id');
     $commentText = $req->getAttribute('commentText');
     $userId = $req->getAttribute('userId');
@@ -243,15 +243,24 @@ $app->get('/updateComment/{id}/{commentText}/{userId}/{courseId}/{teacherId}/{te
     $teacherRat = $req->getAttribute('teacherRat');
     $courseRat = $req->getAttribute('courseRat');
     $res->getBody()->write(PresentComment::upDateComment($id, $commentText, $userId, $courseId, $teacherId, $teacherRat, $courseRat));
+});*/
+
+$app->get('/saveCourseRat/{userId}/{courseId}/{teacherId}/{courseRat}', function (Request $req, Response $res) {
+    $userId = $req->getAttribute('userId');
+    $courseId = $req->getAttribute('courseId');
+    $teacherId = $req->getAttribute('teacherId');
+    $courseRat = $req->getAttribute('courseRat');
+    $res->getBody()->write(PresentComment::saveCourseRat($userId, $courseId, $teacherId, $courseRat));
 });
+
 
 $app->get('/getCommentByTeacherId/{teacherId}', function(Request $req, Response $res){
     $teacherId = $req->getAttribute('teacherId');
     $res->getBody()->write(PresentComment::getCommentByTeacherId($teacherId));
 });
 
-$app->get('/getMs/{ac}', function (Request $req, Response $res) {
-    $res->getBody()->write(PresenterTeacher::getMadrakState($req->getAttribute('ac')));
+$app->get('/getMsAndRat/{ac}', function (Request $req, Response $res) {
+    $res->getBody()->write(PresenterTeacher::getMadrakStateAndRat($req->getAttribute('ac')));
 });
 
 $app->get('/upMs/{ac}', function (Request $req, Response $res) {

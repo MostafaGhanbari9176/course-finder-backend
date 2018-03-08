@@ -21,29 +21,67 @@ class comment
         mysqli_set_charset($this->con, "UTF8");
     }
 
-    public function saveComment($commentText, $userId, $courseId, $teacherId, $teacherRat, $courseRat, $date)
+    public function saveComment($commentText, $userId, $courseId, $teacherId, $teacherRat, $date)
     {
-        $sql = "INSERT INTO $this->tableName (comment_text, course_id, user_id, teacher_id, course_rat, teacher_rat, cm_date) VALUES (?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO $this->tableName (comment_text, course_id, user_id, teacher_id, teacher_rat, cm_date) VALUES (?,?,?,?,?,?)";
         $rezult = $this->con->prepare($sql);
-        $rezult->bind_param('sissiis', $commentText, $courseId, $userId, $teacherId, $courseRat, $teacherRat, $date);
+        $rezult->bind_param('sissis', $commentText, $courseId, $userId, $teacherId, $teacherRat, $date);
         if ($rezult->execute())
             return 1;
         return 0;
     }/////////////checked
 
-    public function upDateComment($id, $commentText, $userId, $courseId, $teacherId, $teacherRat, $courseRat)
+    public function saveCourseRat($userId, $courseId, $teacherId, $courseRat)
     {
-        $sql = "UPDATE $this->tableName c SET user_id = ?, course_id= ?, teacher_id = ?, teacher_rat = ?, course_rat = ?, comment_text = ? WHERE c.id = ?";
+        $sql = "INSERT INTO $this->tableName (course_id, user_id, teacher_id, course_rat) VALUES (?,?,?,?)";
+        $rezult = $this->con->prepare($sql);
+        $rezult->bind_param('issi', $commentText, $courseId, $userId, $teacherId, $courseRat);
+        if ($rezult->execute())
+            return 1;
+        return 0;
+    }
+
+    public function upDateComment($id, $commentText, $userId, $courseId, $teacherId, $teacherRat, $date)
+    {
+        $vaziat = 0;
+        $sql = "UPDATE $this->tableName c SET user_id = ?, course_id= ?, teacher_id = ?, teacher_rat = ?, comment_text = ?, cm_date = ?, vaziat = ? WHERE c.id = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('sisiisi', $userId, $courseId, $teacherId, $teacherRat, $courseRat, $commentText, $id);
+        $result->bind_param('sisiisisi', $userId, $courseId, $teacherId, $teacherRat, $commentText, $id, $date, $vaziat);
         if ($result->execute())
             return 1;
         return 0;
     }/////////////checked
 
+    public function upDateCourseRat($id, $courseRat){
+        $sql = "UPDATE $this->tableName c SET course_rat = ? WHERE c.id = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('ii', $courseRat, $id);
+        if ($result->execute())
+            return 1;
+        return 0;
+    }
+
     public function getCommentByTeacherId($teacherId)
     {
         $sql = " SELECT * FROM $this->tableName c WHERE c.teacher_id = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('s', $teacherId);
+        if ($result->execute())
+            return $result->get_result();
+        return 0;
+    }
+
+    public function getCourseRat($courseId){
+        $sql = " SELECT c.course_rat FROM $this->tableName c WHERE c.course_id = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('s', $courseId);
+        if ($result->execute())
+            return $result->get_result();
+        return 0;
+    }
+
+    public function getTeacherRat($teacherId){
+        $sql = " SELECT c.teacher_rat , c.vaziat FROM $this->tableName c WHERE c.teacher_id = ?";
         $result = $this->con->prepare($sql);
         $result->bind_param('s', $teacherId);
         if ($result->execute())

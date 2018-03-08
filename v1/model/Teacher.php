@@ -55,7 +55,7 @@ class Teacher
 
     public function getMadrakState($phone)
     {
-        $sql = "SELECT t.madrak FROM $this->tableName t WHERE phone = ?";
+        $sql = "SELECT t.madrak  FROM $this->tableName t WHERE phone = ?";
         $rezult = $this->con->prepare($sql);
         $rezult->bind_param('s', $phone);
         if ($rezult->execute())
