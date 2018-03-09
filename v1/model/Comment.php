@@ -25,7 +25,7 @@ class comment
     {
         $sql = "INSERT INTO $this->tableName (comment_text, course_id, user_id, teacher_id, teacher_rat, cm_date) VALUES (?,?,?,?,?,?)";
         $rezult = $this->con->prepare($sql);
-        $rezult->bind_param('sissis', $commentText, $courseId, $userId, $teacherId, $teacherRat, $date);
+        $rezult->bind_param('sissds', $commentText, $courseId, $userId, $teacherId, $teacherRat, $date);
         if ($rezult->execute())
             return 1;
         return 0;
@@ -35,7 +35,7 @@ class comment
     {
         $sql = "INSERT INTO $this->tableName (course_id, user_id, teacher_id, course_rat) VALUES (?,?,?,?)";
         $rezult = $this->con->prepare($sql);
-        $rezult->bind_param('issi',$courseId, $userId, $teacherId, $courseRat);
+        $rezult->bind_param('issd', $courseId, $userId, $teacherId, $courseRat);
         if ($rezult->execute())
             return 1;
         return 0;
@@ -46,16 +46,43 @@ class comment
         $vaziat = 0;
         $sql = "UPDATE $this->tableName c SET user_id = ?, course_id= ?, teacher_id = ?, teacher_rat = ?, comment_text = ?, cm_date = ?, vaziat = ? WHERE c.id = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('sisissii', $userId, $courseId, $teacherId, $teacherRat, $commentText, $date, $vaziat, $id);
+        $result->bind_param('sisdssii', $userId, $courseId, $teacherId, $teacherRat, $commentText, $date, $vaziat, $id);
         if ($result->execute())
             return 1;
         return 0;
     }/////////////checked
 
-    public function upDateCourseRat($id, $courseRat){
+    public function getCommentById($commentId)
+    {
+        $sql = " SELECT * FROM $this->tableName c WHERE c.id = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('i', $commentId);
+        $result->execute();
+        return $result->get_result();
+
+    }
+
+    public function changeLike($likeNum, $commentId)
+    {
+        $sql = "UPDATE $this->tableName c SET like_num = ? WHERE c.id = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('ii', $likeNum, $commentId);
+        $result->execute();
+    }
+
+    public function changeDisLike($disLikeNum, $commentId)
+    {
+        $sql = "UPDATE $this->tableName c SET dislike_num = ? WHERE c.id = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('ii', $disLikeNum, $commentId);
+        $result->execute();
+    }
+
+    public function upDateCourseRat($id, $courseRat)
+    {
         $sql = "UPDATE $this->tableName c SET course_rat = ? WHERE c.id = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('ii', $courseRat, $id);
+        $result->bind_param('di', $courseRat, $id);
         if ($result->execute())
             return 1;
         return 0;
@@ -71,7 +98,8 @@ class comment
         return 0;
     }
 
-    public function getCourseRat($courseId){
+    public function getCourseRat($courseId)
+    {
         $sql = " SELECT c.course_rat FROM $this->tableName c WHERE c.course_id = ?";
         $result = $this->con->prepare($sql);
         $result->bind_param('s', $courseId);
@@ -80,7 +108,8 @@ class comment
         return 0;
     }
 
-    public function getTeacherRat($teacherId){
+    public function getTeacherRat($teacherId)
+    {
         $sql = " SELECT c.teacher_rat , c.vaziat FROM $this->tableName c WHERE c.teacher_id = ?";
         $result = $this->con->prepare($sql);
         $result->bind_param('s', $teacherId);

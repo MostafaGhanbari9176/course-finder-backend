@@ -35,7 +35,7 @@ class Sabtenam
     {
         $sql = "SELECT * FROM $this->tableName c WHERE c.user_id = ?";
         $result = $this->conn->prepare($sql);
-        $result->bind_param('i', $id);
+        $result->bind_param('s', $id);
         if ($result->execute())
             return $result->get_result();
         return 0;

@@ -259,6 +259,13 @@ $app->get('/getCommentByTeacherId/{teacherId}', function(Request $req, Response 
     $res->getBody()->write(PresentComment::getCommentByTeacherId($teacherId));
 });
 
+$app->get('/commentFeedBack/{userId}/{commentId}/{isLicked}', function (Request $req, Response $res) {
+    $userId = $req->getAttribute('userId');
+    $commentId = $req->getAttribute('commentId');
+    $isLicked = $req->getAttribute('isLicked');
+    $res->getBody()->write(PresentComment::feedBackComment($userId, $commentId, $isLicked));
+});
+
 $app->get('/getMsAndRat/{ac}', function (Request $req, Response $res) {
     $res->getBody()->write(PresenterTeacher::getMadrakStateAndRat($req->getAttribute('ac')));
 });

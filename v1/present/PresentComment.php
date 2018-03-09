@@ -8,8 +8,9 @@
 require_once 'model/Comment.php';
 require_once 'model/User.php';
 require_once 'model/Course.php';
+require_once 'model/LikeSaver.php';
 
- class PresentComment
+class PresentComment
 {
 
     public static function saveComment($commentText, $acUser, $courseId, $acTeacher, $teacherRat)
@@ -18,10 +19,10 @@ require_once 'model/Course.php';
         $teacherId = (new User())->getPhoneByAc($acTeacher);
         if (!(self::checkAvailable($userId, $courseId))) {
             $model = new Comment();
-            $result = $model->saveComment($commentText, $userId, $courseId, $teacherId, $teacherRat, self::getDate());
+            $result = $model->saveComment($commentText, $userId, $courseId, $teacherId, $teacherRat, getJDate(null));
         } else {
             $model = new Comment();
-            $result = $model->upDateComment(self::checkAvailable($userId, $courseId), $commentText, $userId, $courseId, $teacherId, $teacherRat, self::getDate());
+            $result = $model->upDateComment(self::checkAvailable($userId, $courseId), $commentText, $userId, $courseId, $teacherId, $teacherRat, getJDate(null));
         }
         $res = array();
         $res['code'] = $result;
@@ -30,10 +31,10 @@ require_once 'model/Course.php';
         return json_encode($message);
     }////////////checked
 
-    public static function saveCourseRat($acUser, $courseId, $teacherId, $courseRat)
+    public static function saveCourseRat($acUser, $courseId, $acTeacher, $courseRat)
     {
         $userId = (new User())->getPhoneByAc($acUser);
-
+        $teacherId = (new User())->getPhoneByAc($acTeacher);
         if (!(self::checkAvailable($userId, $courseId))) {
             $model = new Comment();
             $result = $model->saveCourseRat($userId, $courseId, $teacherId, $courseRat);
@@ -48,7 +49,63 @@ require_once 'model/Course.php';
         return json_encode($message);
     }
 
-    public static function getCommentByTeacherId($acTeacher)
+
+    public static function feedBackComment($acUser, $commentId, $isLicked)
+    {
+
+        $userId = (new User())->getPhoneByAc($acUser);
+        $model = new LikeSaver();
+        if ($model->checkValidation($userId, $commentId, $isLicked))
+            $result = 0;
+        else {
+            if ($model->checkForInverting($userId, $commentId)) {
+                $result = $model->upDateLike($userId, $commentId, $isLicked);
+                if ($result == 1 && $isLicked == 1) {
+                    self::changeLike(1, $commentId);
+                    self::changeDisLike(-1, $commentId);
+                } else if ($result == 1 && $isLicked == 0) {
+                    self::changeDisLike(1, $commentId);
+                    self::changeLike(-1, $commentId);
+                }
+            } else {
+
+                $result = $model->saveLike($userId, $commentId, $isLicked);
+                if ($result == 1 && $isLicked == 1)
+                    self::changeLike(1, $commentId);
+                else if ($result == 1 && $isLicked == 0)
+                    self::changeDisLike(1, $commentId);
+            }
+            $result = 1;
+        }
+        $res = array();
+        $res['code'] = $result;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+
+    }
+
+    public
+    static function changeLike($addNumber, $commentId)
+    {
+        $model = new Comment();
+        $likeNum = $model->getCommentById($commentId)->fetch_assoc()['like_num'];
+        $likeNum = $likeNum + $addNumber;
+        $model->changeLike($likeNum, $commentId);
+
+    }
+
+    public
+    static function changeDisLike($addNumber, $commentId)
+    {
+        $model = new Comment();
+        $disLikeNum = $model->getCommentById($commentId)->fetch_assoc()['dislike_num'];
+        $disLikeNum = $disLikeNum + $addNumber;
+        $model->changeDisLike($disLikeNum, $commentId);
+    }
+
+    public
+    static function getCommentByTeacherId($acTeacher)
     {
         $teacherId = (new User())->getPhoneByAc($acTeacher);
         $comment = new Comment();
@@ -61,15 +118,12 @@ require_once 'model/Course.php';
                 continue;
             $comment['id'] = $row['id'];
             $comment['userId'] = (new User())->getAcByPhone($row['user_id']);
-            $comment['courseId'] = $row['course_id'];
             $comment['courseName'] = (new Course())->getCourseName($row['course_id']);
             $comment['userName'] = (new User())->getUserName($row['user_id']);
-            $comment['teacherId'] = (new User())->getAcByPhone($row['teacher_id']);//
-            $comment['startDate'] = (new Course())->getCourseById($row['course_id'])['start_date'];//
-            $comment['courseRat'] = $row['course_rat'];//
+            $comment['startDate'] = (new Course())->getCourseById($row['course_id'])->fetch_assoc()['start_date'];//
             $comment['teacherRat'] = $row['teacher_rat'];//
             $comment['commentText'] = $row['comment_text'];//
-            $comment['date'] = $row['date'];//
+            $comment['date'] = $row['cm_date'];//
             $comment['totalRat'] = $totalRat;//
             $res[] = $comment;
         }
@@ -83,7 +137,8 @@ require_once 'model/Course.php';
         }
     }////////////checked
 
-    public static function calculateCourseRat($courseId)
+    public
+    static function calculateCourseRat($courseId)
     {
         $comment = new Comment();
         $resuelt = $comment->getCourseRat($courseId);
@@ -95,20 +150,25 @@ require_once 'model/Course.php';
         return $rat / $count;
     }
 
-    public static function calculateTeacherRat($acTeacher)
+    public
+    static function calculateTeacherRat($acTeacher)
     {
 
         $teacherId = (new User())->getPhoneByAc($acTeacher);
         $comment = new Comment();
         $resuelt = $comment->getTeacherRat($teacherId);
-        $count = sizeof($resuelt);
+        $count = 0;
         $rat = 0;
         while ($row = $resuelt->fetch_assoc()) {
-
+            $count += 1;
             if ($row['vaziat'] == 0)
                 continue;
             $rat += $row['teacher_rat'];
         }
+//        echo "count  =  " . $count;
+//        echo " , rat = " . $rat;
+        if ($count == 0 || $rat == 0)
+            return 0;
         return $rat / $count;
     }
 
@@ -138,12 +198,13 @@ require_once 'model/Course.php';
            }
        }////////////checked*/
 
-    public static function upDateComment($id, $commentText, $acUser, $courseId, $acTeacher, $teacherRat)
+    public
+    static function upDateComment($id, $commentText, $acUser, $courseId, $acTeacher, $teacherRat)
     {////////////checked
         $userId = (new User())->getPhoneByAc($acUser);
         $teacherId = (new User())->getPhoneByAc($acTeacher);
         $model = new Comment();
-        $result = $model->upDateComment($id, $commentText, $userId, $courseId, $teacherId, $teacherRat, self::getDate());
+        $result = $model->upDateComment($id, $commentText, $userId, $courseId, $teacherId, $teacherRat, getJDate(null));
         $res = array();
         $res['code'] = $result;
         $message = array();
@@ -151,7 +212,8 @@ require_once 'model/Course.php';
         return json_encode($message);
     }
 
-    public static function getSelectedCamment()
+    public
+    static function getSelectedCamment()
     {
         $comment = new Comment();
         $resuelt = $comment->getSelectedComment();
@@ -177,7 +239,8 @@ require_once 'model/Course.php';
         }
     }
 
-    public static function getCommentByCourseId($userId)
+    public
+    static function getCommentByCourseId($userId)
     {
         $comment = new Comment();
         $resuelt = $comment->getCommentByCourseId($userId);
@@ -204,7 +267,8 @@ require_once 'model/Course.php';
     }
 
 
-    public static function getawesomeComment()
+    public
+    static function getawesomeComment()
     {
         $comment = new Comment();
         $resuelt = $comment->getawesomeComment();
