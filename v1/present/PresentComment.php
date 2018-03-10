@@ -124,6 +124,8 @@ class PresentComment
             $comment['teacherRat'] = $row['teacher_rat'];//
             $comment['commentText'] = $row['comment_text'];//
             $comment['date'] = $row['cm_date'];//
+            $comment['likeNum'] = $row['like_num'];//
+            $comment['disLikeNum'] = $row['dislike_num'];//
             $comment['totalRat'] = $totalRat;//
             $res[] = $comment;
         }
