@@ -162,9 +162,9 @@ class PresentComment
         $count = 0;
         $rat = 0;
         while ($row = $resuelt->fetch_assoc()) {
-            $count += 1;
             if ($row['vaziat'] == 0)
                 continue;
+            $count += 1;
             $rat += $row['teacher_rat'];
         }
 //        echo "count  =  " . $count;

@@ -15,7 +15,7 @@ if (isset($_FILES['tabaghe']['name'])) {
     }
 
 } else if (isset($_FILES['teacher']['name'])) {
-    if ($_FILES["teacher"]["size"] > 5000000 || $_FILES["teacher"]["size"] < 100000) {
+    if ($_FILES["teacher"]["size"] > 5000000 || $_FILES["teacher"]["size"] < 50000) {
         $result = 2;
     }
 } else if (isset($_FILES['madrak']['name'])) {
@@ -23,7 +23,7 @@ if (isset($_FILES['tabaghe']['name'])) {
         $result = 2;
     }
 } else if (isset($_FILES['course']['name'])) {
-    if ($_FILES["course"]["size"] > 5000000 || $_FILES["course"]["size"] < 100000) {
+    if ($_FILES["course"]["size"] > 5000000 || $_FILES["course"]["size"] < 50000) {
         $result = 2;
     }
 }

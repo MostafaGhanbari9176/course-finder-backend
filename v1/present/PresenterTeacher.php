@@ -10,7 +10,6 @@ require_once 'model/City.php';
 require_once 'model/User.php';
 
 
-
 class PresenterTeacher
 {
 
@@ -57,6 +56,37 @@ class PresenterTeacher
             return json_encode($res);
         } else {
             $res['erorr'] = "ok";
+            $res['empty'] = "ok";
+            return json_encode($res);
+        }
+    }
+
+    public static function getSelectedTeacher()
+    {
+
+        $teacher = new Teacher();
+        $rezult = $teacher->getAllTeacher();
+        $res = array();
+        while ($row = $rezult->fetch_assoc()) {
+//            echo(PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone'])));
+            if ((PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone']))) < (float)3.5)
+                continue;
+            $teacher = array();
+            $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
+            $teacher['subject'] = $row['subject'];
+            $teacher['teacherRat'] = PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone']));
+            $teacher['lt'] = $row['lat'];
+            $teacher['lg'] = $row['lon'];
+            $res[] = $teacher;
+        }
+//       if(sizeof($res) >= 10){
+//           $counter
+//            $ranNum = rand(0,sizeof($res));
+//
+//       }
+        if ($res) {
+            return json_encode($res);
+        } else {
             $res['empty'] = "ok";
             return json_encode($res);
         }

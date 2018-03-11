@@ -34,7 +34,7 @@ class PresentCourse
         $resuelt = $course->getAllCourse();
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
-            if ($row['is_deleted'] != 0)
+            if ($row['is_deleted'] != 0 || $row['vaziat'] == 0)
                 continue;
             $course = array();
             $course['startDate'] = $row['start_date'];
@@ -194,21 +194,12 @@ class PresentCourse
         while ($row = $resuelt->fetch_assoc()) {
             $course = array();
             $course['id'] = $row['cource_id'];
-            $course['idTeacher'] = $row['teacher_id'];
+            $course['vaziat'] = $row['vaziat'];
+            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
             $course['CourseName'] = $row['subject'];
-            $course['type'] = $row['type'];//
             $course['capacity'] = $row['capacity'];//
-            $course['mony'] = $row['mony'];//
-            $course['sharayet'] = $row['sharayet'];//
-            $course['tozihat'] = $row['tozihat'];//
-            $course['endDate'] = $row['end_date'];//
-            $course['day'] = $row['day'];//
-            $course['hours'] = $row['hours'];//
-            $course['range'] = $row['min_old'];//
-            $course['idTabaghe'] = $row['tabaghe_id'];//
             $course['startDate'] = $row['start_date'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
-            $course['tabaghe'] = (new Tabaghe())->getGroupingSubjectByCourseId($row['cource_id']);
             $res[] = $course;
         }
         if ($res) {
@@ -267,6 +258,8 @@ class PresentCourse
             $item = array();
             $courses = array();
             while ($row = $result->fetch_assoc()) {
+                if($row['vaziat'] == 0)
+                    continue;
                 $course = array();
                 $course['id'] = $row['cource_id'];
                 $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);

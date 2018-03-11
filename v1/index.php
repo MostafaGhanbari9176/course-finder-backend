@@ -25,12 +25,6 @@ require 'present/PresentSmsBox.php';
 
 $app = new \Slim\App;
 
-/*$app->get('/getOstan', function (Request $req, Response $response) {
-
-    $result = PresentOstan::getOstan();
-    $response->getBody()->write($result);
-});*/
-
 $app->get('/logUp/{phone}/{name}/{code}', function (Request $req, Response $res) {
 
     $phone = $req->getAttribute('phone');
@@ -50,33 +44,9 @@ $app->get('/logIn/{phone}/{code}', function (Request $req, Response $res) {
 
 });
 
-/*$app->get('/getCity/{flag}', function (Request $request, Response $response) {
-
-    $flag = $request->getAttribute('flag');
-    $result = PresentCity::getCity($flag);
-    $response->getBody()->write($result);
-});*/
-
-/*$app->get('/updateUser/{phone}/{name}', function (Request $req, Response $res) {
-    $phone = $req->getAttribute('phone');
-    $name = $req->getAttribute('name');
-    $result = PresentUser::updateUser($phone, $name);
-    $res->getBody()->write($result);
-});*/
-
-/*$app->get('/getUser/{phone}', function (Request $request, Response $response) {
-    $result = PresentUser::getUser($request->getAttribute('phone'));
-    $response->getBody()->write($result);
-});*/
-
 $app->get('/createAndSaveSmsCode/{phone}', function (Request $request, Response $response) {
 
     $response->getBody()->write(PresentSmsCode::creatAndSaveSmsCode($request->getAttribute('phone')));
-});
-
-$app->get('/checkedSmsCode/{phone}/{code}', function (Request $request, Response $response) {
-
-    $response->getBody()->write(PresentSmsCode::checkedSmsCode($request->getAttribute('phone'), $request->getAttribute('code')));
 });
 
 $app->get('/logOut/{phone}', function (Request $request, Response $response) {
@@ -109,18 +79,10 @@ $app->get('/getAllTeacher', function (Request $req, Response $res) {
     $res->getBody()->write(PresenterTeacher::getAllTeacher());
 });
 
-/*$app->get('/updateTeacher/{phone}/{landPhone}/{address}/{subject}/{cityId}/{madrak}', function (Request $req, Response $res) {
+$app->get('/getSelectedTeacher', function (Request $req, Response $res) {
 
-    $phone = $req->getAttribute('phone');
-    $landPhone = $req->getAttribute('landPhone');
-    $subject = $req->getAttribute('subject');
-    $address = $req->getAttribute('address');
-    $cityId = $req->getAttribute('cityId');
-    $madrak = $req->getAttribute('madrak');
-
-    $res->getBody()->write(PresenterTeacher::updateTeacher($phone, $landPhone, $madrak, $subject, $address, $cityId));
-
-});*/
+    $res->getBody()->write(PresenterTeacher::getSelectedTeacher());
+});
 
 $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
 
@@ -305,7 +267,6 @@ $app->get('/upDateSeen/{id}',function (Request $req, Response $res){
     $res->getBody()->write(PresentSmsBox::upDateSeen($id));
 
 });
-
 
 $app->get('/deleteSms/{id}',function (Request $req, Response $res){
 
