@@ -90,6 +90,8 @@ $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentGrouping::getTabaghe($uperId));
 });
 
+/////////////////////////////courseMethods
+
 $app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{minOld}/{maxOld}',  function (Request $req, Response $res) {
     $ac = $req->getAttribute('ac');
     $subject = $req->getAttribute('subject');
@@ -140,6 +142,11 @@ $app->get('/getUserCourse/{ac}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getByUserId($id));
 });/////////////**
 
+$app->get('/getCourseForListHome/{id}', function (Request $req, Response $res) {
+    $id = $req->getAttribute('id');
+    $res->getBody()->write(PresentCourse::getCourseForListHome($id));
+});
+
 $app->get('/getCourseByGroupingId/{id}', function (Request $req, Response $res) {
     $id = $req->getAttribute('id');
     $res->getBody()->write(PresentCourse::getCourseByGroupingId($id));
@@ -155,13 +162,7 @@ $app->get('/getFullCapacityCourse', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getNewCourse());
 });*/
 
-$app->get('/checkedServer', function (Request $req, Response $res) {
-    $rezuelt = array();
-    $rezuelt["code"] = 1;
-    $message = array();
-    $message[] = $rezuelt;
-    $res->getBody()->write(json_encode($message));
-});
+/////////////////////////////sabtenamMethods
 
 $app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}', function (Request $req, Response $res) {
     $idCourse = $req->getAttribute('idCourse');
@@ -291,7 +292,13 @@ $app->get('/updateCanceledFlag/{sabtenamId}/{code}',function (Request $req, Resp
 
 });
 
-
+$app->get('/checkedServer', function (Request $req, Response $res) {
+    $rezuelt = array();
+    $rezuelt["code"] = 1;
+    $message = array();
+    $message[] = $rezuelt;
+    $res->getBody()->write(json_encode($message));
+});
 
 $app->get('/test', function (Request $req, Response $res) {
     $res->getBody()->write(stripos("@godhelot1#gmail.com","@"));

@@ -53,6 +53,31 @@ class PresentCourse
         }
     }
 
+    public static function getCourseByGroupingId($groupingId)
+    {
+        $course = new Course();
+        $resuelt = $course->getCourseByGroupingId($groupingId);
+        $res = array();
+        while ($row = $resuelt->fetch_assoc()) {
+            if ($row['is_deleted'] != 0 || $row['vaziat'] == 0)
+                continue;
+            $course = array();
+            $course['startDate'] = $row['start_date'];
+            $course['id'] = $row['cource_id'];
+            $course['CourseName'] = $row['subject'];
+            $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+            $res[] = $course;
+        }
+        if ($res) {
+            return json_encode($res);
+        } else {
+            $course = array();
+            $course['empty'] = 1;
+            $res[] = $course;
+            return json_encode($res);
+        }
+    }
+
     /*    public static function getNewCourse()
         {
 
@@ -229,6 +254,7 @@ class PresentCourse
                 $course = array();
                 $course['id'] = $row['cource_id'];
                 $course['isCanceled'] = $sabtenam['is_canceled'];
+                $course['vaziat'] = $sabtenam['vaziat'];
                 $course['sabtenamId'] = (new Sabtenam())->getSabtenamIdByUserIdAndCourseId($sabtenam['user_id'], $row['cource_id']);
                 $course['CourseName'] = $row['subject'];
                 $course['startDate'] = $row['start_date'];
@@ -248,19 +274,28 @@ class PresentCourse
         }
     }
 
-    public static function getCourseByGroupingId($id)
+    public static function getCourseForListHome($id)
     {
         $res = array();
         $arr = self::creatGroupingArr($id);
         for ($i = 0; $i < count($arr); $i++) {
+            $counter = 0;
             $model = new Course();
             $result = $model->getCourseByGroupingId($arr[$i]['id']);
             $item = array();
             $courses = array();
             while ($row = $result->fetch_assoc()) {
-                if($row['vaziat'] == 0)
+                if ($row['vaziat'] == 0)
                     continue;
+                $counter++;
                 $course = array();
+                if ($counter >= 10) {
+                    $course['endOfList'] = 1;
+                    break;
+                }
+                $course['idTabaghe'] = $row['tabaghe_id'];
+                $course['startDate'] = $row['start_date'];
+                $course['endOfList'] = 0;
                 $course['id'] = $row['cource_id'];
                 $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
                 $course['CourseName'] = $row['subject'];
@@ -277,7 +312,6 @@ class PresentCourse
                  $course['idTabaghe'] = $row['tabaghe_id'];//
                  $course['startDate'] = $row['start_date'];
                  $course['tabaghe'] = (new Tabaghe())->getGroupingSubject($row['cource_id']);*/
-
                 $courses[] = $course;
             }
             if ($courses) {
