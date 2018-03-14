@@ -8,6 +8,7 @@
 require_once 'model/Teacher.php';
 require_once 'model/City.php';
 require_once 'model/User.php';
+require_once 'PresentSubscribe.php';
 
 
 class PresenterTeacher
@@ -21,7 +22,7 @@ class PresenterTeacher
         $res = array();
         if ($model->changeUserType($phone, 1)) {
             $teacher = new Teacher();
-            $result = $teacher->addTeacher($phone, $landPhone, self::getDate(), $subject, $tozihat, $type, $lat, $lon);
+            $result = $teacher->addTeacher($phone, $landPhone, self::getDate(), $subject, $tozihat, $type, $lat, $lon, $ac);
             $res["code"] = $result;
             if ($result == 0)
                 $model->changeUserType($phone, 0);
@@ -43,6 +44,7 @@ class PresenterTeacher
         while ($row = $rezult->fetch_assoc()) {
             $teacher = array();
             $teacher['landPhone'] = $row['land_phone'];
+            $teacher['pictureId'] = $row['picture_id'];
             $teacher['teacherRat'] = PresentComment::calculateTeacherRat($ac);
             $teacher['phone'] = $row['phone'];
             $teacher['type'] = $row['type'];
@@ -68,26 +70,47 @@ class PresenterTeacher
         $rezult = $teacher->getAllTeacher();
         $res = array();
         while ($row = $rezult->fetch_assoc()) {
-//            echo(PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone'])));
+
             if ((PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone']))) < (float)3.5)
                 continue;
             $teacher = array();
+            $teacher['pictureId'] = $row['picture_id'];
             $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
             $teacher['subject'] = $row['subject'];
             $teacher['teacherRat'] = PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone']));
-            $teacher['lt'] = $row['lat'];
-            $teacher['lg'] = $row['lon'];
             $res[] = $teacher;
         }
-//       if(sizeof($res) >= 10){
-//           $counter
-//            $ranNum = rand(0,sizeof($res));
-//
-//       }
+
+        if (sizeof($res) >= 10) {
+            $index = array();
+            $limitedRes = array();
+            $counter = 0;
+            $index[] = rand(0, sizeof($res));
+            $limitedRes[] = $res[$index[0]];
+            for ($i = 0; $i < sizeof($res); $i++) {
+                if ($counter >= 5)
+                    break;
+                $randome = rand(0, sizeof($res));
+                $flag = true;
+                for ($j = 0; $j < sizeof($index); $j++) {
+                    if ($randome == $index[$j]) {
+                        $flag = false;
+                        break;
+                    }
+                }
+                if ($flag) {
+                    $limitedRes[] = $res[$randome];
+                    $index[] = $randome;
+                    $counter++;
+                }
+            }
+            if ($limitedRes)
+                return json_encode($limitedRes);
+        }
         if ($res) {
             return json_encode($res);
         } else {
-            $res['empty'] = "ok";
+            $res['empty'] = 1;
             return json_encode($res);
         }
     }
@@ -141,10 +164,18 @@ class PresenterTeacher
 
     public static function getMadrakStateAndRat($ac)
     {
+        $res = array();
+
+        $have = PresentSubscribe::haveASubscription($ac);
+        if ($have == 0)
+            $res['bus'] = base64_encode((base64_encode("BnAoD")));
+        else
+            $res['bus'] = base64_encode((base64_encode("YoEkS")));
+
         $phone = (new User())->getPhoneByAc($ac);
         $teacher = new Teacher();
         $rezult = $teacher->getMadrakState($phone);
-        $res = array();
+
         if ($rezult == -1) {
             $res['ms'] = base64_encode((base64_encode("error")));
             $res['code'] = -1;

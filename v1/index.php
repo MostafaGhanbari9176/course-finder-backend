@@ -21,6 +21,7 @@ require 'Present/PresentSabtenam.php';
 require 'Present/PresentComment.php';
 require 'jdf.php';
 require 'present/PresentSmsBox.php';
+require 'present/PresentReport.php';
 
 
 $app = new \Slim\App;
@@ -92,7 +93,7 @@ $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
 
 /////////////////////////////courseMethods
 
-$app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{minOld}/{maxOld}',  function (Request $req, Response $res) {
+$app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{minOld}/{maxOld}', function (Request $req, Response $res) {
     $ac = $req->getAttribute('ac');
     $subject = $req->getAttribute('subject');
     $tabaghe_id = $req->getAttribute('tabaghe_id');
@@ -113,7 +114,7 @@ $app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{shar
     $res->getBody()->write($resuelt);
 });
 
-$app->get('/getCourseByFilter/{minOld}/{maxOld}/{startDate}/{endDate}/{Grouping}/{days}',  function (Request $req, Response $res) {
+$app->get('/getCourseByFilter/{minOld}/{maxOld}/{startDate}/{endDate}/{Grouping}/{days}', function (Request $req, Response $res) {
 
     $minOld = $req->getAttribute('minOld');
     $maxOld = $req->getAttribute('maxOld');
@@ -217,7 +218,7 @@ $app->get('/saveCourseRat/{userId}/{courseId}/{teacherId}/{courseRat}', function
 });
 
 
-$app->get('/getCommentByTeacherId/{teacherId}', function(Request $req, Response $res){
+$app->get('/getCommentByTeacherId/{teacherId}', function (Request $req, Response $res) {
     $teacherId = $req->getAttribute('teacherId');
     $res->getBody()->write(PresentComment::getCommentByTeacherId($teacherId));
 });
@@ -237,7 +238,7 @@ $app->get('/upMs/{ac}', function (Request $req, Response $res) {
     $res->getBody()->write(PresenterTeacher::updateMadrakState($req->getAttribute('ac')));
 });
 
-$app->get('/saveSms/{text}/{tsId}/{rsId}/{courseId}/{howSending}',function (Request $req, Response $res){
+$app->get('/saveSms/{text}/{tsId}/{rsId}/{courseId}/{howSending}', function (Request $req, Response $res) {
 
     $text = $req->getAttribute('text');
     $tsId = $req->getAttribute('tsId');
@@ -248,43 +249,43 @@ $app->get('/saveSms/{text}/{tsId}/{rsId}/{courseId}/{howSending}',function (Requ
 
 });
 
-$app->get('/getRsSms/{rsId}',function (Request $req, Response $res){
+$app->get('/getRsSms/{rsId}', function (Request $req, Response $res) {
 
     $rsId = $req->getAttribute('rsId');
     $res->getBody()->write(PresentSmsBox::getRsSms($rsId));
 
 });
 
-$app->get('/getTsSms/{tsId}',function (Request $req, Response $res){
+$app->get('/getTsSms/{tsId}', function (Request $req, Response $res) {
 
     $tsId = $req->getAttribute('tsId');
     $res->getBody()->write(PresentSmsBox::getTsSms($tsId));
 
 });
 
-$app->get('/upDateSeen/{id}',function (Request $req, Response $res){
+$app->get('/upDateSeen/{id}', function (Request $req, Response $res) {
 
     $id = $req->getAttribute('id');
     $res->getBody()->write(PresentSmsBox::upDateSeen($id));
 
 });
 
-$app->get('/deleteSms/{id}',function (Request $req, Response $res){
+$app->get('/deleteSms/{id}', function (Request $req, Response $res) {
 
     $id = $req->getAttribute('id');
     $res->getBody()->write(PresentSmsBox::deleteSms($id));
 
 });
 
-$app->get('/updateDeletedFlag/{courseId}/{code}',function (Request $req, Response $res){
+$app->get('/updateDeletedFlag/{courseId}/{code}', function (Request $req, Response $res) {
 
     $id = $req->getAttribute('courseId');
     $code = $req->getAttribute('code');
-    $res->getBody()->write(PresentCourse::updateDeletedFlag($id,$code));
+    $res->getBody()->write(PresentCourse::updateDeletedFlag($id, $code));
 
 });
 
-$app->get('/updateCanceledFlag/{sabtenamId}/{code}',function (Request $req, Response $res){
+$app->get('/updateCanceledFlag/{sabtenamId}/{code}', function (Request $req, Response $res) {
 
     $id = $req->getAttribute('sabtenamId');
     $code = $req->getAttribute('code');
@@ -292,7 +293,7 @@ $app->get('/updateCanceledFlag/{sabtenamId}/{code}',function (Request $req, Resp
 
 });
 
-$app->get('/checkedServer', function (Request $req, Response $res) {
+$app->get('/checkedServerStatuse', function (Request $req, Response $res) {
     $rezuelt = array();
     $rezuelt["code"] = 1;
     $message = array();
@@ -300,8 +301,29 @@ $app->get('/checkedServer', function (Request $req, Response $res) {
     $res->getBody()->write(json_encode($message));
 });
 
+$app->get('/checkedUserStatuse/{id}', function (Request $req, Response $res) {
+    $UserId = $req->getAttribute('id');
+    $res->getBody()->write(PresentUser::checkUserStatuse($UserId));
+});
+
+$app->get('/confirmStudent/{sabtenamId}/{ac}/{courseId}', function (Request $req, Response $res) {
+    $sabtenamId = $req->getAttribute('sabtenamId');
+    $ac = $req->getAttribute('ac');
+    $courseId = $req->getAttribute('courseId');
+    $res->getBody()->write(PresentSabtenam::confirmStudent($ac, $sabtenamId, $courseId));
+});
+
+$app->get('/RePoRt/{signText}/{reportText}/{spamId}/{spamerId}/{reporterId}', function (Request $req, Response $res) {
+    $signText = $req->getAttribute('signText');
+    $reportText = $req->getAttribute('reportText');
+    $spamId = $req->getAttribute('spamId');
+    $spamerId = $req->getAttribute('spamerId');
+    $reporterId = $req->getAttribute('reporterId');
+    $res->getBody()->write(PresentReport::saveAReport($signText, $reportText, $spamId, $spamerId, $reporterId));
+});
+
 $app->get('/test', function (Request $req, Response $res) {
-    $res->getBody()->write(stripos("@godhelot1#gmail.com","@"));
+    $res->getBody()->write(PresentUser::createApiCode("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.com"));
 });
 
 $app->run();

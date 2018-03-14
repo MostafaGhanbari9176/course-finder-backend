@@ -61,10 +61,13 @@ class PresentUser
         $resuelt1 = $sabtenam->getByTeacherIdAndCourseId($idTeacher, $courseId);
         $res = array();
         while ($row = $resuelt1->fetch_assoc()) {
+            if ($row['is_canceled'] != 0)
+                continue;
             $user = array();
             $user['sabtenamId'] = $row['id'];
             $user['name'] = (new User())->getUserName($row['user_id']);
             $user['apiCode'] = (new User())->getAcByPhone($row['user_id']);
+            $user['status'] = $row['vaziat'];
             $res[] = $user;
         }
         if ($res) {
@@ -78,7 +81,27 @@ class PresentUser
 
     }
 
-    public static function updateUser($phone, $name)
+    public static function checkUserStatuse($userAc)
+    {
+
+        if (hash_equals($userAc, "OP's"))
+            $result = 0;
+        else {
+
+            $model = new User();
+            $userId = $model->getPhoneByAc($userAc);
+            $result = $model->getUserStatuse($userId);
+        }
+        $res = array();
+        $user = array();
+        $user['code'] = $result;
+        $res[] = $user;
+        return json_encode($res);
+
+    }
+
+    public
+    static function updateUser($phone, $name)
     {
         $model = new User();
         $result = $model->updateUser($phone, $name);
@@ -89,7 +112,8 @@ class PresentUser
         return json_encode($message);
     }
 
-    public static function getUser($phone)
+    public
+    static function getUser($phone)
     {
         $model = new User();
         $result = $model->getUser($phone);
@@ -117,7 +141,8 @@ class PresentUser
         }
     }
 
-    public static function logOut($phone)
+    public
+    static function logOut($phone)
     {
         $model = new User();
         $result = $model->logOut($phone);
@@ -128,7 +153,8 @@ class PresentUser
         return json_encode($message);
     }
 
-    public static function location($cityId)
+    public
+    static function location($cityId)
     {
 
         $model = new City();
@@ -137,12 +163,19 @@ class PresentUser
         return $row['name'] . " , " . $row['city_name'];
     }
 
-    public static function createApiCode($phone)
+    public
+    static function createApiCode($phone)
     {
+        $min = array();
         $apiCode = "";
         $milliseconds = str_split(round(microtime(true) * 1000));
         $phone = str_split($phone);
-        for ($i = count($phone) - 1; $i >= 0; $i--) {
+        if (sizeof($phone) >= sizeof($milliseconds)) {
+            $min = $milliseconds;
+        } else {
+            $min = $phone;
+        }
+        for ($i = count($min) - 1; $i >= 0; $i--) {
             $apiCode = $apiCode . $phone[$i] . $milliseconds[$i];
         }
         return $apiCode;

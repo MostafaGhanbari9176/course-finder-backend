@@ -8,6 +8,7 @@
 require_once 'model/Sabtenam.php';
 require_once 'model/User.php';
 require_once 'model/Comment.php';
+require_once 'model/Course.php';
 
 class PresentSabtenam
 {
@@ -55,6 +56,23 @@ class PresentSabtenam
         $message = array();
         $message[] = $res;
         return json_encode($message);
+    }
+
+    public static function confirmStudent($ac, $SabtenamId, $courseId)
+    {
+
+        $idUser = (new User())->getPhoneByAc($ac);
+        $model = new Sabtenam();
+        $resuelt = $model->confirmStudent($SabtenamId, $idUser);
+        $rezuelt2 = 0;
+        if ($resuelt == 1)
+            $rezuelt2 = (new Course())->decrementCapacity($courseId);
+        $res = array();
+        $res['code'] = $rezuelt2;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+
     }
 
 

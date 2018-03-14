@@ -55,7 +55,7 @@ class Course
 
         $sql = "UPDATE $this->tablename c SET is_deleted = ? WHERE c.cource_id = ?";
         $result = $this->conn->prepare($sql);
-        $result->bind_param('ii',$code,$courseId);
+        $result->bind_param('ii', $code, $courseId);
         if ($result->execute())
             return 1;
         return 0;
@@ -72,6 +72,25 @@ class Course
 
     }
 
+    public function decrementCapacity($courseId)
+    {
+        $sql = "SELECT c.capacity FROM $this->tablename c WHERE c.cource_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('i', $courseId);
+        if (!$result->execute())
+            return 0;
+
+        $capacity = $result->get_result()->fetch_assoc()['capacity'];
+        $capacity = $capacity - 1;
+        $sql = "UPDATE $this->tablename c SET capacity = ? WHERE c.cource_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('ii', $capacity, $courseId);
+        if ($result->execute())
+            return 1;
+        return 0;
+
+    }
+
     public function getCourseById($id)
     {
         $sql = "SELECT * FROM $this->tablename c WHERE c.cource_id = ?";
@@ -84,9 +103,10 @@ class Course
 
     public function getCourseByTeacherId($teacherId)
     {
+
         $sql = "SELECT * FROM $this->tablename c WHERE c.teacher_id = ?";
         $result = $this->conn->prepare($sql);
-        $result->bind_param('i', $teacherId);
+        $result->bind_param('s', $teacherId);
         if ($result->execute())
             return $result->get_result();
         return 0;

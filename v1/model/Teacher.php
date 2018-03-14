@@ -22,12 +22,12 @@ class Teacher
         mysqli_set_charset($this->con, "UTF8");
     }
 
-    public function addTeacher($phone, $landPhone, $definitionDate, $subject, $tozihat, $type, $lat, $lon)
+    public function addTeacher($phone, $landPhone, $definitionDate, $subject, $tozihat, $type, $lat, $lon, $pictureId)
     {
 
-        $sql = "INSERT INTO $this->tableName (`phone`,`land_phone`, `type`, `subject`,`definition_date`, `tozihat`, `lat`, `lon`) VALUES (?,?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO $this->tableName (`phone`,`land_phone`, `type`, `subject`,`definition_date`, `tozihat`, `lat`, `lon`, picture_id) VALUES (?,?,?,?,?,?,?,?,?)";
         $result = $this->con->prepare($sql);
-        $result->bind_param('ssisssss', $phone, $landPhone, $type, $subject, $definitionDate, $tozihat, $lat, $lon);
+        $result->bind_param('ssissssss', $phone, $landPhone, $type, $subject, $definitionDate, $tozihat, $lat, $lon, $pictureId);
         if ($result->execute())
             return 1;
         return 0;

@@ -72,4 +72,15 @@ class Sabtenam
             return 1;
         return 0;
     }
+
+    public function confirmStudent($sabtenamId, $teacherId){
+
+        $vaziat = 1;
+        $sql = "UPDATE $this->tableName s SET vaziat = ? WHERE s.id = ? && s.teacher_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('iis', $vaziat, $sabtenamId, $teacherId);
+        if ($result->execute())
+            return 1;
+        return 0;
+    }
 }

@@ -17,12 +17,17 @@ class PresentCourse
 
     public static function addCourse($ac, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld)
     {
-
-        $teacher_id = (new User())->getPhoneByAc($ac);
-        $course = new Course();
-        $rezult = $course->addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
         $res = array();
-        $res['code'] = $rezult;
+        if (PresentSubscribe::haveASubscription($ac) == 0) {
+            $res['code'] = 404;
+            $res['bus'] = base64_encode((base64_encode("BnAoD")));
+        } else {
+            $teacher_id = (new User())->getPhoneByAc($ac);
+            $course = new Course();
+            $rezult = $course->addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
+            $res['code'] = $rezult;
+            $res['bus'] = base64_encode((base64_encode("YoEkS")));
+        }
         $message = array();
         $message[] = $res;
         return json_encode($message);
@@ -37,6 +42,7 @@ class PresentCourse
             if ($row['is_deleted'] != 0 || $row['vaziat'] == 0)
                 continue;
             $course = array();
+            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
             $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
@@ -253,6 +259,7 @@ class PresentCourse
                     continue;
                 $course = array();
                 $course['id'] = $row['cource_id'];
+                $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
                 $course['isCanceled'] = $sabtenam['is_canceled'];
                 $course['vaziat'] = $sabtenam['vaziat'];
                 $course['sabtenamId'] = (new Sabtenam())->getSabtenamIdByUserIdAndCourseId($sabtenam['user_id'], $row['cource_id']);

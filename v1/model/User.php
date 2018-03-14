@@ -70,6 +70,17 @@ class User
         return $result->get_result();
     }
 
+    public function getUserStatuse($phone)
+    {
+
+        $sql = "SELECT u.status FROM $this->tableName u WHERE u.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('s', $phone);
+        if ($result->execute())
+            return $result->get_result()->fetch_assoc()['status'];
+        return 0;
+    }
+
     public function logOut($phone)
     {
         $status = 0;
@@ -121,7 +132,8 @@ class User
         return 0;
     }
 
-    public function getUserName($phone){
+    public function getUserName($phone)
+    {
 
         $sql = "SELECT u.name FROM $this->tableName u WHERE u.phone = ?";
         $result = $this->con->prepare($sql);
