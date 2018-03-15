@@ -31,16 +31,22 @@ class PresentSabtenam
         $sabtenam = new Sabtenam();
         $resuelt1 = $sabtenam->getByUserId($idUser);
         $result = -1;
+        $vaziat = -1;
         while ($row = $resuelt1->fetch_assoc()) {
             if ($idCourse == $row['cource_id']) {
+                $vaziat = $row['vaziat'];
                 $result = (new Comment())->getRatByCourseIdAndUserId($idCourse, $idUser);
                 break;
             }
         }
+
         if ($result == null)
             $result = 0;
         $res = array();
-        $res["code"] = $result;
+        if ($vaziat == 0)
+            $res["code"] = -2;
+        else
+            $res["code"] = $result;
         $message = array();
         $message[] = $res;
         return json_encode($message);
