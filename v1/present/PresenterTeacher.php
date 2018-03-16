@@ -24,6 +24,7 @@ class PresenterTeacher
             $teacher = new Teacher();
             $result = $teacher->addTeacher($phone, $landPhone, self::getDate(), $subject, $tozihat, $type, $lat, $lon, $ac);
             $res["code"] = $result;
+            $res["name"] = $ac;
             if ($result == 0)
                 $model->changeUserType($phone, 0);
 
