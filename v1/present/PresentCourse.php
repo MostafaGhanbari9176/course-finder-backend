@@ -397,6 +397,7 @@ class PresentCourse
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
             $res[] = $course;
         }
         if ($res) {
@@ -435,6 +436,7 @@ class PresentCourse
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
             $res[] = $course;
         }
         if ($res) {
@@ -470,6 +472,7 @@ class PresentCourse
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
             $res[] = $course;
         }
         if ($res) {
@@ -508,6 +511,7 @@ class PresentCourse
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
             $res[] = $course;
         }
         if ($res) {
