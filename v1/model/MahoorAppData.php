@@ -2,14 +2,15 @@
 /**
  * Created by PhpStorm.
  * User: M-gh
- * Date: 13-Mar-18
- * Time: 12:56 PM
+ * Date: 16-Mar-18
+ * Time: 3:14 PM
  */
 require_once 'uses/DBConnection.php';
-class Subscribe
+
+class MahoorAppData
 {
     private $conn;
-    private $tableName = 'subscribe';
+    private $tableName = 'mahoor_app';
 
     function __construct()
     {
@@ -19,11 +20,10 @@ class Subscribe
         mysqli_set_charset($this->conn, "UTF8");
     }
 
-    public function getByUserId($id)
+    public function getAppData()
     {
-        $sql = "SELECT * FROM $this->tableName e WHERE e.user_id = ?";
+        $sql = "SELECT * FROM $this->tableName";
         $result = $this->conn->prepare($sql);
-        $result->bind_param('s', $id);
         if ($result->execute())
             return $result->get_result();
         return 0;

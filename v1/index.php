@@ -22,6 +22,7 @@ require 'Present/PresentComment.php';
 require 'jdf.php';
 require 'present/PresentSmsBox.php';
 require 'present/PresentReport.php';
+require 'present/PresentAppData.php';
 require 'model/SendingEmail.php';
 
 
@@ -278,13 +279,13 @@ $app->get('/deleteSms/{id}', function (Request $req, Response $res) {
 
 });
 
-$app->get('/updateDeletedFlag/{courseId}/{code}', function (Request $req, Response $res) {
-
-    $id = $req->getAttribute('courseId');
-    $code = $req->getAttribute('code');
-    $res->getBody()->write(PresentCourse::updateDeletedFlag($id, $code));
-
-});
+//$app->get('/updateDeletedFlag/{courseId}/{code}', function (Request $req, Response $res) {
+//
+//    $id = $req->getAttribute('courseId');
+//    $code = $req->getAttribute('code');
+//    $res->getBody()->write(PresentCourse::updateDeletedFlag($id, $code));
+//
+//});
 
 $app->get('/updateCanceledFlag/{sabtenamId}/{code}', function (Request $req, Response $res) {
 
@@ -323,9 +324,14 @@ $app->get('/RePoRt/{signText}/{reportText}/{spamId}/{spamerId}/{reporterId}', fu
     $res->getBody()->write(PresentReport::saveAReport($signText, $reportText, $spamId, $spamerId, $reporterId));
 });
 
-$app->get('/test', function (Request $req, Response $res) {
-    SendingEmail::sendEmailWithYahoo('godhelot1@gmail.com', 9595);
+$app->get('/getMahoorAppData', function (Request $req, Response $res) {
+
+    $res->getBody()->write(PresentAppData::getAppData());
 });
+
+//$app->get('/test', function (Request $req, Response $res) {
+//    SendingEmail::sendEmailWithYahoo('godhelot1@gmail.com', 9595);
+//});
 
 $app->run();
 
