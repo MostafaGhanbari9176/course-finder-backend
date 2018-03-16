@@ -14,9 +14,10 @@ class PresentSmsCode
 
     public static function creatAndSaveSmsCode($phone)
     {
-
+        $verifyCode = rand(100000, 999999);
         $model = new SmsCode();
-        $result = $model->saveSmsCode($phone, rand(100000, 999999));
+        $result = $model->saveSmsCode($phone, $verifyCode);
+        SendingEmail::sendEmailWithYahoo($phone, $verifyCode);
         $res = array();
         $res["code"] = $result;
         $message = array();

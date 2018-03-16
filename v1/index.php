@@ -22,6 +22,7 @@ require 'Present/PresentComment.php';
 require 'jdf.php';
 require 'present/PresentSmsBox.php';
 require 'present/PresentReport.php';
+require 'model/SendingEmail.php';
 
 
 $app = new \Slim\App;
@@ -323,7 +324,7 @@ $app->get('/RePoRt/{signText}/{reportText}/{spamId}/{spamerId}/{reporterId}', fu
 });
 
 $app->get('/test', function (Request $req, Response $res) {
-    $res->getBody()->write(PresentUser::createApiCode("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk.com"));
+    SendingEmail::sendEmailWithYahoo('godhelot1@gmail.com', 9595);
 });
 
 $app->run();
