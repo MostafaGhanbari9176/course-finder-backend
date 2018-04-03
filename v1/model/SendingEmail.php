@@ -47,11 +47,12 @@ class SendingEmail
     private static function htmlPage($code)
     {
         $html = "<html>
-<body>
-	<div style='background: blue'>
-		<p style='color:white'>Your Code</p>
-		<ul>
-			<li style='color: aquamarine'>$code</li>
+<body style='direction:rtl'>
+	<div style='background: #263238; height: 300px'>
+		<p style='color:white; background: #384248; padding: 20px; font-size: 20px;'>دوره های آموزشی من</p>
+		<p style='color:#41cdb0; padding-right:20px; text-align: right; font-size: 15px;'>کد زیرا در برنامه وارد کنید :</p>
+		<ul style='padding: 20px; padding-right:30px'>
+			<li style='color: #ffcc00;font-size: 20px'>$code</li>
 		</ul>
 	</div>
 </body>

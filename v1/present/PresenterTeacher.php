@@ -70,14 +70,14 @@ class PresenterTeacher
         $rezult = $teacher->getAllTeacher();
         $res = array();
         while ($row = $rezult->fetch_assoc()) {
-
-            if ((PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone']))) < (float)3.5)
+            $TeacherRat = PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone']));
+            if ($TeacherRat < (float)3.5)
                 continue;
             $teacher = array();
             $teacher['pictureId'] = $row['picture_id'];
             $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
             $teacher['subject'] = $row['subject'];
-            $teacher['teacherRat'] = PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone']));
+            $teacher['teacherRat'] = $TeacherRat;
             $res[] = $teacher;
         }
 
@@ -110,8 +110,10 @@ class PresenterTeacher
         if ($res) {
             return json_encode($res);
         } else {
-            $res['empty'] = 1;
-            return json_encode($res);
+            $message = array();
+            $res['empty'] = (int)1;
+            $message[] = $res;
+            return json_encode($message);
         }
     }
 
