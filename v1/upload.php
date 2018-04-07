@@ -41,7 +41,7 @@ if ($result != 2) {
             unlink($target_file);
         }
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+        if($imageFileType != "pdf") {
             $result = 3;
         }else {
             move_uploaded_file($_FILES["madrak"]["tmp_name"], $target_file);
