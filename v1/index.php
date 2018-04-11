@@ -155,11 +155,11 @@ $app->get('/getCourseByGroupingId/{id}', function (Request $req, Response $res) 
     $res->getBody()->write(PresentCourse::getCourseByGroupingId($id));
 });
 
-/*$app->get('/getNewCourse', function (Request $req, Response $res) {
+$app->get('/getNewCourse', function (Request $req, Response $res) {
 
     $res->getBody()->write(PresentCourse::getNewCourse());
 });
-
+/*
 $app->get('/getFullCapacityCourse', function (Request $req, Response $res) {
 
     $res->getBody()->write(PresentCourse::getNewCourse());
