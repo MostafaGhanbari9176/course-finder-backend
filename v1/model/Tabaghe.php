@@ -19,10 +19,37 @@ class Tabaghe
         mysqli_set_charset($this->con, "UTF8");
     }
 
+    public function getTabagheByRootId($rootId){
+        $sql ="SELECT * FROM tabaghe t WHERE t.root_id = ?";
+        $rezult = $this->con->prepare($sql);
+        $rezult->bind_param('i',$rootId);
+        if($rezult->execute())
+            return $rezult->get_result();
+        return 0;
+    }
+
+    public function getTabagheByUperId($uperId){
+        $sql ="SELECT * FROM tabaghe t WHERE t.uper_id = ?";
+        $rezult = $this->con->prepare($sql);
+        $rezult->bind_param('i',$uperId);
+        if($rezult->execute())
+            return $rezult->get_result();
+        return 0;
+    }
+
     public function getTabaghe($uperId){
         $sql ="SELECT * FROM tabaghe t WHERE t.uper_id = ?";
         $rezult = $this->con->prepare($sql);
         $rezult->bind_param('i',$uperId);
+        if($rezult->execute())
+            return $rezult->get_result();
+        return 0;
+    }
+
+    public function getFinalBranchGroupByRootId($rootId){
+        $sql ="SELECT * FROM tabaghe t WHERE t.root_id = ? && t.final = 1";
+        $rezult = $this->con->prepare($sql);
+        $rezult->bind_param('i',$rootId);
         if($rezult->execute())
             return $rezult->get_result();
         return 0;

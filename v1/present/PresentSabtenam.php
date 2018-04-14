@@ -81,5 +81,46 @@ class PresentSabtenam
 
     }
 
+    public static function getRegistrationsName($courseId, $acTeacher)
+    {
+        $idTeacher = (new User())->getPhoneByAc($acTeacher);
+        $sabtenam = new Sabtenam();
+        $resuelt1 = $sabtenam->getByTeacherIdAndCourseId($idTeacher, $courseId);
+        $res = array();
+        while ($row = $resuelt1->fetch_assoc()) {
+            if ($row['is_canceled'] != 0)
+                continue;
+            $user = array();
+            $user['sabtenamId'] = $row['id'];
+            $user['name'] = (new User())->getUserName($row['user_id']);
+            $user['apiCode'] = (new User())->getAcByPhone($row['user_id']);
+            $user['status'] = $row['vaziat'];
+            $res[] = $user;
+        }
+        if ($res) {
+            return json_encode($res);
+        } else {
+            $user = array();
+            $user['empty'] = 1;
+            $res[] = $user;
+            return json_encode($res);
+        }
+
+    }
+
+    public static function getNumberOfWaitingStudent($teacherId, $courseId)
+    {
+        $sabtenam = new Sabtenam();
+        $resuelt1 = $sabtenam->getByTeacherIdAndCourseId($teacherId, $courseId);
+        $counter = 0;
+        while ($row = $resuelt1->fetch_assoc()) {
+            if ($row['is_canceled'] != 0)
+                continue;
+            if ($row['vaziat'] == 0)
+                $counter++;
+        }
+        return $counter;
+
+    }
 
 }

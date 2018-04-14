@@ -233,16 +233,37 @@ class PresentCourse
             $course['capacity'] = $row['capacity'];//
             $course['startDate'] = $row['start_date'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+            $course['numberOfWaitingStudent'] = self::getNumberOfWaitingStudent($phone, $row['cource_id']);
             $res[] = $course;
         }
         if ($res) {
-            return json_encode($res);
+            return json_encode(self::sortWithNumberOfWaitingStudent($res));
         } else {
             $course = array();
             $course['empty'] = 1;
             $res[] = $course;
             return json_encode($res);
         }
+    }
+
+    static function sortWithNumberOfWaitingStudent($res)
+    {
+        for ($i = 0; $i < count($res); $i++) {
+            for ($j = $i; $j < count($res); $j++) {
+
+                if ($res[$i]['numberOfWaitingStudent'] < $res[$j]['numberOfWaitingStudent']) {
+                    $helpArray = $res[$i];
+                    $res[$i] = $res[$j];
+                    $res[$j] = $helpArray;
+                }
+            }
+        }
+        return $res;
+    }
+
+    public static function getNumberOfWaitingStudent($teacherId, $courseId)
+    {
+        return PresentSabtenam::getNumberOfWaitingStudent($teacherId, $courseId);
     }
 
     public static function getByUserId($ac)
@@ -285,16 +306,26 @@ class PresentCourse
 
     public static function getCourseForListHome($id)
     {
+        if ($id == -1)
+            return self::courseByrootIdForHomeList();
+        return self::courseByGroupingIdForListHome($id);
+
+    }
+
+    static function courseByGroupingIdForListHome($rootId)
+    {
+
+        $model = new Tabaghe();
+        $courseModel = new Course();
+        $rezult = $model->getFinalBranchGroupByRootId($rootId);
         $res = array();
-        $arr = self::creatGroupingArr($id);
-        for ($i = 0; $i < count($arr); $i++) {
+        while ($rowOfGroupList = $rezult->fetch_assoc()) {
             $counter = 0;
-            $model = new Course();
-            $result = $model->getCourseByGroupingId($arr[$i]['id']);
-            $item = array();
             $courses = array();
-            while ($row = $result->fetch_assoc()) {
-                if ($row['vaziat'] == 0 || $row['is_deleted'] !== 0 )
+            $item = array();
+            $courseResult = $courseModel->getCourseByGroupingId($rowOfGroupList['id']);
+            while ($row = $courseResult->fetch_assoc()) {
+                if ($row['vaziat'] == 0 || $row['is_deleted'] !== 0)
                     continue;
                 $counter++;
                 $course = array();
@@ -312,49 +343,128 @@ class PresentCourse
                 $course['CourseName'] = $row['subject'];
                 $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
                 $courses[] = $course;
+
             }
+
             if ($courses) {
                 $item['courses'] = $courses;
-                $item['GroupingSubject'] = $arr[$i]['subject'];
+                $item['groupSubject'] = $rowOfGroupList['subject'];
+                $res[] = $item;
+            } else {
+                $item['empty'] = 1;
+                $item['courses'] = null;
+                $item['groupSubject'] = $rowOfGroupList['subject'];
                 $res[] = $item;
             }
+
         }
 
         if ($res) {
-            return json_encode($res);
+            return json_encode(self::sortWithCourseNumber($res));
         } else {
-            $course = array();
-            $course['empty'] = 1;
-            $res[] = $course;
+            $item = array();
+            $item['empty'] = 1;
+            $item['courses'] = null;
+            $item['groupSubject'] = $model->getGroupingSubjectByGroupId($rootId);
+            $res[] = $item;
             return json_encode($res);
         }
     }
 
+    static function courseByrootIdForHomeList()
+    {
+        $arr = self::creatGroupingArr(-1);
+        $model = new Course();
+        $res = array();
+        for ($i = 0; $i < count($arr); $i++) {
+            $counter = 0;
+            $courses = array();
+            $item = array();
+            for ($j = 0; $j < count($arr[$i]['subCategory']); $j++) {
+                $result = $model->getCourseByGroupingId($arr[$i]['subCategory'][$j]);
+
+                while ($row = $result->fetch_assoc()) {
+                    if ($row['vaziat'] == 0 || $row['is_deleted'] !== 0)
+                        continue;
+                    $counter++;
+                    $course = array();
+                    if ($counter >= 10)
+                        break;
+
+                    $course['idTabaghe'] = $row['tabaghe_id'];
+                    $course['startDate'] = $row['start_date'];
+                    $course['endOfList'] = 0;
+                    $course['id'] = $row['cource_id'];
+                    $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+                    $course['CourseName'] = $row['subject'];
+                    $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
+                    $courses[] = $course;
+
+                }
+                if ($counter >= 10) {
+                    $course['endOfList'] = 1;
+                    $course['idTabaghe'] = $row['tabaghe_id'];
+                    $courses[] = $course;
+                    break;
+                }
+            }
+            if ($courses) {
+                $item['courses'] = $courses;
+                $item['groupSubject'] = $arr[$i]['subject'];
+                $res[] = $item;
+            } else {
+                $item['empty'] = 1;
+                $item['courses'] = null;
+                $item['groupSubject'] = $arr[$i]['subject'];
+                $res[] = $item;
+            }
+        }
+
+
+        if ($res) {
+            return json_encode(self::sortWithCourseNumber($res));
+        } else {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+            return json_encode($res);
+        }
+    }
+
+    static function sortWithCourseNumber($res)
+    {
+        for ($i = 0; $i < count($res); $i++) {
+            for ($j = $i; $j < count($res); $j++) {
+
+                if (count($res[$i]['courses']) < count($res[$j]['courses'])) {
+                    $helpArray = $res[$i];
+                    $res[$i] = $res[$j];
+                    $res[$j] = $helpArray;
+                }
+            }
+        }
+        return $res;
+    }
+
+
+
     static function creatGroupingArr($id)
     {
         $model = new Tabaghe();
-        $rezult = $model->getTabaghe($id);
+        $rezult = $model->getTabagheByRootId($id);
         $res = array();
         while ($row = $rezult->fetch_assoc()) {
             $tabaghe = array();
             $tabaghe['id'] = $row['id'];
             $tabaghe['subject'] = $row['subject'];
+            $finalRezult = $model->getFinalBranchGroupByRootId($row['id']);
+            $final = array();
+            while ($row = $finalRezult->fetch_assoc()) {
+                $final[] = $row['id'];
+            }
+            $tabaghe['subCategory'] = $final;
             $res[] = $tabaghe;
         }
-        for ($i = 0; $i < count($res); $i++) {
-
-            $rezult = $model->getTabaghe($res[$i]['id']);
-            while ($row = $rezult->fetch_assoc()) {
-                $tabaghe = array();
-                $tabaghe['id'] = $row['id'];
-                $tabaghe['subject'] = $row['subject'];
-                $res[] = $tabaghe;
-            }
-        }
-        $tabaghe = array();
-        $tabaghe['id'] = $id;
-        $tabaghe['subject'] = (new Tabaghe())->getGroupingSubjectByGroupId($id);
-        $res[] = $tabaghe;
         return $res;
     }
 

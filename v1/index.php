@@ -90,7 +90,7 @@ $app->get('/getSelectedTeacher', function (Request $req, Response $res) {
 $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
 
     $uperId = $req->getAttribute('uperId');
-    $res->getBody()->write(PresentGrouping::getTabaghe($uperId));
+    $res->getBody()->write(PresentGrouping::getTabagheByUperId($uperId));
 });
 
 /////////////////////////////courseMethods
@@ -186,7 +186,7 @@ $app->get('/getRegistrationsName/{idCourse}/{idTeacher}', function (Request $req
 
     $idCourse = $req->getAttribute('idCourse');
     $acTeacher = $req->getAttribute('idTeacher');
-    $res->getBody()->write(PresentUser::getRegistrationsName($idCourse, $acTeacher));
+    $res->getBody()->write(PresentSabtenam::getRegistrationsName($idCourse, $acTeacher));
 
 });
 
@@ -329,9 +329,9 @@ $app->get('/getMahoorAppData', function (Request $req, Response $res) {
     $res->getBody()->write(PresentAppData::getAppData());
 });
 
-//$app->get('/test', function (Request $req, Response $res) {
-//    SendingEmail::sendEmailWithYahoo('godhelot1@gmail.com', 9595);
-//});
+$app->get('/test/{id}', function (Request $req, Response $res) {
+    $res->getBody()->write(PresentCourse::getCourseByTeacherId($req->getAttribute('id')));
+});
 
 $app->run();
 

@@ -9,9 +9,9 @@
 require_once 'model/Tabaghe.php';
 class PresentGrouping
 {
-    public static function getTabaghe($uperId){
+    public static function getTabagheByUperId($uperId){
         $tabaghe = new Tabaghe();
-        $rezult = $tabaghe->getTabaghe($uperId);
+        $rezult = $tabaghe->getTabagheByUperId($uperId);
         $res = array();
         while($row = $rezult->fetch_assoc()){
             $tabaghe = array();
