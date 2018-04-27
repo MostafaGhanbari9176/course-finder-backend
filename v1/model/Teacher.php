@@ -92,4 +92,13 @@ class Teacher
             return 1;
         return 0;
     }
+
+    public function getNewTeacher(){
+
+//      SELECT TOP 30 * FROM Customers c ORDER BY c.CustomerID DESC
+        $sql = " SELECT * FROM $this->tableName t ORDER BY t.`definition_date`  DESC LIMIT 10";
+        $result = $this->con->prepare($sql);
+        $result->execute();
+        return $result->get_result();
+    }
 }

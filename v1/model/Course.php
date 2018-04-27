@@ -132,4 +132,12 @@ class Course
         return 0;
     }
 
+    public function getNewCourse(){
+
+        $sql = "SELECT * FROM $this->tablename c ORDER BY c.cource_id DESC LIMIT 10";
+        $result = $this->conn->prepare($sql);
+        $result->execute();
+        return $result->get_result();
+    }
+
 }

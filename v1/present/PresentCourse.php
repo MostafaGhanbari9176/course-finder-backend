@@ -446,7 +446,49 @@ class PresentCourse
         return $res;
     }
 
+    public static function getCustomeCourseListForHome()
+    {
+        $res = array();
+        $item = array();
+        $item['courses'] = self::getNewCourse();
+        $item['groupSubject'] = 'دوره های جدید';
+        $res[] = $item;
+        if (!$res) {
+            $message = array();
+            $message ['empty'] = 1;
+            $res[] = $message;
+        }
 
+        return json_encode($res);
+
+    }
+
+    private static function getNewCourse()
+    {
+        $course = new Course();
+        $resuelt = $course->getNewCourse();
+        $res = array();
+        while ($row = $resuelt->fetch_assoc()) {
+
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+                continue;
+            $course = array();
+            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
+            $course['startDate'] = $row['start_date'];
+            $course['id'] = $row['cource_id'];
+            $course['CourseName'] = $row['subject'];
+            $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+            $res[] = $course;
+        }
+
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+        return $res;
+
+    }
 
     static function creatGroupingArr($id)
     {

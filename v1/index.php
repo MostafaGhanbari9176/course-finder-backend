@@ -87,6 +87,10 @@ $app->get('/getSelectedTeacher', function (Request $req, Response $res) {
     $res->getBody()->write(PresenterTeacher::getSelectedTeacher());
 });
 
+$app->get('/getCustomTeacherListData', function (Request $req, Response $res){
+    $res->getBody()->write(PresenterTeacher::getCustomTeacherListForHome());
+});
+
 $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
 
     $uperId = $req->getAttribute('uperId');
@@ -155,15 +159,10 @@ $app->get('/getCourseByGroupingId/{id}', function (Request $req, Response $res) 
     $res->getBody()->write(PresentCourse::getCourseByGroupingId($id));
 });
 
-$app->get('/getNewCourse', function (Request $req, Response $res) {
+$app->get('/getCustomCourseListForHome', function (Request $req, Response $res) {
 
-    $res->getBody()->write(PresentCourse::getNewCourse());
+    $res->getBody()->write(PresentCourse::getCustomeCourseListForHome());
 });
-/*
-$app->get('/getFullCapacityCourse', function (Request $req, Response $res) {
-
-    $res->getBody()->write(PresentCourse::getNewCourse());
-});*/
 
 /////////////////////////////sabtenamMethods
 
@@ -329,8 +328,10 @@ $app->get('/getMahoorAppData', function (Request $req, Response $res) {
     $res->getBody()->write(PresentAppData::getAppData());
 });
 
-$app->get('/test/{id}', function (Request $req, Response $res) {
-    $res->getBody()->write(PresentCourse::getCourseByTeacherId($req->getAttribute('id')));
+$app->get('/test', function (Request $req, Response $res) {
+    $res->getBody()->write((new Teacher())->getNewTeacher());
+    //str_replace("-","",$req->getAttribute('id'))
+
 });
 
 $app->run();

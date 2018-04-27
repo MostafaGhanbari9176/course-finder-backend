@@ -117,6 +117,44 @@ class PresenterTeacher
         }
     }
 
+    public static function getNewTeacher()
+    {
+        $model = new Teacher();
+        $result = $model->getNewTeacher();
+        $res = array();
+        while ($row = $result->fetch_assoc()) {
+            if ($row['madrak'] != 2)
+                continue;
+            $teacher = array();
+            $teacher['pictureId'] = $row['picture_id'];
+            $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
+            $teacher['subject'] = $row['subject'];
+            $teacher['teacherRat'] = PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone']));
+            $res[] = $teacher;
+        }
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+        return $res;
+    }
+
+    public static function getCustomTeacherListForHome(){
+        $res = array();
+        $item = array();
+        $item['teachers'] = self::getNewTeacher();
+        $item['groupSubject'] = 'آموزشگاهای های جدید';
+        $res[] = $item;
+        if (!$res) {
+            $message = array();
+            $message ['empty'] = 1;
+            $res[] = $message;
+        }
+
+        return json_encode($res);
+    }
+
     public static function getAllTeacher()
     {
         $teacher = new Teacher();
