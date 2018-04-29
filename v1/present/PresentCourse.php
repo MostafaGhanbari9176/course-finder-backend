@@ -331,7 +331,7 @@ class PresentCourse
                 $course = array();
                 if ($counter >= 10) {
                     $course['endOfList'] = 1;
-                    $course['idTabaghe'] = $row['tabaghe_id'];
+                    $course['idTabaghe'] = $rowOfGroupList['id'];
                     $courses[] = $course;
                     break;
                 }
@@ -403,7 +403,7 @@ class PresentCourse
                 }
                 if ($counter >= 10) {
                     $course['endOfList'] = 1;
-                    $course['idTabaghe'] = $row['tabaghe_id'];
+                    $course['idTabaghe'] = $arr[$i]['id'];
                     $courses[] = $course;
                     break;
                 }
