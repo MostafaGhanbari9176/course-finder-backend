@@ -91,6 +91,25 @@ class Course
 
     }
 
+    public function incrementCapacity($courseId)
+    {
+        $sql = "SELECT c.capacity FROM $this->tablename c WHERE c.cource_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('i', $courseId);
+        if (!$result->execute())
+            return 0;
+
+        $capacity = $result->get_result()->fetch_assoc()['capacity'];
+        $capacity = $capacity + 1;
+        $sql = "UPDATE $this->tablename c SET capacity = ? WHERE c.cource_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('ii', $capacity, $courseId);
+        if ($result->execute())
+            return 1;
+        return 0;
+
+    }
+
     public function getCourseById($id)
     {
         $sql = "SELECT * FROM $this->tablename c WHERE c.cource_id = ?";

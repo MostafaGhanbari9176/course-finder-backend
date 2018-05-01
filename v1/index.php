@@ -87,7 +87,7 @@ $app->get('/getSelectedTeacher', function (Request $req, Response $res) {
     $res->getBody()->write(PresenterTeacher::getSelectedTeacher());
 });
 
-$app->get('/getCustomTeacherListData', function (Request $req, Response $res){
+$app->get('/getCustomTeacherListData', function (Request $req, Response $res) {
     $res->getBody()->write(PresenterTeacher::getCustomTeacherListForHome());
 });
 
@@ -294,6 +294,13 @@ $app->get('/updateCanceledFlag/{sabtenamId}/{code}', function (Request $req, Res
 
 });
 
+$app->get('/updateMoreCanceledFlag/{data}', function (Request $req, Response $res) {
+
+    $data = $req->getAttribute('data');
+    $res->getBody()->write(PresentSabtenam::updateMoreCanceledFlag($data));
+
+});
+
 $app->get('/checkedServerStatuse', function (Request $req, Response $res) {
     $rezuelt = array();
     $rezuelt["code"] = 1;
@@ -312,6 +319,11 @@ $app->get('/confirmStudent/{sabtenamId}/{ac}/{courseId}', function (Request $req
     $ac = $req->getAttribute('ac');
     $courseId = $req->getAttribute('courseId');
     $res->getBody()->write(PresentSabtenam::confirmStudent($ac, $sabtenamId, $courseId));
+});
+
+$app->get('/confirmMoreStudent/{data}', function (Request $req, Response $res) {
+    $data = $req->getAttribute('sabtenamId');
+    $res->getBody()->write(PresentSabtenam::confirmMoreStudent($data));
 });
 
 $app->get('/RePoRt/{signText}/{reportText}/{spamId}/{spamerId}/{reporterId}', function (Request $req, Response $res) {

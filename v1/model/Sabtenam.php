@@ -69,8 +69,8 @@ class Sabtenam
         $result = $this->conn->prepare($sql);
         $result->bind_param('ii', $code, $sabteNameId);
         if ($result->execute())
-            return 1;
-        return 0;
+            return true;
+        return false;
     }
 
     public function confirmStudent($sabtenamId, $teacherId){
@@ -80,7 +80,7 @@ class Sabtenam
         $result = $this->conn->prepare($sql);
         $result->bind_param('iis', $vaziat, $sabtenamId, $teacherId);
         if ($result->execute())
-            return 1;
-        return 0;
+            return true;
+        return false;
     }
 }

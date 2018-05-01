@@ -64,6 +64,24 @@ class PresentSabtenam
         return json_encode($message);
     }
 
+    public static function updateMoreCanceledFlag($data)
+    {
+
+        $students = json_decode($data);
+        $resuelt = 0;
+        $model = new Sabtenam();
+        for ($i = 0; $i < sizeof($students); $i++) {
+            if ($model->updatecanceledFlag($students[$i]['sabtenamId'], 1))
+                $resuelt = (new Course())->incrementCapacity($students[$i]['courseId']);
+        }
+        $res = array();
+        $res['code'] = 1;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+
+    }
+
     public static function confirmStudent($ac, $SabtenamId, $courseId)
     {
 
@@ -75,6 +93,27 @@ class PresentSabtenam
             $rezuelt2 = (new Course())->decrementCapacity($courseId);
         $res = array();
         $res['code'] = $rezuelt2;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+
+    }
+
+
+    public static function confirmMoreStudent($data)
+    {
+
+        $students = json_decode($data);
+        $resuelt = 0;
+        $user = new User();
+        $sabtenam = new Sabtenam();
+        for ($i = 0; $i < sizeof($students); $i++) {
+            $idUser = $user->getPhoneByAc($students[$i]['ac']);
+            if ($sabtenam->confirmStudent($students[$i]['sabtenamId'], $idUser))
+                $resuelt = (new Course())->decrementCapacity($students[$i]['courseId']);
+        }
+        $res = array();
+        $res['code'] = 1;
         $message = array();
         $message[] = $res;
         return json_encode($message);
