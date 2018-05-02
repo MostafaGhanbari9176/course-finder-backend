@@ -168,13 +168,12 @@ class PresenterTeacher
             $teacher['lg'] = $row['lon'];
             $res[] = $teacher;
         }
-        if ($res) {
-            return json_encode($res);
-        } else {
-            $res['erorr'] = "ok";
-            $res['empoty'] = "ok";
-            return json_encode($res);
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
         }
+        return json_encode($res);
     }
 
     public static function updateTeacher($phone, $landPhone, $madrak, $subject, $address, $cityId)

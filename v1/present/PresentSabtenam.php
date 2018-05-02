@@ -10,6 +10,8 @@ require_once 'model/User.php';
 require_once 'model/Comment.php';
 require_once 'model/Course.php';
 
+//require 'present/PresentSmsBox.php';
+
 class PresentSabtenam
 {
     public static function add($idCourse, $acTeacher, $acUser)
@@ -53,26 +55,30 @@ class PresentSabtenam
 
     }
 
-    public static function updateCanceledFlag($sabteNameId, $code)
+    public static function updateCanceledFlag($sabteNameId, $code, $courseId, $message, $tsId, $rsId)
     {
         $model = new Sabtenam();
-        $resuelt = $model->updatecanceledFlag($sabteNameId, $code);
+        $result = 0;
+        if ($model->updatecanceledFlag($sabteNameId, $code) && $code == 1) {
+            $result = (new Course())->incrementCapacity($courseId);
+            PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
+        }
         $res = array();
-        $res['code'] = $resuelt;
+        $res['code'] = $result;
         $message = array();
         $message[] = $res;
         return json_encode($message);
     }
 
-    public static function updateMoreCanceledFlag($data)
+    public static function updateMoreCanceledFlag($data, $message)
     {
-
-        $students = json_decode($data);
-        $resuelt = 0;
+        $students = json_decode($data, true);
         $model = new Sabtenam();
+        $course = new Course();
         for ($i = 0; $i < sizeof($students); $i++) {
-            if ($model->updatecanceledFlag($students[$i]['sabtenamId'], 1))
-                $resuelt = (new Course())->incrementCapacity($students[$i]['courseId']);
+            $model->updatecanceledFlag($students[$i]['sabtenamId'], 1);
+            $course->incrementCapacity($students[$i]['courseId']);
+            PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
         }
         $res = array();
         $res['code'] = 1;
@@ -82,17 +88,17 @@ class PresentSabtenam
 
     }
 
-    public static function confirmStudent($ac, $SabtenamId, $courseId)
+    public static function confirmStudent($SabtenamId, $courseId, $message, $tsId, $rsId)
     {
 
-        $idUser = (new User())->getPhoneByAc($ac);
         $model = new Sabtenam();
-        $resuelt = $model->confirmStudent($SabtenamId, $idUser);
-        $rezuelt2 = 0;
-        if ($resuelt == 1)
-            $rezuelt2 = (new Course())->decrementCapacity($courseId);
+        $result = 0;
+        if ($model->confirmStudent($SabtenamId)) {
+            $result = (new Course())->decrementCapacity($courseId);
+            PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
+        }
         $res = array();
-        $res['code'] = $rezuelt2;
+        $res['code'] = $result;
         $message = array();
         $message[] = $res;
         return json_encode($message);
@@ -100,17 +106,16 @@ class PresentSabtenam
     }
 
 
-    public static function confirmMoreStudent($data)
+    public static function confirmMoreStudent($data, $message)
     {
 
-        $students = json_decode($data);
-        $resuelt = 0;
-        $user = new User();
+        $students = json_decode($data, true);
         $sabtenam = new Sabtenam();
+        $course = new Course();
         for ($i = 0; $i < sizeof($students); $i++) {
-            $idUser = $user->getPhoneByAc($students[$i]['ac']);
-            if ($sabtenam->confirmStudent($students[$i]['sabtenamId'], $idUser))
-                $resuelt = (new Course())->decrementCapacity($students[$i]['courseId']);
+            $sabtenam->confirmStudent($students[$i]['sabtenamId']);
+            $course->decrementCapacity($students[$i]['courseId']);
+            PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
         }
         $res = array();
         $res['code'] = 1;

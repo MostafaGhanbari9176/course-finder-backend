@@ -73,12 +73,12 @@ class Sabtenam
         return false;
     }
 
-    public function confirmStudent($sabtenamId, $teacherId){
+    public function confirmStudent($sabtenamId){
 
         $vaziat = 1;
-        $sql = "UPDATE $this->tableName s SET vaziat = ? WHERE s.id = ? && s.teacher_id = ?";
+        $sql = "UPDATE $this->tableName s SET vaziat = ? WHERE s.id = ?";
         $result = $this->conn->prepare($sql);
-        $result->bind_param('iis', $vaziat, $sabtenamId, $teacherId);
+        $result->bind_param('ii', $vaziat, $sabtenamId);
         if ($result->execute())
             return true;
         return false;

@@ -286,18 +286,23 @@ $app->get('/deleteSms/{id}', function (Request $req, Response $res) {
 //
 //});
 
-$app->get('/updateCanceledFlag/{sabtenamId}/{code}', function (Request $req, Response $res) {
+$app->get('/updateCanceledFlag/{sabtenamId}/{code}/{courseId}/{message}/{tsId}/{rsId}', function (Request $req, Response $res) {
 
     $id = $req->getAttribute('sabtenamId');
     $code = $req->getAttribute('code');
-    $res->getBody()->write(PresentSabtenam::updateCanceledFlag($id, $code));
+    $courseId = $req->getAttribute('courseId');
+    $message = $req->getAttribute('message');
+    $tsId = $req->getAttribute('tsId');
+    $rsId = $req->getAttribute('rsId');
+    $res->getBody()->write(PresentSabtenam::updateCanceledFlag($id, $code, $courseId, $message, $tsId, $rsId));
 
 });
 
-$app->get('/updateMoreCanceledFlag/{data}', function (Request $req, Response $res) {
+$app->get('/updateMoreCanceledFlag/{data}/{message}', function (Request $req, Response $res) {
 
     $data = $req->getAttribute('data');
-    $res->getBody()->write(PresentSabtenam::updateMoreCanceledFlag($data));
+    $message = $req->getAttribute('message');
+    $res->getBody()->write(PresentSabtenam::updateMoreCanceledFlag($data, $message));
 
 });
 
@@ -314,16 +319,19 @@ $app->get('/checkedUserStatuse/{id}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentUser::checkUserStatuse($UserId));
 });
 
-$app->get('/confirmStudent/{sabtenamId}/{ac}/{courseId}', function (Request $req, Response $res) {
+$app->get('/confirmStudent/{sabtenamId}/{courseId}/{message}/{tsId}/{rsId}', function (Request $req, Response $res) {
     $sabtenamId = $req->getAttribute('sabtenamId');
-    $ac = $req->getAttribute('ac');
     $courseId = $req->getAttribute('courseId');
-    $res->getBody()->write(PresentSabtenam::confirmStudent($ac, $sabtenamId, $courseId));
+    $message = $req->getAttribute('message');
+    $tsId = $req->getAttribute('tsId');
+    $rsId = $req->getAttribute('rsId');
+    $res->getBody()->write(PresentSabtenam::confirmStudent($sabtenamId, $courseId, $message, $tsId, $rsId));
 });
 
-$app->get('/confirmMoreStudent/{data}', function (Request $req, Response $res) {
-    $data = $req->getAttribute('sabtenamId');
-    $res->getBody()->write(PresentSabtenam::confirmMoreStudent($data));
+$app->get('/confirmMoreStudent/{data}/{message}', function (Request $req, Response $res) {
+    $data = $req->getAttribute('data');
+    $message = $req->getAttribute('message');
+    $res->getBody()->write(PresentSabtenam::confirmMoreStudent($data, $message));
 });
 
 $app->get('/RePoRt/{signText}/{reportText}/{spamId}/{spamerId}/{reporterId}', function (Request $req, Response $res) {

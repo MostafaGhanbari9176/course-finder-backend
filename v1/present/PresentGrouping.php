@@ -18,6 +18,7 @@ class PresentGrouping
             $tabaghe['id'] = $row['id'];
             $tabaghe['subject'] = $row['subject'];
             $tabaghe['uperId'] = $row['uper_id'];
+            $tabaghe['isFinaly'] = $row['final'];
             $res[] = $tabaghe;
         }
         if ($res) {

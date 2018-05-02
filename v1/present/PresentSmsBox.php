@@ -10,6 +10,7 @@ require_once 'model/SmsBox.php';
 require_once 'model/Teacher.php';
 require_once 'model/user.php';
 
+
 class PresentSmsBox
 {
     public static function saveSms($text, $tsId, $rsId, $courseId, $howSending)
@@ -22,7 +23,6 @@ class PresentSmsBox
         $res['code'] = $result;
         $message = array();
         $message[] = $res;
-
         return json_encode($message);
     }
 
