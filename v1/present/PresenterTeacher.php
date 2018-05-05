@@ -166,6 +166,7 @@ class PresenterTeacher
             $teacher['subject'] = $row['subject'];
             $teacher['lt'] = $row['lat'];
             $teacher['lg'] = $row['lon'];
+            $teacher['pictureId'] = $row['picture_id'];
             $res[] = $teacher;
         }
         if (!$res) {

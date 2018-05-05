@@ -34,9 +34,11 @@ class PresentSabtenam
         $resuelt1 = $sabtenam->getByUserId($idUser);
         $result = -1;
         $vaziat = -1;
+        $isCanceled = -1;
         while ($row = $resuelt1->fetch_assoc()) {
             if ($idCourse == $row['cource_id']) {
                 $vaziat = $row['vaziat'];
+                $isCanceled = $row['is_canceled'];
                 $result = (new Comment())->getRatByCourseIdAndUserId($idCourse, $idUser);
                 break;
             }
@@ -45,10 +47,12 @@ class PresentSabtenam
         if ($result == null)
             $result = 0;
         $res = array();
-        if ($vaziat == 0)
-            $res["code"] = -2;
+        if ($isCanceled == 1)
+            $res['code'] = -3;
+        else if ($vaziat == 0)
+            $res['code'] = -2;
         else
-            $res["code"] = $result;
+            $res['code'] = $result;
         $message = array();
         $message[] = $res;
         return json_encode($message);
