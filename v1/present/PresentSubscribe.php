@@ -12,17 +12,78 @@ class PresentSubscribe
     public static function haveASubscription($ac)
     {
         $have = 0;
-        $phone = (new User())->getPhoneByAc($ac);
+        $userId = (new User())->getPhoneByAc($ac);
         $subs = new Subscribe();
-        $resuelt = $subs->getByUserId($phone);
-        while ($row = $resuelt->fetch_assoc()) {
-            if ($row['user_id'] == $phone) {
+        $result = $subs->getUserSubscribe($userId);
+        while ($row = $result->fetch_assoc()) {
+            if ($row['user_id'] == $userId && $row['remaining_courses'] > 0) {
                 $have = 1;
                 break;
             }
         }
-      //  return $have;
-        return 1;
+        return $have;
     }
+
+    public static function getSubscribeList()
+    {
+        $result = (new Subscribe())->getSubscribeList();
+        $res = array();
+        while ($row = $result->fetch_assoc()) {
+            $subscribe = array();
+            $subscribe['id'] = $row['id'];
+            $subscribe['price'] = $row['price'];
+            $subscribe['period'] = $row['period'];
+            $subscribe['subject'] = $row['subject'];
+            $subscribe['description'] = $row['description'];
+            $subscribe['remainingCourses'] = $row['remaining_courses'];
+            $res[] = $subscribe;
+        }
+
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+
+        return json_encode($res);
+
+    }
+
+    public static function getUserSubscribe($ac)
+    {
+        $res = array();
+        $userId = (new User())->getPhoneByAc($ac);
+        $subs = new Subscribe();
+        $result = $subs->getUserSubscribe($userId);
+        while ($row = $result->fetch_assoc()) {
+            $subscribe = array();
+            $subscribe['id'] = $row['id'];
+            $subscribe['price'] = $row['price'];
+            $subscribe['period'] = $row['period'];
+            $subscribe['subject'] = $row['subject'];
+            $subscribe['description'] = $row['description'];
+            $subscribe['remainingCourses'] = $row['remaining_courses'];
+            $res[] = $subscribe;
+        }
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+
+        return json_encode($res);
+    }
+
+    public static function saveUserBuy($ac, $buyDate, $token, $remainingCourse, $subscribeId)
+    {
+        $userId = (new User())->getPhoneByAc($ac);
+        $result = (new Subscribe())->saveUserBuy($userId, $buyDate, $token, $remainingCourse, $subscribeId);
+        $res = array();
+        $message['code'] = $result;
+        $res[] = $message;
+        return json_encode($res);
+
+    }
+
 
 }

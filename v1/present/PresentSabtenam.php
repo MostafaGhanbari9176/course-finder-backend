@@ -32,13 +32,15 @@ class PresentSabtenam
         $idUser = (new User())->getPhoneByAc($acUser);
         $sabtenam = new Sabtenam();
         $resuelt1 = $sabtenam->getByUserId($idUser);
-        $result = -1;
+        $result = -1;//////  هنگام ثبتنام نداشتن منفی یک بر میگردد اصلاح شود
         $vaziat = -1;
         $isCanceled = -1;
         while ($row = $resuelt1->fetch_assoc()) {
             if ($idCourse == $row['cource_id']) {
                 $vaziat = $row['vaziat'];
                 $isCanceled = $row['is_canceled'];
+                if ($isCanceled == 2)
+                    continue;
                 $result = (new Comment())->getRatByCourseIdAndUserId($idCourse, $idUser);
                 break;
             }
@@ -63,9 +65,12 @@ class PresentSabtenam
     {
         $model = new Sabtenam();
         $result = 0;
-        if ($model->updatecanceledFlag($sabteNameId, $code) && $code == 1) {
-            $result = (new Course())->incrementCapacity($courseId);
-            PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
+        if ($model->updatecanceledFlag($sabteNameId, $code)) {
+            $result = 1;
+            if ($code == 1) {
+                (new Course())->incrementCapacity($courseId);
+                PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
+            }
         }
         $res = array();
         $res['code'] = $result;
@@ -74,7 +79,8 @@ class PresentSabtenam
         return json_encode($message);
     }
 
-    public static function updateMoreCanceledFlag($data, $message)
+    public
+    static function updateMoreCanceledFlag($data, $message)
     {
         $students = json_decode($data, true);
         $model = new Sabtenam();
@@ -92,7 +98,8 @@ class PresentSabtenam
 
     }
 
-    public static function confirmStudent($SabtenamId, $courseId, $message, $tsId, $rsId)
+    public
+    static function confirmStudent($SabtenamId, $courseId, $message, $tsId, $rsId)
     {
 
         $model = new Sabtenam();
@@ -110,7 +117,8 @@ class PresentSabtenam
     }
 
 
-    public static function confirmMoreStudent($data, $message)
+    public
+    static function confirmMoreStudent($data, $message)
     {
 
         $students = json_decode($data, true);
@@ -129,7 +137,8 @@ class PresentSabtenam
 
     }
 
-    public static function getRegistrationsName($courseId, $acTeacher)
+    public
+    static function getRegistrationsName($courseId, $acTeacher)
     {
         $idTeacher = (new User())->getPhoneByAc($acTeacher);
         $sabtenam = new Sabtenam();
@@ -156,7 +165,8 @@ class PresentSabtenam
 
     }
 
-    public static function getNumberOfWaitingStudent($teacherId, $courseId)
+    public
+    static function getNumberOfWaitingStudent($teacherId, $courseId)
     {
         $sabtenam = new Sabtenam();
         $resuelt1 = $sabtenam->getByTeacherIdAndCourseId($teacherId, $courseId);

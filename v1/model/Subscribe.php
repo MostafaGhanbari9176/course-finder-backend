@@ -6,10 +6,12 @@
  * Time: 12:56 PM
  */
 require_once 'uses/DBConnection.php';
+
 class Subscribe
 {
     private $conn;
-    private $tableName = 'subscribe';
+    private $subscribListTableName = 'subscribe';
+    private $buyTableName = 'buy';
 
     function __construct()
     {
@@ -19,13 +21,32 @@ class Subscribe
         mysqli_set_charset($this->conn, "UTF8");
     }
 
-    public function getByUserId($id)
+    public function getSubscribeList()
     {
-        $sql = "SELECT * FROM $this->tableName e WHERE e.user_id = ?";
+        $sql = "SELECT * FROM $this->subscribListTableName";
         $result = $this->conn->prepare($sql);
-        $result->bind_param('s', $id);
+        $result->execute();
+        return $result->get_result();
+    }
+
+    public function getUserSubscribe($userId)
+    {
+
+        $sql = "SELECT * FROM $this->buyTableName b WHERE b.user_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('i', $userId);
+        $result->execute();
+        return $result->get_result();
+    }
+
+    public function saveUserBuy($userId, $buyDate, $token, $remainingCourse, $subscribeId)
+    {
+
+        $sql = "INSERT INTO $this->$this->buyTableName (`user_id`, `buy_date`, `token`, `remaining_courses`, `subscribe_id`) VALUES (?, ?, ?, ?, ?)";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('sssii', $userId, $buyDate, $token, $remainingCourse, $subscribeId);
         if ($result->execute())
-            return $result->get_result();
+            return 1;
         return 0;
     }
 }

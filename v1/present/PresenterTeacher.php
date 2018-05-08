@@ -144,7 +144,7 @@ class PresenterTeacher
         $res = array();
         $item = array();
         $item['teachers'] = self::getNewTeacher();
-        $item['groupSubject'] = 'آموزشگاهای های جدید';
+        $item['groupSubject'] = 'آموزشگاهای جدید';
         $res[] = $item;
         if (!$res) {
             $message = array();

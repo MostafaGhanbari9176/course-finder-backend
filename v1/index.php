@@ -18,6 +18,7 @@ require 'present/PresenterTeacher.php';
 require 'present/PresentGrouping.php';
 require 'Present/PresentCourse.php';
 require 'Present/PresentSabtenam.php';
+require_once 'Present/PresentSubscribe.php';
 require 'Present/PresentComment.php';
 require 'jdf.php';
 require 'present/PresentSmsBox.php';
@@ -346,6 +347,11 @@ $app->get('/RePoRt/{signText}/{reportText}/{spamId}/{spamerId}/{reporterId}', fu
 $app->get('/getMahoorAppData', function (Request $req, Response $res) {
 
     $res->getBody()->write(PresentAppData::getAppData());
+});
+
+$app->get('/getSubscribeList', function (Request $req, Response $res) {
+
+    $res->getBody()->write(PresentSubscribe::getSubscribeList());
 });
 
 $app->get('/test', function (Request $req, Response $res) {
