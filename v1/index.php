@@ -251,6 +251,14 @@ $app->get('/saveSms/{text}/{tsId}/{rsId}/{courseId}/{howSending}', function (Req
 
 });
 
+$app->get('/sendMoreSms/{data}/{message}', function (Request $req, Response $res) {
+
+    $data = $req->getAttribute('data');
+    $message = $req->getAttribute('message');
+    $res->getBody()->write(PresentSmsBox::sendMoreSms($data, $message));
+
+});
+
 $app->get('/getRsSms/{rsId}', function (Request $req, Response $res) {
 
     $rsId = $req->getAttribute('rsId');
@@ -354,9 +362,25 @@ $app->get('/getSubscribeList', function (Request $req, Response $res) {
     $res->getBody()->write(PresentSubscribe::getSubscribeList());
 });
 
+$app->get('/getUserSubscribe/{ac}', function (Request $req, Response $res) {
+
+    $res->getBody()->write(PresentSubscribe::getUserSubscribe($req->getAttribute('ac')));
+});
+
+$app->post('/saveUserBuy', function (Request $req, Response $res) {
+
+    $postParam = $req->getParsedBody();
+
+    $tableName = $postParam['table_name'];
+    $phone = $postParam['phone'];
+    $phone = $postParam['phone'];
+
+    $res->getBody()->write(json_encode($responseArray));
+});
+
 $app->get('/test', function (Request $req, Response $res) {
-    $res->getBody()->write((new Teacher())->getNewTeacher());
-    //str_replace("-","",$req->getAttribute('id'))
+    $res->getBody()->write("");
+    //str_replace("-","",$req->getAttriute('id'))
 
 });
 

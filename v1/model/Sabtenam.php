@@ -43,7 +43,7 @@ class Sabtenam
 
     public function getSabtenamIdByUserIdAndCourseId($userId, $courseId)
     {
-        $sql = "SELECT c.id FROM $this->tableName c WHERE c.cource_id = ? && c.user_id = ?";
+        $sql = "SELECT c.id FROM $this->tableName c  WHERE c.cource_id = ? && c.user_id = ? ORDER BY c.id DESC LIMIT 1";
         $result = $this->conn->prepare($sql);
         $result->bind_param('is', $courseId, $userId);
         if ($result->execute())
@@ -73,7 +73,8 @@ class Sabtenam
         return false;
     }
 
-    public function confirmStudent($sabtenamId){
+    public function confirmStudent($sabtenamId)
+    {
 
         $vaziat = 1;
         $sql = "UPDATE $this->tableName s SET vaziat = ? WHERE s.id = ?";

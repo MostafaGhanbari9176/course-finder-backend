@@ -16,7 +16,7 @@ class PresentSubscribe
         $subs = new Subscribe();
         $result = $subs->getUserSubscribe($userId);
         while ($row = $result->fetch_assoc()) {
-            if ($row['user_id'] == $userId && $row['remaining_courses'] > 0) {
+            if ($row['user_id'] == $userId && $row['remaining_courses'] > 0) {/////////////////////date not checked
                 $have = 1;
                 break;
             }
@@ -55,13 +55,14 @@ class PresentSubscribe
         $userId = (new User())->getPhoneByAc($ac);
         $subs = new Subscribe();
         $result = $subs->getUserSubscribe($userId);
+        //$subscribeData = $subs->getSubscribe()
         while ($row = $result->fetch_assoc()) {
             $subscribe = array();
             $subscribe['id'] = $row['id'];
-            $subscribe['price'] = $row['price'];
-            $subscribe['period'] = $row['period'];
-            $subscribe['subject'] = $row['subject'];
-            $subscribe['description'] = $row['description'];
+            $subscribe['price'] = $row['user_id'];
+            $subscribe['period'] = $row['buy_date'];
+            $subscribe['subject'] = $row['subscribe_id'];
+            $subscribe['description'] = $row['vaziat'];
             $subscribe['remainingCourses'] = $row['remaining_courses'];
             $res[] = $subscribe;
         }
@@ -74,10 +75,11 @@ class PresentSubscribe
         return json_encode($res);
     }
 
-    public static function saveUserBuy($ac, $buyDate, $token, $remainingCourse, $subscribeId)
+    public static function saveUserBuy($ac, $token, $subscribeId)
     {
         $userId = (new User())->getPhoneByAc($ac);
-        $result = (new Subscribe())->saveUserBuy($userId, $buyDate, $token, $remainingCourse, $subscribeId);
+        $subscribe = new Subscribe();
+        $result = $subscribe->saveUserBuy($userId, getJDate(null), $token, $subscribe->getRemainingCourse($subscribeId), $subscribeId);
         $res = array();
         $message['code'] = $result;
         $res[] = $message;

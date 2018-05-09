@@ -49,4 +49,26 @@ class Subscribe
             return 1;
         return 0;
     }
+
+    public function getRemainingCourse($subscribeId)
+    {
+
+        $sql = "SELECT s.remaining_courses FROM $this->subscribListTableName s WHERE s.id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('i', $subscribeId);
+        $result->execute();
+        return $result->get_result()->fetch_assoc()['remaining_courses'];
+    }
+
+    public function getSubscribe($subscribeId)
+    {
+
+        $sql = "SELECT * FROM $this->subscribListTableName s WHERE s.id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('i', $subscribeId);
+        $result->execute();
+        $result->get_result()->fetch_assoc();
+    }
+
+
 }

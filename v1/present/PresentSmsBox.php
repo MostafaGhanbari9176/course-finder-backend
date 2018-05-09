@@ -26,6 +26,21 @@ class PresentSmsBox
         return json_encode($message);
     }
 
+    public
+    static function sendMoreSms($data, $message)
+    {
+        $students = json_decode($data, true);
+        for ($i = 0; $i < sizeof($students); $i++) {
+            PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
+        }
+        $res = array();
+        $res['code'] = 1;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
+
+    }
+
     public static function getRsSms($rsId)
     {
         $rsPhone = (new User())->getPhoneByAc($rsId);
@@ -72,9 +87,9 @@ class PresentSmsBox
             $sms['seen'] = $row['seen_flag'];
             $sms['courseId'] = $row['course_id'];
 //            if ($row['how_sending'] == 0)
-                $sms['rsName'] = (new User())->getUserName($row['rs_id']);
-/*            else
-                $sms['rsName'] = "آموزشگاه ".(new Teacher())->getTeacherName($row['rs_id']);*/
+            $sms['rsName'] = (new User())->getUserName($row['rs_id']);
+            /*            else
+                            $sms['rsName'] = "آموزشگاه ".(new Teacher())->getTeacherName($row['rs_id']);*/
             $sms['courseName'] = (new Course())->getCourseName($row['course_id']);
             $res[] = $sms;
         }
@@ -88,7 +103,8 @@ class PresentSmsBox
         }
     }
 
-    public static function upDateSeen($id){
+    public static function upDateSeen($id)
+    {
         $model = new SmsBox();
         $result = $model->upDateSeen($id);
         $res = array();
@@ -98,7 +114,8 @@ class PresentSmsBox
         return json_encode($message);
     }
 
-    public static function deleteSms($id){
+    public static function deleteSms($id)
+    {
         $model = new SmsBox();
         $result = $model->deleteSms($id);
         $res = array();

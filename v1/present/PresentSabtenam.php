@@ -37,10 +37,10 @@ class PresentSabtenam
         $isCanceled = -1;
         while ($row = $resuelt1->fetch_assoc()) {
             if ($idCourse == $row['cource_id']) {
+                if ($row['is_canceled'] == 2)
+                    continue;
                 $vaziat = $row['vaziat'];
                 $isCanceled = $row['is_canceled'];
-                if ($isCanceled == 2)
-                    continue;
                 $result = (new Comment())->getRatByCourseIdAndUserId($idCourse, $idUser);
                 break;
             }
