@@ -9,6 +9,7 @@ require_once 'model/Course.php';
 require_once 'model/User.php';
 require_once 'model/Sabtenam.php';
 require_once 'model/Tabaghe.php';
+require_once 'model/Subscribe.php';
 require_once 'present/PresentGrouping.php';
 
 
@@ -18,15 +19,17 @@ class PresentCourse
     public static function addCourse($ac, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld)
     {
         $res = array();
-        if (PresentSubscribe::haveASubscription($ac) == 0) {
+        $teacher_id = (new User())->getPhoneByAc($ac);
+        if (PresentSubscribe::haveASubscription($teacher_id) == 0) {
             $res['code'] = 404;
-            $res['bus'] = base64_encode((base64_encode("BnAoD")));
+            $res['sub'] = base64_encode((base64_encode("BnAoD")));
         } else {
-            $teacher_id = (new User())->getPhoneByAc($ac);
+
+            (new Subscribe())->decrementRemainingCourse($teacher_id);
             $course = new Course();
             $rezult = $course->addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
             $res['code'] = $rezult;
-            $res['bus'] = base64_encode((base64_encode("YoEkS")));
+            $res['sub'] = base64_encode((base64_encode("YoEkS")));
         }
         $message = array();
         $message[] = $res;
@@ -39,7 +42,6 @@ class PresentCourse
         $resuelt = $course->getAllCourse();
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
-//            echo $row['is_deleted']."";
             if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
                 continue;
             $course = array();
@@ -85,90 +87,6 @@ class PresentCourse
             return json_encode($res);
         }
     }
-
-    /*    public static function getNewCourse()
-        {
-
-            $arr = array();
-            $course = new Course();
-            $resuelt = $course->getAllCourse();
-            $res = array();
-            while ($row = $resuelt->fetch_assoc()) {
-                $course = array();
-                $arr['date'] = $row['definition_date'];
-                $arr['delay'] = 7;
-                $range_date = getJDate($arr);
-                if (strcmp($range_date, getJDate(null)) > 0) {
-                    $course['id'] = $row['cource_id'];
-                    $course['idTeacher'] = $row['teacher_id'];
-                    $course['CourseName'] = $row['subject'];
-                    $course['type'] = $row['type'];//
-                    $course['capacity'] = $row['capacity'];//
-                    $course['mony'] = $row['mony'];//
-                    $course['sharayet'] = $row['sharayet'];//
-                    $course['tozihat'] = $row['tozihat'];//
-                    $course['endDate'] = $row['end_date'];//
-                    $course['day'] = $row['day'];//
-                    $course['hours'] = $row['hours'];//
-                    $course['range'] = $row['min_old'];//
-                    $course['idTabaghe'] = $row['tabaghe_id'];//
-                    $course['startDate'] = $row['start_date'];
-                    $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
-                    $course['tabaghe'] = (new Course())->getTabaghe($row['cource_id']);
-                    $res[] = $course;
-                }
-            }
-            if ($res) {
-                return json_encode($res);
-            } else {
-                $course = array();
-                $course['empty'] = 1;
-                $res[] = $course;
-                return json_encode($res);
-            }
-        }
-
-        public static function getFullCapacityCourse()
-        {
-
-            $arr = array();
-            $course = new Course();
-            $resuelt = $course->getAllCourse();
-            $res = array();
-            while ($row = $resuelt->fetch_assoc()) {
-                $course = array();
-                $arr['date'] = $row['definition_date'];
-                $arr['delay'] = 7;
-                $range_date = getJDate($arr);
-                if (strcmp($range_date, getJDate(null)) > 0) {
-                    $course['id'] = $row['cource_id'];
-    //              $course['idTeacher'] = $row['teacher_id'];
-                    $course['CourseName'] = $row['subject'];
-                    $course['type'] = $row['type'];//
-                    $course['capacity'] = $row['capacity'];//
-                    $course['mony'] = $row['mony'];//
-                    $course['sharayet'] = $row['sharayet'];//
-                    $course['tozihat'] = $row['tozihat'];//
-                    $course['endDate'] = $row['end_date'];//
-                    $course['day'] = $row['day'];//
-                    $course['hours'] = $row['hours'];//
-                    $course['range'] = $row['min_old'];//
-                    $course['idTabaghe'] = $row['tabaghe_id'];//
-                    $course['startDate'] = $row['start_date'];
-                    $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
-                    $course['tabaghe'] = (new Course())->getTabaghe($row['cource_id']);
-                    $res[] = $course;
-                }
-            }
-            if ($res) {
-                return json_encode($res);
-            } else {
-                $course = array();
-                $course['empty'] = 1;
-                $res[] = $course;
-                return json_encode($res);
-            }
-        }*/
 
     public static function updateDeletedFlag($courseId, $code)
     {

@@ -9,18 +9,15 @@ require_once 'model/Subscribe.php';
 
 class PresentSubscribe
 {
-    public static function haveASubscription($ac)
+    public static function haveASubscription($userId)
     {
         $have = 0;
-        $userId = (new User())->getPhoneByAc($ac);
         $subs = new Subscribe();
-        $result = $subs->getUserSubscribe($userId);
-        while ($row = $result->fetch_assoc()) {
-            if ($row['user_id'] == $userId && $row['remaining_courses'] > 0) {/////////////////////date not checked
-                $have = 1;
-                break;
-            }
-        }
+        $row = $subs->getUserSubscribe($userId);
+        if ($row['vaziat'] == 1 && $row['user_id'] == $userId && $row['remaining_courses'] > 0 && $row['end_buy_date'] >= getJDate(null))
+            $have = 1;
+        if (sizeof($row) > 0 && $have == 0)
+            $subs->updateVaziat($row['id'], 0);
         return $have;
     }
 
@@ -53,18 +50,23 @@ class PresentSubscribe
     {
         $res = array();
         $userId = (new User())->getPhoneByAc($ac);
+        PresentSubscribe::haveASubscription($userId);
         $subs = new Subscribe();
-        $result = $subs->getUserSubscribe($userId);
-        //$subscribeData = $subs->getSubscribe()
-        while ($row = $result->fetch_assoc()) {
-            $subscribe = array();
-            $subscribe['id'] = $row['id'];
-            $subscribe['price'] = $row['user_id'];
-            $subscribe['period'] = $row['buy_date'];
-            $subscribe['subject'] = $row['subscribe_id'];
-            $subscribe['description'] = $row['vaziat'];
-            $subscribe['remainingCourses'] = $row['remaining_courses'];
-            $res[] = $subscribe;
+        $userBuy = $subs->getUserSubscribe($userId);
+        if (sizeof($userBuy) > 0) {
+            $subscribeData = $subs->getSubscribe($userBuy['subscribe_id']);
+            $buy = array();
+            $buy['userId'] = $ac;
+            $buy['id'] = $userBuy['id'];
+            $buy['vaziat'] = $userBuy['vaziat'];
+            $buy['buyDate'] = base64_encode((base64_encode($userBuy['buy_date'])));
+            $buy['price'] = $subscribeData['price'];
+            $buy['endBuyDate'] = base64_encode((base64_encode($userBuy['end_buy_date'])));
+            $buy['description'] = $subscribeData['description'];
+            $buy['subjectSubscribe'] = $subscribeData['subject'];
+            $buy['subscribeId'] = $userBuy['subscribe_id'];
+            $buy['remainingCourses'] = $userBuy['remaining_courses'];
+            $res[] = $buy;
         }
         if (!$res) {
             $message = array();
@@ -79,7 +81,8 @@ class PresentSubscribe
     {
         $userId = (new User())->getPhoneByAc($ac);
         $subscribe = new Subscribe();
-        $result = $subscribe->saveUserBuy($userId, getJDate(null), $token, $subscribe->getRemainingCourse($subscribeId), $subscribeId);
+        $subscribeData = $subscribe->getSubscribe($subscribeId);
+        $result = $subscribe->saveUserBuy($userId, getJDate(null), getJDate($subscribeData['period']), $token, $subscribeData['remaining_courses'], $subscribeId);
         $res = array();
         $message['code'] = $result;
         $res[] = $message;

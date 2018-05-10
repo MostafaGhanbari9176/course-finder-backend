@@ -636,12 +636,14 @@ function gregorian_to_jalali($gy, $gm, $gd, $mod = '')
 }
 
 //////////////////////////////functionMe
-function getJDate($dateByDelay)
+function getJDate($next)
 {
-    if ($dateByDelay == null)
+    if ($next == null)
         return gregorian_to_jalali(date("Y"), date("m"), date("d"), '-');
-    $date = str_split($dateByDelay['date']);
-    return gregorian_to_jalali($date[0].$date[1].$date[2].$date[3], $date[5].$date[6], (int)($date[8].$date[9]) + $dateByDelay['delay'], '-');
+    $numberOfNext = strtotime("+$next Months");
+    $date = date("Y-m-d", $numberOfNext);
+    $date = str_split($date);
+    return gregorian_to_jalali($date[0] . $date[1] . $date[2] . $date[3], $date[5] . $date[6], $date[8] . $date[9], '-');
 
 }
 

@@ -205,13 +205,6 @@ class PresenterTeacher
     public static function getMadrakStateAndRat($ac)
     {
         $res = array();
-
-        $have = PresentSubscribe::haveASubscription($ac);
-        if ($have == 0)
-            $res['bus'] = base64_encode((base64_encode("BnAoD")));
-        else
-            $res['bus'] = base64_encode((base64_encode("YoEkS")));
-
         $phone = (new User())->getPhoneByAc($ac);
         $teacher = new Teacher();
         $rezult = $teacher->getMadrakState($phone);

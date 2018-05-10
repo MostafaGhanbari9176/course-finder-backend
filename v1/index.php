@@ -362,7 +362,7 @@ $app->get('/getSubscribeList', function (Request $req, Response $res) {
     $res->getBody()->write(PresentSubscribe::getSubscribeList());
 });
 
-$app->get('/getUserSubscribe/{ac}', function (Request $req, Response $res) {
+$app->get('/getUserBuySubscribe/{ac}', function (Request $req, Response $res) {
 
     $res->getBody()->write(PresentSubscribe::getUserSubscribe($req->getAttribute('ac')));
 });
@@ -375,11 +375,13 @@ $app->post('/saveUserBuy', function (Request $req, Response $res) {
     $phone = $postParam['phone'];
     $phone = $postParam['phone'];
 
-    $res->getBody()->write(json_encode($responseArray));
+    //$res->getBody()->write(json_encode($responseArray));
 });
 
-$app->get('/test', function (Request $req, Response $res) {
+$app->get('/test/{number}', function (Request $req, Response $res) {
     $res->getBody()->write("");
+    $i = 0;
+    $res->getBody()->write(getJDate($req->getAttribute('number')));
     //str_replace("-","",$req->getAttriute('id'))
 
 });
