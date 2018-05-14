@@ -98,8 +98,6 @@ $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentGrouping::getTabagheByUperId($uperId));
 });
 
-/////////////////////////////courseMethods
-
 $app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{minOld}/{maxOld}', function (Request $req, Response $res) {
     $ac = $req->getAttribute('ac');
     $subject = $req->getAttribute('subject');
@@ -165,8 +163,6 @@ $app->get('/getCustomCourseListForHome', function (Request $req, Response $res) 
     $res->getBody()->write(PresentCourse::getCustomeCourseListForHome());
 });
 
-/////////////////////////////sabtenamMethods
-
 $app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}', function (Request $req, Response $res) {
     $idCourse = $req->getAttribute('idCourse');
     $idTeacher = $req->getAttribute('idTeacher');
@@ -200,17 +196,6 @@ $app->get('/saveComment/{commentText}/{userId}/{courseId}/{teacherId}/{teacherRa
     $res->getBody()->write(PresentComment::saveComment($commentText, $userId, $courseId, $teacherId, $teacherRat));
 });
 
-/*$app->get('/updateComment/{id}/{commentText}/{userId}/{courseId}/{teacherId}/{teacherRat}/{courseRat}', function (Request $req, Response $res) {
-    $id = $req->getAttribute('id');
-    $commentText = $req->getAttribute('commentText');
-    $userId = $req->getAttribute('userId');
-    $courseId = $req->getAttribute('courseId');
-    $teacherId = $req->getAttribute('teacherid');
-    $teacherRat = $req->getAttribute('teacherRat');
-    $courseRat = $req->getAttribute('courseRat');
-    $res->getBody()->write(PresentComment::upDateComment($id, $commentText, $userId, $courseId, $teacherId, $teacherRat, $courseRat));
-});*/
-
 $app->get('/saveCourseRat/{userId}/{courseId}/{teacherId}/{courseRat}', function (Request $req, Response $res) {
     $userId = $req->getAttribute('userId');
     $courseId = $req->getAttribute('courseId');
@@ -218,7 +203,6 @@ $app->get('/saveCourseRat/{userId}/{courseId}/{teacherId}/{courseRat}', function
     $courseRat = $req->getAttribute('courseRat');
     $res->getBody()->write(PresentComment::saveCourseRat($userId, $courseId, $teacherId, $courseRat));
 });
-
 
 $app->get('/getCommentByTeacherId/{teacherId}', function (Request $req, Response $res) {
     $teacherId = $req->getAttribute('teacherId');
@@ -286,14 +270,6 @@ $app->get('/deleteSms/{id}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentSmsBox::deleteSms($id));
 
 });
-
-//$app->get('/updateDeletedFlag/{courseId}/{code}', function (Request $req, Response $res) {
-//
-//    $id = $req->getAttribute('courseId');
-//    $code = $req->getAttribute('code');
-//    $res->getBody()->write(PresentCourse::updateDeletedFlag($id, $code));
-//
-//});
 
 $app->get('/updateCanceledFlag/{sabtenamId}/{code}/{courseId}/{message}/{tsId}/{rsId}', function (Request $req, Response $res) {
 
@@ -370,12 +346,11 @@ $app->get('/getUserBuySubscribe/{ac}', function (Request $req, Response $res) {
 $app->post('/saveUserBuy', function (Request $req, Response $res) {
 
     $postParam = $req->getParsedBody();
+    $ac = $postParam['ac'];
+    $refId = $postParam['refId'];
+    $subscribeId = $postParam['subId'];
+    $res->getBody()->write(PresentSubscribe::saveUserBuy($ac, $refId, $subscribeId));
 
-    $tableName = $postParam['table_name'];
-    $phone = $postParam['phone'];
-    $phone = $postParam['phone'];
-
-    //$res->getBody()->write(json_encode($responseArray));
 });
 
 $app->get('/test/{number}', function (Request $req, Response $res) {

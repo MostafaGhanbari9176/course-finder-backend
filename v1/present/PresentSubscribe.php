@@ -6,6 +6,7 @@
  * Time: 12:58 PM
  */
 require_once 'model/Subscribe.php';
+require_once 'model/User.php';
 
 class PresentSubscribe
 {
@@ -66,6 +67,7 @@ class PresentSubscribe
             $buy['subjectSubscribe'] = $subscribeData['subject'];
             $buy['subscribeId'] = $userBuy['subscribe_id'];
             $buy['remainingCourses'] = $userBuy['remaining_courses'];
+            $buy['refId'] = $userBuy['ref_id'];
             $res[] = $buy;
         }
         if (!$res) {
@@ -77,12 +79,12 @@ class PresentSubscribe
         return json_encode($res);
     }
 
-    public static function saveUserBuy($ac, $token, $subscribeId)
+    public static function saveUserBuy($ac, $refId, $subscribeId)
     {
         $userId = (new User())->getPhoneByAc($ac);
         $subscribe = new Subscribe();
         $subscribeData = $subscribe->getSubscribe($subscribeId);
-        $result = $subscribe->saveUserBuy($userId, getJDate(null), getJDate($subscribeData['period']), $token, $subscribeData['remaining_courses'], $subscribeId);
+        $result = $subscribe->saveUserBuy($userId, getJDate(null), getJDate($subscribeData['period']), $refId, $subscribeData['remaining_courses'], $subscribeId);
         $res = array();
         $message['code'] = $result;
         $res[] = $message;

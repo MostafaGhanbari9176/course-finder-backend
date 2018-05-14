@@ -139,7 +139,7 @@ class PresentUser
     public
     static function createApiCode($phone)
     {
-        $min = array();
+
         $apiCode = "";
         $milliseconds = str_split(round(microtime(true) * 1000));
         $phone = str_split($phone);

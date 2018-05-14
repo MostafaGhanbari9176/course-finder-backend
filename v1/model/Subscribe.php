@@ -39,15 +39,16 @@ class Subscribe
         return $result->get_result()->fetch_assoc();
     }
 
-    public function saveUserBuy($userId, $buyDate, $endBuyDate, $token, $remainingCourse, $subscribeId)
+    public function saveUserBuy($userId, $buyDate, $endBuyDate, $refId, $remainingCourse, $subscribeId)
     {
 
-        $sql = "INSERT INTO $this->$this->buyTableName (user_id, buy_date, token, remaining_courses, end_buy_date, subscribe_id) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO $this->buyTableName (user_id, buy_date, ref_id, remaining_courses, end_buy_date, subscribe_id) VALUES (?, ?, ?, ?, ?, ?)";
         $result = $this->conn->prepare($sql);
-        $result->bind_param('sssisi', $userId, $buyDate, $token, $remainingCourse, $endBuyDate, $subscribeId);
+        $result->bind_param('sssisi', $userId, $buyDate, $refId, $remainingCourse, $endBuyDate, $subscribeId);
         if ($result->execute())
             return 1;
         return 0;
+
     }
 
     public function getSubscribe($subscribeId)
