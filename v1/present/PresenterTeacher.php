@@ -161,6 +161,8 @@ class PresenterTeacher
         $rezult = $teacher->getAllTeacher();
         $res = array();
         while ($row = $rezult->fetch_assoc()) {
+            if ($row['madrak'] != 2)
+                continue;
             $teacher = array();
             $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
             $teacher['subject'] = $row['subject'];
