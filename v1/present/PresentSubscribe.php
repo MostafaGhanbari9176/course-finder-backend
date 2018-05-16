@@ -27,6 +27,8 @@ class PresentSubscribe
         $result = (new Subscribe())->getSubscribeList();
         $res = array();
         while ($row = $result->fetch_assoc()) {
+            if ($row['price'] == 0)
+                continue;
             $subscribe = array();
             $subscribe['id'] = $row['id'];
             $subscribe['price'] = $row['price'];
