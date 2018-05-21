@@ -34,7 +34,7 @@ class SmsBox
 
     public function getRsSms($rsId)
     {
-        $sql = "SELECT * FROM $this->tableName s WHERE s.rs_id = ?";
+        $sql = "SELECT * FROM $this->tableName s WHERE s.rs_id = ? ORDER BY s.id DESC";
         $result = $this->con->prepare($sql);
         $result->bind_param('s', $rsId);
         if ($result->execute())
@@ -44,7 +44,7 @@ class SmsBox
 
     public function getTsSms($tsId)
     {
-        $sql = "SELECT * FROM $this->tableName s WHERE s.ts_id = ?";
+        $sql = "SELECT * FROM $this->tableName s WHERE s.ts_id = ? ORDER BY s.id DESC";
         $result = $this->con->prepare($sql);
         $result->bind_param('s', $tsId);
         if ($result->execute())

@@ -59,7 +59,7 @@ $app->get('/logOut/{phone}', function (Request $request, Response $response) {
 
 });
 
-$app->get('/addTeacher/{ac}/{landPhone}/{subject}/{tozihat}/{type}/{lat}/{lon}', function (Request $req, Response $res) {
+$app->get('/addTeacher/{ac}/{landPhone}/{subject}/{tozihat}/{type}/{lat}/{lon}/{address}', function (Request $req, Response $res) {
 
     $ac = $req->getAttribute('ac');
     $landPhone = $req->getAttribute('landPhone');
@@ -68,7 +68,8 @@ $app->get('/addTeacher/{ac}/{landPhone}/{subject}/{tozihat}/{type}/{lat}/{lon}',
     $tozihat = $req->getAttribute('tozihat');
     $type = $req->getAttribute('type');
     $long = $req->getAttribute('lon');
-    $result = PresenterTeacher::addTeacher($ac, $landPhone, $subject, $tozihat, $type, $lat, $long);
+    $address = $req->getAttribute('address');
+    $result = PresenterTeacher::addTeacher($ac, $landPhone, $subject, $tozihat, $type, $lat, $long, $address);
     $res->getBody()->write($result);
 
 });
@@ -163,11 +164,12 @@ $app->get('/getCustomCourseListForHome', function (Request $req, Response $res) 
     $res->getBody()->write(PresentCourse::getCustomeCourseListForHome());
 });
 
-$app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}', function (Request $req, Response $res) {
+$app->get('/sabtenam/{idCourse}/{idTeacher}/{idUser}/{cellPhone}', function (Request $req, Response $res) {
     $idCourse = $req->getAttribute('idCourse');
     $idTeacher = $req->getAttribute('idTeacher');
     $idUser = $req->getAttribute('idUser');
-    $res->getBody()->write(PresentSabtenam::add($idCourse, $idTeacher, $idUser));
+    $cellPhone = $req->getAttribute('cellPhone');
+    $res->getBody()->write(PresentSabtenam::add($idCourse, $idTeacher, $idUser, $cellPhone));
 
 });
 
@@ -353,10 +355,10 @@ $app->post('/saveUserBuy', function (Request $req, Response $res) {
 
 });
 
-$app->get('/test/{number}', function (Request $req, Response $res) {
+$app->get('/test', function (Request $req, Response $res) {
     $res->getBody()->write("");
     $i = 0;
-    $res->getBody()->write(getJDate($req->getAttribute('number')));
+    $res->getBody()->write(getJDate(null));
     //str_replace("-","",$req->getAttriute('id'))
 
 });

@@ -15,14 +15,14 @@ class PresenterTeacher
 {
 
 
-    public static function addTeacher($ac, $landPhone, $subject, $tozihat, $type, $lat, $lon)
+    public static function addTeacher($ac, $landPhone, $subject, $tozihat, $type, $lat, $lon, $address)
     {
         $phone = (new User())->getPhoneByAc($ac);
         $model = new User();
         $res = array();
         if ($model->changeUserType($phone, 1)) {
             $teacher = new Teacher();
-            $result = $teacher->addTeacher($phone, $landPhone, self::getDate(), $subject, $tozihat, $type, $lat, $lon, $ac);
+            $result = $teacher->addTeacher($phone, $landPhone, self::getDate(), $subject, $tozihat, $type, $lat, $lon, $ac, $address);
             $res["code"] = $result;
             if ($result == 0)
                 $model->changeUserType($phone, 0);
@@ -52,6 +52,8 @@ class PresenterTeacher
             $teacher['subject'] = $row['subject'];
             $teacher['lt'] = $row['lat'];
             $teacher['lg'] = $row['lon'];
+            $teacher['tozihat'] = $row['tozihat'];
+            $teacher['address'] = $row['address'];
             $res[] = $teacher;
         }
         if ($res) {
