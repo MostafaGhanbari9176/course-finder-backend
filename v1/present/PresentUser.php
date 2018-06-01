@@ -10,6 +10,8 @@ require_once 'model/Sabtenam.php';
 
 class PresentUser
 {
+    public static $versionName = '1.0.1';
+
     public static function logUP($phone, $name, $code)//0-->badCod  1-->ok  2--> badLogUp
     {
         $apiCode = PresentUser::createApiCode($phone);
@@ -60,7 +62,6 @@ class PresentUser
         if (hash_equals($userAc, "OP's"))
             $result = 0;
         else {
-
             $model = new User();
             $userId = $model->getPhoneByAc($userAc);
             $result = $model->getUserStatuse($userId);
@@ -68,6 +69,7 @@ class PresentUser
         $res = array();
         $user = array();
         $user['code'] = $result;
+        $user['versionName'] = self::$versionName;
         $res[] = $user;
         return json_encode($res);
 

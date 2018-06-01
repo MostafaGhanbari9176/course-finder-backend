@@ -23,18 +23,14 @@ class Course
     public function addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld)
     {
         $sql = "INSERT INTO $this->tablename (teacher_id, subject, tabaghe_id, type, capacity, mony, sharayet, tozihat, definition_date, start_date, end_date, day, hours, min_old, max_old) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        $rezult = $this->conn->prepare($sql);
-        $rezult->bind_param('ssiiiisssssssii', $teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, getJDate(null), $start_date, $end_date, $day, $hours, $minOld, $maxOld);
-        if ($rezult->execute()) {
-            $sql2 = "SELECT c.cource_id FROM  $this->tablename c WHERE c.teacher_id = ?";
-            $rezult2 = $this->conn->prepare($sql2);
-            $rezult2->bind_param('s', $teacher_id);
-            $rezult2->execute();
-            $rezult2 = $rezult2->get_result();
-            $res = 0;
-            while ($row = $rezult2->fetch_assoc()) {
-                $res = $row['cource_id'];
-            }
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('ssiiiisssssssii', $teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, getJDate(null), $start_date, $end_date, $day, $hours, $minOld, $maxOld);
+        if ($result->execute()) {
+            $sql2 = "SELECT c.cource_id FROM  $this->tablename c WHERE c.teacher_id = ? ORDER BY c.cource_id DESC LIMIT 1";
+            $result2 = $this->conn->prepare($sql2);
+            $result2->bind_param('s', $teacher_id);
+            $result2->execute();
+            $res = $result2->get_result()->fetch_assoc()['cource_id'];
             return $res;
         }
         return (int)0;
@@ -151,7 +147,8 @@ class Course
         return 0;
     }
 
-    public function getNewCourse(){
+    public function getNewCourse()
+    {
 
         $sql = "SELECT * FROM $this->tablename c ORDER BY c.cource_id DESC LIMIT 10";
         $result = $this->conn->prepare($sql);

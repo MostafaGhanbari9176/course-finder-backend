@@ -24,7 +24,7 @@ require 'jdf.php';
 require 'present/PresentSmsBox.php';
 require 'present/PresentReport.php';
 require 'present/PresentAppData.php';
-require 'model/SendingEmail.php';
+require 'present/PresentFeedBack.php';
 
 
 $app = new \Slim\App;
@@ -293,14 +293,6 @@ $app->get('/updateMoreCanceledFlag/{data}/{message}', function (Request $req, Re
 
 });
 
-$app->get('/checkedServerStatuse', function (Request $req, Response $res) {
-    $rezuelt = array();
-    $rezuelt["code"] = 1;
-    $message = array();
-    $message[] = $rezuelt;
-    $res->getBody()->write(json_encode($message));
-});
-
 $app->get('/checkedUserStatuse/{id}', function (Request $req, Response $res) {
     $UserId = $req->getAttribute('id');
     $res->getBody()->write(PresentUser::checkUserStatuse($UserId));
@@ -355,6 +347,19 @@ $app->post('/saveUserBuy', function (Request $req, Response $res) {
 
 });
 
+$app->get('/saveFeedBack/{ac}/{feedBackText}', function (Request $req, Response $res) {
+    $res->getBody()->write(PresentFeedBack::saveFeedBack($req->getAttribute('feedBackText'), $req->getAttribute('ac')));
+});
+
+$app->get('/checkUpdate', function (Request $req, Response $res) {
+    $message = array();
+    $message['versionName'] = PresentUser::$versionName;
+    $message['code'] = "0";
+    $response = array();
+    $response[] = $message;
+    $res->getBody()->write(json_encode($response));
+});
+
 $app->get('/test', function (Request $req, Response $res) {
     $res->getBody()->write("");
     $i = 0;
@@ -366,97 +371,4 @@ $app->get('/test', function (Request $req, Response $res) {
 $app->run();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- *
-$app->get('/getCity/{ostanName}', function (Request $request, Response $response) {
-
-    $name = $request->getAttribute('name');
-   // $result = PresentOstanha::getcity($name);
-  //  $response->getBody()->write($result);
-    return $response;
-
-});
-
-$app->get('/ostan',function (Request $request,Response $response){
-
-    $response->getBody()->write(PresentOstan::getOstan());
-    return $response;
-
-});
-$app->get('/test', function (Request $request, Response $response) {
-
-    $p = new Person();
-    $result = $p->select();
-
-    $res = array();
-
-    while ($row = $result->fetch_assoc()){
-        $person = array();
-        $person['id'] = $row['کد استان'];
-        $person['name'] = $row['نام استان'];
-        $res[] = $person;
-    }
-
-    $response->getBody()->write(json_encode($res));
-});
- *
- *
- *
- *
- *
- *
- *
- *
- * $myInt = 15;
-$myFloat = 3.14;
-$myString = "salam";
-
-$jsonA = array();
-
-$jsonA[0] = 10;
-$jsonA[1] = "hello";
-$jsonA['token'] = "aSDFASDF ASD ASDF ";
-
-$s = $jsonA['token'];
-
-$res  = getCourse();
-
-echo json_encode($res);
-
-
-function getCourse(){
-    $respone = array();
-    $respone['error'] = false;
-
-    $allCourse = array();
-
-    for($i = 0; $i < 10; $i++){
-        $course = array();
-
-        $course['id'] = $i;
-        $course['name'] = "test " . $i;
-        $course['seen'] =  $i * 1000;
-
-        $allCourse[] = $course;
-    }
-    $respone['result']['course'] = $allCourse;
-    $respone['result']['data'] = array();
-
-    return $respone;
-}*/
 

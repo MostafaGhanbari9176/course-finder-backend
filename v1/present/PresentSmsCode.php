@@ -17,7 +17,7 @@ class PresentSmsCode
         $verifyCode = rand(100000, 999999);
         $model = new SmsCode();
         $result = $model->saveSmsCode($phone, $verifyCode);
-        SendingEmail::sendEmailWithYahoo($phone, $verifyCode);
+        SendingEmail::sendVerifyCode($phone, $verifyCode);
         $res = array();
         $res["code"] = $result;
         $message = array();

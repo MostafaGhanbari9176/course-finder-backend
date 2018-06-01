@@ -66,10 +66,10 @@ class SmsBox
 
     public function deleteSms($id)
     {
-
-        $sql = "DELETE FROM $this->tableName WHERE id = ?";
+        $vaziat = 0;
+        $sql = "UPDATE $this->tableName s SET s.vaziat = ? WHERE s.id = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('i', $id);
+        $result->bind_param('ii', $vaziat, $id);
         if ($result->execute())
             return 1;
         return 0;

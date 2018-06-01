@@ -43,10 +43,10 @@ if ($result != 2) {
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
         if($imageFileType != "pdf") {
             $result = 3;
-        }else {
+        }else {}
             move_uploaded_file($_FILES["madrak"]["tmp_name"], $target_file);
             $result = 1;
-        }
+
     } else if (isset($_FILES['course']['name'])) {
         $target_file = $target_dir_course . basename($_FILES["course"]["name"]);
         if (file_exists($target_file)) {

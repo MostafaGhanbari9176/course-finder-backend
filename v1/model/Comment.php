@@ -137,7 +137,7 @@ class comment
         $result->bind_param('is', $courseId, $userId);
         if ($result->execute())
             return $result->get_result()->fetch_assoc()['course_rat'];
-        return false;
+        return 0;
 
 
     }

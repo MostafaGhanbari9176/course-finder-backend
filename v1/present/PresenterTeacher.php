@@ -142,7 +142,8 @@ class PresenterTeacher
         return $res;
     }
 
-    public static function getCustomTeacherListForHome(){
+    public static function getCustomTeacherListForHome()
+    {
         $res = array();
         $item = array();
         $item['teachers'] = self::getNewTeacher();
@@ -199,6 +200,7 @@ class PresenterTeacher
         $phone = (new User())->getPhoneByAc($ac);
         $teacher = new Teacher();
         $rezult = $teacher->updateMadrakState($phone, 1);
+        (new SendingEmail())->sendRequestForMaster('مدرک خودرا بارگذاری کرده است.', $phone);
         $res = array();
         $res['code'] = $rezult;
         $message = array();

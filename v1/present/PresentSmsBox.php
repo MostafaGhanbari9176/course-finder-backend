@@ -48,6 +48,8 @@ class PresentSmsBox
         $result = $model->getRsSms($rsPhone);
         $res = array();
         while ($row = $result->fetch_assoc()) {
+            if ($row['vaziat'] == 0)
+                continue;
             $sms = array();
             $sms['id'] = $row['id'];
             $sms['tsId'] = (new User())->getAcByPhone($row['ts_id']);
@@ -79,6 +81,8 @@ class PresentSmsBox
         $result = $model->getTsSms($tsPhone);
         $res = array();
         while ($row = $result->fetch_assoc()) {
+            if ($row['vaziat'] == 0)
+                continue;
             $sms = array();
             $sms['id'] = $row['id'];
             $sms['rsId'] = (new User())->getAcByPhone($row['rs_id']);

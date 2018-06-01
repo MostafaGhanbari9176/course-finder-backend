@@ -10,7 +10,6 @@ require_once 'model/User.php';
 require_once 'model/Comment.php';
 require_once 'model/Course.php';
 
-//require 'present/PresentSmsBox.php';
 
 class PresentSabtenam
 {
@@ -27,37 +26,30 @@ class PresentSabtenam
         return json_encode($message);
     }
 
-    public static function checkValieded($acUser, $idCourse)
+    public static function checkValieded($ac, $courseId)
     {
-        $idUser = (new User())->getPhoneByAc($acUser);
-        $sabtenam = new Sabtenam();
-        $resuelt1 = $sabtenam->getByUserId($idUser);
-        $result = -1;//////  هنگام ثبتنام نداشتن منفی یک بر میگردد اصلاح شود
-        $vaziat = -1;
-        $isCanceled = -1;
-        while ($row = $resuelt1->fetch_assoc()) {
-            if ($idCourse == $row['cource_id']) {
+        $message = array();
+        $userId = (new User())->getPhoneByAc($ac);
+        $registerList = (new Sabtenam())->getByUserId($userId);
+        while ($row = $registerList->fetch_assoc()) {
+            if ($courseId == $row['cource_id']) {
                 if ($row['is_canceled'] == 2)
                     continue;
-                $vaziat = $row['vaziat'];
-                $isCanceled = $row['is_canceled'];
-                $result = (new Comment())->getRatByCourseIdAndUserId($idCourse, $idUser);
-                break;
+                else if ($row['vaziat'] == 0)
+                    $message['code'] = -2;
+                else if ($row['is_canceled'] == 1)
+                    $message['code'] = -3;
+                else {
+                    $message['code'] = (new Comment())->getRatByCourseIdAndUserId($courseId, $userId);
+                    break;
+                }
             }
         }
-
-        if ($result == null)
-            $result = 0;
+        if (!$message)
+            $message['code'] = -1;
         $res = array();
-        if ($isCanceled == 1)
-            $res['code'] = -3;
-        else if ($vaziat == 0)
-            $res['code'] = -2;
-        else
-            $res['code'] = $result;
-        $message = array();
-        $message[] = $res;
-        return json_encode($message);
+        $res [] = $message;
+        return json_encode($res);
 
     }
 
