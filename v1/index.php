@@ -25,6 +25,7 @@ require 'present/PresentSmsBox.php';
 require 'present/PresentReport.php';
 require 'present/PresentAppData.php';
 require 'present/PresentFeedBack.php';
+require 'present/PresentFavorite.php';
 
 
 $app = new \Slim\App;
@@ -74,9 +75,10 @@ $app->get('/addTeacher/{ac}/{landPhone}/{subject}/{tozihat}/{type}/{lat}/{lon}/{
 
 });
 
-$app->get('/getTeacher/{ac}', function (Request $req, Response $res) {
+$app->get('/getTeacher/{teacherApi}/{userApi}', function (Request $req, Response $res) {
 
-    $res->getBody()->write(PresenterTeacher::getTeacher($req->getAttribute('ac')));
+    $result = PresenterTeacher::getTeacher($req->getAttribute('teacherApi'), $req->getAttribute('userApi'));
+    $res->getBody()->write($result);
 });
 
 $app->get('/getAllTeacher', function (Request $req, Response $res) {
@@ -358,6 +360,22 @@ $app->get('/checkUpdate', function (Request $req, Response $res) {
     $response = array();
     $response[] = $message;
     $res->getBody()->write(json_encode($response));
+
+});
+
+$app->get('/SaveFavorite/{teacherId}/{api}', function (Request $req, Response $res) {
+    $result = PresentFavorite::saveFavorite($req->getAttribute('teacherId'), $req->getAttribute('api'));
+    $res->getBody()->write($result);
+});
+
+$app->get('/CheckFavorite/{teacherId}/{api}', function (Request $req, Response $res) {
+    $result = PresentFavorite::checkFavorite($req->getAttribute('teacherId'), $req->getAttribute('api'));
+    $res->getBody()->write($result);
+});
+
+$app->get('/RemoveFavorite/{FavoriteId}', function (Request $req, Response $res) {
+    $result = PresentFavorite::removeFavorite($req->getAttribute('FavoriteId'));
+    $res->getBody()->write($result);
 });
 
 $app->get('/test', function (Request $req, Response $res) {

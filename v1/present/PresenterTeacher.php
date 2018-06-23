@@ -35,17 +35,19 @@ class PresenterTeacher
         return json_encode($message);
     }
 
-    public static function getTeacher($ac)
+    public static function getTeacher($teacherApi, $userApi)
     {
 
-        $teacher = new Teacher();
-        $rezult = $teacher->getTeacher((new User())->getPhoneByAc($ac));
+
+        $teacherId = (new User())->getPhoneByAc($teacherApi);
+        $userId = (new User())->getPhoneByAc($userApi);
+        $result = (new Teacher())->getTeacher($teacherId);
         $res = array();
-        while ($row = $rezult->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             $teacher = array();
             $teacher['landPhone'] = $row['land_phone'];
             $teacher['pictureId'] = $row['picture_id'];
-            $teacher['teacherRat'] = PresentComment::calculateTeacherRat($ac);
+            $teacher['favorite'] = PresentFavorite::checkFavorite($teacherId, $userId);
             $teacher['phone'] = $row['phone'];
             $teacher['type'] = $row['type'];
             $teacher['m'] = $row['madrak'];
@@ -56,13 +58,13 @@ class PresenterTeacher
             $teacher['address'] = $row['address'];
             $res[] = $teacher;
         }
-        if ($res) {
-            return json_encode($res);
-        } else {
-            $res['erorr'] = "ok";
-            $res['empty'] = "ok";
-            return json_encode($res);
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
         }
+        return json_encode($res);
+
     }
 
     public static function getSelectedTeacher()

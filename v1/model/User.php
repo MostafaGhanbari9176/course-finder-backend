@@ -119,7 +119,7 @@ class User
         $result->bind_param('s', $ac);
         if ($result->execute())
             return $result->get_result()->fetch_assoc()['phone'];
-        return 0;
+        return "aa";
     }
 
     public function getAcByPhone($phone)
@@ -129,7 +129,7 @@ class User
         $result->bind_param('s', $phone);
         if ($result->execute())
             return $result->get_result()->fetch_assoc()['api_code'];
-        return 0;
+        return "aa";
     }
 
     public function getUserName($phone)

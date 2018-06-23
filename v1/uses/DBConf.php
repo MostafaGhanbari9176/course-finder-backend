@@ -7,13 +7,13 @@
  */
 
 
-/*define("DB_HOST", "localhost");
+define("DB_HOST", "localhost");
 define("DB_USER", "root");
 define("DB_PASSWORD", "");
-define("DB_NAME", "city_need");*/
+define("DB_NAME", "city_need");
 
 
-define("DB_HOST", "localhost");
+/*define("DB_HOST", "localhost");
 define("DB_USER", "city_need");
 define("DB_PASSWORD", "gpc%4L^@");
-define("DB_NAME", "city_need");
+define("DB_NAME", "city_need");*/
