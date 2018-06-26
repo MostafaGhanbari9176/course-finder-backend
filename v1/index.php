@@ -27,7 +27,7 @@ require 'present/PresentAppData.php';
 require 'present/PresentFeedBack.php';
 require 'present/PresentFavorite.php';
 require 'Present/PresentBookMark.php';
-
+require 'Present/PresentGift.php';
 
 
 $app = new \Slim\App;
@@ -122,6 +122,7 @@ $app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{shar
     $resuelt = PresentCourse::addCourse($ac, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet,
         $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
     $res->getBody()->write($resuelt);
+    (new SendingEmail())->sendRequestForMaster('ثبت دوره ایی با کد : ' . $resuelt, $ac);
 });
 
 $app->get('/getCourseByFilter/{minOld}/{maxOld}/{startDate}/{endDate}/{Grouping}/{days}', function (Request $req, Response $res) {
@@ -395,6 +396,11 @@ $app->get('/getFavoriteTeachers/{userApi}', function (Request $req, Response $re
 
 $app->get('/getBookMarkCourses/{userApi}', function (Request $req, Response $res) {
     $result = PresentCourse::getBookMarkCourses($req->getAttribute('userApi'));
+    $res->getBody()->write($result);
+});
+
+$app->get('/checkGiftCode/{giftCode}/{userApi}', function (Request $req, Response $res) {
+    $result = PresentGift::checkGift($req->getAttribute('giftCode'), $req->getAttribute('userApi'));
     $res->getBody()->write($result);
 });
 

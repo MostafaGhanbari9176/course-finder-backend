@@ -29,7 +29,6 @@ class PresentCourse
             (new Subscribe())->decrementRemainingCourse($teacher_id);
             $course = new Course();
             $result = $course->addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
-            (new SendingEmail())->sendRequestForMaster('ثبت دوره ایی با کد : ' . $result, $teacher_id);
             $res['code'] = $result;
             $res['sub'] = base64_encode((base64_encode("YoEkS")));
         }

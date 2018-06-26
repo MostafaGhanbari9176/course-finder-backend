@@ -135,8 +135,10 @@ class comment
         $sql = " SELECT c.course_rat FROM $this->tableName c WHERE c.course_id = ? && c.user_id = ?";
         $result = $this->con->prepare($sql);
         $result->bind_param('is', $courseId, $userId);
-        if ($result->execute())
-            return $result->get_result()->fetch_assoc()['course_rat'];
+        $result->execute();
+        $data = $result->get_result()->fetch_assoc();
+        if (sizeof($data) > 0)
+            return $data['course_rat'];
         return 0;
 
 
