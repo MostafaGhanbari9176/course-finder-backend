@@ -38,6 +38,35 @@ class PresentCourse
         return json_encode($message);
     }
 
+    public static function getBookMarkCourses($userApi)
+    {
+        $userId = (new User())->getPhoneByAc($userApi);
+        $course = new Course();
+        $resuelt = $course->getAllCourse();
+        $res = array();
+        while ($row = $resuelt->fetch_assoc()) {
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+                continue;
+            if ((new BookMark())->checkBookMark($row['cource_id'], $userId) == 1) {
+                $course = array();
+                $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
+                $course['startDate'] = $row['start_date'];
+                $course['id'] = $row['cource_id'];
+                $course['CourseName'] = $row['subject'];
+                $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+                $res[] = $course;
+            }
+        }
+        if ($res) {
+            return json_encode($res);
+        } else {
+            $course = array();
+            $course['empty'] = 1;
+            $res[] = $course;
+            return json_encode($res);
+        }
+    }
+
     public static function getAllCourse()
     {
         $course = new Course();
@@ -101,15 +130,16 @@ class PresentCourse
         return json_encode($message);
     }
 
-    public static function getCourseById($id)
+    public static function getCourseById($id, $userApi)
     {
+        $user = new User;
         $course = new Course();
-        $resuelt = $course->getCourseById($id);
+        $result = $course->getCourseById($id);
         $res = array();
-        while ($row = $resuelt->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             $course = array();
             $course['id'] = $row['cource_id'];
-            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
+            $course['idTeacher'] = $user->getAcByPhone($row['teacher_id']);
             $course['CourseName'] = $row['subject'];
             $course['type'] = $row['type'];//
             $course['capacity'] = $row['capacity'];//
@@ -122,8 +152,8 @@ class PresentCourse
             $course['hours'] = $row['hours'];//
             $course['minOld'] = $row['min_old'];//
             $course['maxOld'] = $row['max_old'];//
-            $course['idTabaghe'] = $row['tabaghe_id'];//
-
+            $course['idTabaghe'] = $row['tabaghe_id'];
+            $course['bookMark'] = (new BookMark())->checkBookMark($id, $user->getPhoneByAc($userApi));;
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
             $course['tabaghe'] = (new Tabaghe())->getGroupingSubjectByCourseId($row['cource_id']);
             $res[] = $course;

@@ -29,9 +29,9 @@ if ($result != 2) {
             unlink($target_file);
         }
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
             $result = 3;
-        }else {
+        } else {
             move_uploaded_file($_FILES["teacher"]["tmp_name"], $target_file);
             $result = 1;
         }
@@ -41,12 +41,12 @@ if ($result != 2) {
             unlink($target_file);
         }
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        if($imageFileType != "pdf") {
+        if ($imageFileType != "pdf") {
             $result = 3;
-        }else {
+        } else {
             move_uploaded_file($_FILES["madrak"]["tmp_name"], $target_file);
             $result = 1;
-	}
+        }
 
     } else if (isset($_FILES['course']['name'])) {
         $target_file = $target_dir_course . basename($_FILES["course"]["name"]);
@@ -54,9 +54,9 @@ if ($result != 2) {
             unlink($target_file);
         }
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
             $result = 3;
-        }else {
+        } else {
             move_uploaded_file($_FILES["course"]["tmp_name"], $target_file);
             $result = 1;
         }

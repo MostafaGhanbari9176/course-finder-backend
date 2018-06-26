@@ -9,7 +9,7 @@ require_once 'model/Teacher.php';
 require_once 'model/City.php';
 require_once 'model/User.php';
 require_once 'PresentSubscribe.php';
-
+require_once 'model/Favorite.php';
 
 class PresenterTeacher
 {
@@ -35,6 +35,34 @@ class PresenterTeacher
         return json_encode($message);
     }
 
+    public static function getFavoriteTeachers($userApi)
+    {
+        $userId = (new User())->getPhoneByAc($userApi);
+        $teacher = new Teacher();
+        $rezult = $teacher->getAllTeacher();
+        $res = array();
+        while ($row = $rezult->fetch_assoc()) {
+            if ($row['madrak'] != 2)
+                continue;
+            if ((new Favorite())->checkFavorite($row['phone'], $userId) == 1) {
+                $teacher = array();
+                $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
+                $teacher['subject'] = $row['subject'];
+                $teacher['lt'] = $row['lat'];
+                $teacher['lg'] = $row['lon'];
+                $teacher['pictureId'] = $row['picture_id'];
+                $res[] = $teacher;
+            }
+        }
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+        return json_encode($res);
+
+    }
+
     public static function getTeacher($teacherApi, $userApi)
     {
 
@@ -47,7 +75,7 @@ class PresenterTeacher
             $teacher = array();
             $teacher['landPhone'] = $row['land_phone'];
             $teacher['pictureId'] = $row['picture_id'];
-            $teacher['favorite'] = PresentFavorite::checkFavorite($teacherId, $userId);
+            $teacher['favorite'] = (new Favorite())->checkFavorite($teacherId, $userId);
             $teacher['phone'] = $row['phone'];
             $teacher['type'] = $row['type'];
             $teacher['m'] = $row['madrak'];
@@ -201,10 +229,9 @@ class PresenterTeacher
     {
         $phone = (new User())->getPhoneByAc($ac);
         $teacher = new Teacher();
-        $rezult = $teacher->updateMadrakState($phone, 1);
-        (new SendingEmail())->sendRequestForMaster('مدرک خودرا بارگذاری کرده است.', $phone);
+        $result = $teacher->updateMadrakState($phone, 1);
         $res = array();
-        $res['code'] = $rezult;
+        $res['code'] = $result;
         $message = array();
         $message[] = $res;
         return json_encode($message);

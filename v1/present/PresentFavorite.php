@@ -13,8 +13,9 @@ class PresentFavorite
 {
     public static function saveFavorite($teacherApi, $userApi)
     {
-        $userId = (new User())->getPhoneByAc($userApi);
-        $teacherId = (new User())->getPhoneByAc($teacherApi);
+        $user = new User();
+        $userId = $user->getPhoneByAc($userApi);
+        $teacherId = $user->getPhoneByAc($teacherApi);
         $result = (new Favorite())->saveFavorite($teacherId, $userId);
         $res = array();
         $message = array();
@@ -23,16 +24,12 @@ class PresentFavorite
         return json_encode($res);
     }
 
-    public static function checkFavorite($teacherId, $userId)
+    public static function removeFavorite($teacherApi, $userApi)
     {
-        $result = (new Favorite())->checkFavorite($teacherId, $userId);
-        return json_encode($result);
-    }
-
-    public static function removeFavorite($favoriteId)
-    {
-
-        $result = (new Favorite())->removeFavorite($favoriteId);
+        $user = new User();
+        $userId = $user->getPhoneByAc($userApi);
+        $teacherId = $user->getPhoneByAc($teacherApi);
+        $result = (new Favorite())->removeFavorite($teacherId, $userId);
         $res = array();
         $message = array();
         $message['code'] = $result;

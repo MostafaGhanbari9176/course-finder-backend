@@ -26,6 +26,8 @@ require 'present/PresentReport.php';
 require 'present/PresentAppData.php';
 require 'present/PresentFeedBack.php';
 require 'present/PresentFavorite.php';
+require 'Present/PresentBookMark.php';
+
 
 
 $app = new \Slim\App;
@@ -138,18 +140,18 @@ $app->get('/getAllCourse', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getAllCourse());
 });/////////////////***
 
-$app->get('/getCourseById/{id}', function (Request $req, Response $res) {
-    $res->getBody()->write(PresentCourse::getCourseById($req->getAttribute('id')));
-});//////////////////**
+$app->get('/getCourseById/{id}/{userApi}', function (Request $req, Response $res) {
+    $res->getBody()->write(PresentCourse::getCourseById($req->getAttribute('id'), $req->getAttribute('userApi')));
+});
 
 $app->get('/getCourseByTeacherId/{ac}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentCourse::getCourseByTeacherId($req->getAttribute('ac')));
-});/////////////**
+});
 
 $app->get('/getUserCourse/{ac}', function (Request $req, Response $res) {
     $id = $req->getAttribute('ac');
     $res->getBody()->write(PresentCourse::getByUserId($id));
-});/////////////**
+});
 
 $app->get('/getCourseForListHome/{id}', function (Request $req, Response $res) {
     $id = $req->getAttribute('id');
@@ -225,7 +227,10 @@ $app->get('/getMsAndRat/{ac}', function (Request $req, Response $res) {
 });
 
 $app->get('/upMs/{ac}', function (Request $req, Response $res) {
-    $res->getBody()->write(PresenterTeacher::updateMadrakState($req->getAttribute('ac')));
+    $ac = $req->getAttribute('ac');
+    $res->getBody()->write(PresenterTeacher::updateMadrakState($ac));
+    $phone = (new User())->getPhoneByAc($ac);
+    (new SendingEmail())->sendRequestForMaster('مدرک خودرا بارگذاری کرده است.', $phone);
 });
 
 $app->get('/saveSms/{text}/{tsId}/{rsId}/{courseId}/{howSending}', function (Request $req, Response $res) {
@@ -363,18 +368,33 @@ $app->get('/checkUpdate', function (Request $req, Response $res) {
 
 });
 
-$app->get('/SaveFavorite/{teacherId}/{api}', function (Request $req, Response $res) {
-    $result = PresentFavorite::saveFavorite($req->getAttribute('teacherId'), $req->getAttribute('api'));
+$app->get('/SaveFavorite/{teacherApi}/{userApi}', function (Request $req, Response $res) {
+    $result = PresentFavorite::saveFavorite($req->getAttribute('teacherApi'), $req->getAttribute('userApi'));
     $res->getBody()->write($result);
 });
 
-$app->get('/CheckFavorite/{teacherId}/{api}', function (Request $req, Response $res) {
-    $result = PresentFavorite::checkFavorite($req->getAttribute('teacherId'), $req->getAttribute('api'));
+$app->get('/RemoveFavorite/{teacherApi}/{userApi}', function (Request $req, Response $res) {
+    $result = PresentFavorite::removeFavorite($req->getAttribute('teacherApi'), $req->getAttribute('userApi'));
     $res->getBody()->write($result);
 });
 
-$app->get('/RemoveFavorite/{FavoriteId}', function (Request $req, Response $res) {
-    $result = PresentFavorite::removeFavorite($req->getAttribute('FavoriteId'));
+$app->get('/SaveBookMark/{courseId}/{userApi}', function (Request $req, Response $res) {
+    $result = PresentBookMark::saveBookMark($req->getAttribute('courseId'), $req->getAttribute('userApi'));
+    $res->getBody()->write($result);
+});
+
+$app->get('/RemoveBookMark/{courseId}/{userApi}', function (Request $req, Response $res) {
+    $result = PresentBookMark::removeBookMark($req->getAttribute('courseId'), $req->getAttribute('userApi'));
+    $res->getBody()->write($result);
+});
+
+$app->get('/getFavoriteTeachers/{userApi}', function (Request $req, Response $res) {
+    $result = PresenterTeacher::getFavoriteTeachers($req->getAttribute('userApi'));
+    $res->getBody()->write($result);
+});
+
+$app->get('/getBookMarkCourses/{userApi}', function (Request $req, Response $res) {
+    $result = PresentCourse::getBookMarkCourses($req->getAttribute('userApi'));
     $res->getBody()->write($result);
 });
 

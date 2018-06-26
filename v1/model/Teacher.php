@@ -66,9 +66,9 @@ class Teacher
     public function updateMadrakState($phone, $value)
     {
         $sql = "UPDATE $this->tableName t SET t.madrak = ? WHERE phone = ?";
-        $rezult = $this->con->prepare($sql);
-        $rezult->bind_param('is', $value, $phone);
-        if ($rezult->execute())
+        $result = $this->con->prepare($sql);
+        $result->bind_param('is', $value, $phone);
+        if ($result->execute())
             return 1;
         return 0;
     }

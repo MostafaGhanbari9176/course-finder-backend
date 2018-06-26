@@ -2,18 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: M-gh
- * Date: 23-Jun-18
- * Time: 3:36 AM
+ * Date: 25-Jun-18
+ * Time: 11:39 PM
  */
 
 require_once 'uses/DBConnection.php';
 
-class Favorite
+class BookMark
 {
-    private $tableName = "favorite";
+    private $tableName = "bookmark";
     private $con;
 
-    public function __construct()
+    function __construct()
     {
         $this->con = (new DBConnection())->connect();
         mysqli_query($this->con, "SET NAMES 'utf8'");
@@ -21,38 +21,35 @@ class Favorite
 
     }
 
-    public function saveFavorite($teacherId, $userId)
+    public function saveBookMark($courseId, $userId)
     {
-
-        $sql = "INSERT INTO $this->tableName (teacher_id , user_id)  VALUES (?, ?)";
+        $sql = "INSERT INTO $this->tableName ( course_id, user_id) VALUES (? , ?)";
         $result = $this->con->prepare($sql);
-        $result->bind_param('ss', $teacherId, $userId);
+        $result->bind_param('is', $courseId, $userId);
         if ($result->execute())
             return 1;
         return 0;
     }
 
-    public function removeFavorite($teacherId, $userId)
+    public function removeBookMark($courseId, $userId)
     {
-
-        $sql = "DELETE FROM $this->tableName WHERE user_id = ? AND teacher_id = ?";
+        $sql = "DELETE FROM $this->tableName  WHERE  course_id = ? AND user_id = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('ss', $userId, $teacherId);
+        $result->bind_param('is', $courseId, $userId);
         if ($result->execute())
             return 1;
         return 0;
     }
 
-    public function checkFavorite($teacherId, $userId)
+    public function checkBookMark($courseId, $userId)
     {
-        $sql = "SELECT * FROM   $this->tableName s WHERE s.user_id = ? AND s.teacher_id = ?";
+        $sql = "SELECT * FROM $this->tableName WHERE course_id = ? AND user_id = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('ss', $userId, $teacherId);
+        $result->bind_param('is', $courseId, $userId);
         $result->execute();
         if (sizeof($result->get_result()->fetch_assoc()))
             return 1;
         return 0;
-
     }
 
 }
