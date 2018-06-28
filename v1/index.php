@@ -405,9 +405,10 @@ $app->get('/checkGiftCode/{giftCode}/{userApi}', function (Request $req, Respons
 });
 
 $app->get('/test', function (Request $req, Response $res) {
-    $res->getBody()->write("");
-    $i = 0;
-    $res->getBody()->write(getJDate(null));
+    $home = "0";
+    if ("1396-01-02" > "1397-01-01")
+        $home = "1";
+    $res->getBody()->write(date("H"));
     //str_replace("-","",$req->getAttriute('id'))
 
 });

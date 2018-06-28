@@ -20,7 +20,7 @@ class PresentGift
         $userSub = (new Subscribe())->getUserSubscribe($userId);
         $gift = new Gift();
         $giftData = $gift->getGifData($giftCode);
-        if (sizeof($giftData) > 0 && $giftData['counter'] > 0) {
+        if (sizeof($giftData) > 0 && self::checkGiftValidation($giftData)) {
             $subId = $giftData['subscribe_id'];
 
             if (sizeof($userSub) > 0) {
@@ -40,6 +40,20 @@ class PresentGift
         $res[] = $message;
         return json_encode($res);
 
+    }
+
+    private static function checkGiftValidation($giftData)
+    {
+        if (getJDate(null) <= $giftData['end_date']) {
+
+            if (date("H") <= $giftData['end_hours']) {
+
+                if ($giftData['counter'] > 0)
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     private static function buy($subId, $userApi)
