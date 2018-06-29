@@ -1,43 +1,21 @@
 ﻿<html>
 <head>
-    <script>
-        function myFunction(elementName) {
-            /* Get the text field */
-            var copyText = document.getElementById(elementName);
+    <link rel='stylesheet' type='text/css' href='cssStyle.css'/>
+    <script src="JS.js"></script>
 
-            /* Select the text field */
-            copyText.select();
-
-            /* Copy the text inside the text field */
-            document.execCommand("copy");
-
-            /* Alert the copied text */
-            alert("Copied the text: " + copyText.value);
-        }
-    </script>
-
-    <link><link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body >
+<body>
+<h5 > عیدی ما به شما با وارد کردن کد زیر می توانید یک اشتراک هدیه داشته باشید فقط <span id="counter"></span> نفر دیگر می توانند استفاده کنند. </h5>
 
-<table style="width:100%">
-    <tr style="direction:inherit ">
+<table id = "giftCodesTable">
+    <tr>
         <th>کد هدیه</th>
-        <th>تعداد باقی مانده</th>
-    </tr>
-    <tr style="margin: 20px">
-        <td><input type="text" value="abcd" id="myInput1">
-            <button onclick="myFunction('myInput1')">Copy text</button></td>
-        <td>20</td>
-
-    </tr>
-    <tr >
-        <td ><input type="text" value="fetr97" id="myInput2">
-            <button onclick="myFunction('myInput2')">Copy text</button></td>
-        <td>10</td>
+        <th>تعداد نفرات باقی مانده</th>
     </tr>
 </table>
-
+<script> getGiftCodes() </script>
 
 </body>
 </html>
+
+

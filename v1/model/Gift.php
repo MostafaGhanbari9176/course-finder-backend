@@ -49,4 +49,12 @@ class Gift
             return 1;
         return 0;
     }
+
+    public function getGiftCodes()
+    {
+        $sql = "SELECT * FROM $this->tableName";
+        $result = $this->con->prepare($sql);
+        $result->execute();
+        return $result->get_result();
+    }
 }

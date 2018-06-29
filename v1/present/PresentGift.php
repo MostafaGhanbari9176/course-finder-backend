@@ -42,19 +42,44 @@ class PresentGift
 
     }
 
+    public static function getGiftCodes()
+    {
+        $result = (new Gift())->getGiftCodes();
+        $res = array();
+        while ($row = $result->fetch_assoc()) {
+
+            if (self::checkGiftValidation($row)) {
+                $giftData = array();
+                $giftData['giftCode'] = $row['gift_code'];
+                $giftData['counter'] = $row['counter'];
+                $giftData['endHours'] = $row['end_hours'];
+                $giftData['endDate'] = $row['end_date'];
+                $res[] = $giftData;
+            }
+
+        }
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+        return json_encode($res);
+    }
+
     private static function checkGiftValidation($giftData)
     {
-        if (getJDate(null) <= $giftData['end_date']) {
-
-            if (date("H") <= $giftData['end_hours']) {
-
-                if ($giftData['counter'] > 0)
+        if ($giftData['counter'] > 0) {
+            if (getJDate(null) < $giftData['end_date'])
+                return true;
+            else if (getJDate(null) == $giftData['end_date']) {
+                if (date("H") <= $giftData['end_hours'])
                     return true;
             }
-        }
 
+        }
         return false;
     }
+
 
     private static function buy($subId, $userApi)
     {

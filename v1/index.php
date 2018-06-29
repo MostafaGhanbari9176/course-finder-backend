@@ -26,8 +26,8 @@ require 'present/PresentReport.php';
 require 'present/PresentAppData.php';
 require 'present/PresentFeedBack.php';
 require 'present/PresentFavorite.php';
-require 'Present/PresentBookMark.php';
-require 'Present/PresentGift.php';
+require 'present/PresentBookMark.php';
+require 'present/PresentGift.php';
 
 
 $app = new \Slim\App;
@@ -401,6 +401,11 @@ $app->get('/getBookMarkCourses/{userApi}', function (Request $req, Response $res
 
 $app->get('/checkGiftCode/{giftCode}/{userApi}', function (Request $req, Response $res) {
     $result = PresentGift::checkGift($req->getAttribute('giftCode'), $req->getAttribute('userApi'));
+    $res->getBody()->write($result);
+});
+
+$app->get('/getGiftCodes', function (Request $req, Response $res) {
+    $result = PresentGift::getGiftCodes();
     $res->getBody()->write($result);
 });
 
