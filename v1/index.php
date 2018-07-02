@@ -28,6 +28,7 @@ require 'present/PresentFeedBack.php';
 require 'present/PresentFavorite.php';
 require 'present/PresentBookMark.php';
 require 'present/PresentGift.php';
+require 'ChildThread.php';
 
 
 $app = new \Slim\App;
@@ -122,7 +123,9 @@ $app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{shar
     $resuelt = PresentCourse::addCourse($ac, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet,
         $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
     $res->getBody()->write($resuelt);
-    (new SendingEmail())->sendRequestForMaster('ثبت دوره ایی با کد : ' . $resuelt, $ac);
+    $t = new ChildThread();
+    $t->start();
+    $t->join();
 });
 
 $app->get('/getCourseByFilter/{minOld}/{maxOld}/{startDate}/{endDate}/{Grouping}/{days}', function (Request $req, Response $res) {
@@ -230,8 +233,8 @@ $app->get('/getMsAndRat/{ac}', function (Request $req, Response $res) {
 $app->get('/upMs/{ac}', function (Request $req, Response $res) {
     $ac = $req->getAttribute('ac');
     $res->getBody()->write(PresenterTeacher::updateMadrakState($ac));
-    $phone = (new User())->getPhoneByAc($ac);
-    (new SendingEmail())->sendRequestForMaster('مدرک خودرا بارگذاری کرده است.', $phone);
+    //  $phone = (new User())->getPhoneByAc($ac);
+    //(new SendingEmail())->sendRequestForMaster('مدرک خودرا بارگذاری کرده است.', $phone);
 });
 
 $app->get('/saveSms/{text}/{tsId}/{rsId}/{courseId}/{howSending}', function (Request $req, Response $res) {
