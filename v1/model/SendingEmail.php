@@ -33,7 +33,7 @@ class SendingEmail
             $mail->setFrom('mahoorsoft1997@yahoo.com', 'mahoorsoft1997');
             $mail->addAddress($email, 'user');     // Add a recipient
             $mail->isHTML(true);
-            $mail->Subject = 'verify Code From My Training Courses';
+            $mail->Subject = 'verify Code From CourseFinder';
             $mail->Body = self::VerifyCodehtmlPage($code);
             if ($mail->send())
                 return 1;
@@ -61,7 +61,7 @@ class SendingEmail
             $mail->setFrom('mahoorsoft1997@yahoo.com', 'mahoorsoft1997');
             $mail->addAddress(self::$masterMail, 'user');     // Add a recipient
             $mail->isHTML(true);
-            $mail->Subject = 'FeedBack From My Training Courses';
+            $mail->Subject = 'FeedBack From CourseFinder';
             $mail->Body = self::feedBackHtmlPage($feedBackText, $userId);
             if ($mail->send())
                 return 1;
@@ -89,7 +89,7 @@ class SendingEmail
             $mail->setFrom('mahoorsoft1997@yahoo.com', 'mahoorsoft1997');
             $mail->addAddress(self::$masterMail, 'user');     // Add a recipient
             $mail->isHTML(true);
-            $mail->Subject = 'Request From My Training Courses';
+            $mail->Subject = 'Request From CourseFinder';
             $mail->Body = self::feedBackHtmlPage($text, $userId);
             if ($mail->send())
                 return 1;
