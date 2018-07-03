@@ -8,10 +8,10 @@
 
 require_once 'uses/DBConnection.php';
 
-class SmsCode
+class VerifyCode
 {
     private $con;
-    private $tableName = "sms_code";
+    private $tableName = "verify_code";
 
     function __construct()
     {
@@ -22,23 +22,33 @@ class SmsCode
 
     }
 
-    public function saveSmsCode($phone, $vCode)
+    public function saveSmsCode($phone, $vCode, $sendingDay)
     {
-        $sql = "INSERT INTO $this->tableName (phone ,code ) VALUES (?,?)";
+        $sql = "INSERT INTO $this->tableName (phone ,code , sending_day) VALUES (?,?,?)";
         $result = $this->con->prepare($sql);
-        $result->bind_param('si', $phone, $vCode);
+        $result->bind_param('sis', $phone, $vCode, $sendingDay);
         if ($result->execute()) {
             return (int)1;
         } else {
-            $this->updateCounter($phone);
-            $sql = "UPDATE $this->tableName s SET s.code = ? WHERE s.phone = ?";
+            //$this->updateCounter($phone);
+            $sql = "UPDATE $this->tableName s SET s.code = ? , s.sending_day = ? WHERE s.phone = ?";
             $result = $this->con->prepare($sql);
-            $result->bind_param('is', $vCode, $phone);
+            $result->bind_param('iss', $vCode, $sendingDay, $phone);
             if ($result->execute()) {
                 return (int)1;
             } else
                 return 0;
         }
+    }
+
+    public function getVerifyCodeData($phone)
+    {
+
+        $sql = "SELECT * FROM $this->tableName WHERE phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('s', $phone);
+        $result->execute();
+        return $result->get_result();
     }
 
     public function getSmsCode($phone)
@@ -63,13 +73,22 @@ class SmsCode
 
     public function updateCounter($phone)
     {
-        $counter = SmsCode::getCounter($phone) + 1;
+        $counter = VerifyCode::getCounter($phone) + 1;
         $sql = "UPDATE $this->tableName s SET s.counter = ? WHERE s.phone = ?";
         $result = $this->con->prepare($sql);
         $result->bind_param('is', $counter, $phone);
         $result->execute();
 
 
+    }
+
+    public function removeVerifyCode($phone)
+    {
+
+        $sql = "DELETE FROM $this->tableName WHERE phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('s', $phone);
+        $result->execute();
     }
 
 }

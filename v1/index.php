@@ -13,7 +13,7 @@ require '.././libs/vendor/autoload.php';
 require 'present/PresentOstan.php';
 require 'present/PresentCity.php';
 require 'present/PresentUser.php';
-require 'present/PresentSmsCode.php';
+require 'present/PresentVerifyCode.php';
 require 'present/PresenterTeacher.php';
 require 'present/PresentGrouping.php';
 require 'Present/PresentCourse.php';
@@ -28,8 +28,6 @@ require 'present/PresentFeedBack.php';
 require 'present/PresentFavorite.php';
 require 'present/PresentBookMark.php';
 require 'present/PresentGift.php';
-require 'ChildThread.php';
-
 
 $app = new \Slim\App;
 
@@ -54,7 +52,7 @@ $app->get('/logIn/{phone}/{code}', function (Request $req, Response $res) {
 
 $app->get('/createAndSaveSmsCode/{phone}', function (Request $request, Response $response) {
 
-    $response->getBody()->write(PresentSmsCode::creatAndSaveSmsCode($request->getAttribute('phone')));
+    $response->getBody()->write(PresentVerifyCode::SendVerifyCode($request->getAttribute('phone')));
 });
 
 $app->get('/logOut/{phone}', function (Request $request, Response $response) {
@@ -123,9 +121,6 @@ $app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{shar
     $resuelt = PresentCourse::addCourse($ac, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet,
         $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
     $res->getBody()->write($resuelt);
-    $t = new ChildThread();
-    $t->start();
-    $t->join();
 });
 
 $app->get('/getCourseByFilter/{minOld}/{maxOld}/{startDate}/{endDate}/{Grouping}/{days}', function (Request $req, Response $res) {
@@ -233,8 +228,6 @@ $app->get('/getMsAndRat/{ac}', function (Request $req, Response $res) {
 $app->get('/upMs/{ac}', function (Request $req, Response $res) {
     $ac = $req->getAttribute('ac');
     $res->getBody()->write(PresenterTeacher::updateMadrakState($ac));
-    //  $phone = (new User())->getPhoneByAc($ac);
-    //(new SendingEmail())->sendRequestForMaster('مدرک خودرا بارگذاری کرده است.', $phone);
 });
 
 $app->get('/saveSms/{text}/{tsId}/{rsId}/{courseId}/{howSending}', function (Request $req, Response $res) {
@@ -410,6 +403,10 @@ $app->get('/checkGiftCode/{giftCode}/{userApi}', function (Request $req, Respons
 $app->get('/getGiftCodes', function (Request $req, Response $res) {
     $result = PresentGift::getGiftCodes();
     $res->getBody()->write($result);
+});
+
+$app->get('/sendEmail/{code}', function (Request $req, Response $res) {
+    (new SendingEmail())->sendRequestForMaster('بازخورد از کاربر : ', $req->getAttribute('code'));
 });
 
 $app->get('/test', function (Request $req, Response $res) {

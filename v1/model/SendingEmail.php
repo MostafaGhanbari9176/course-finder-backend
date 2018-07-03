@@ -21,7 +21,7 @@ class SendingEmail
         $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
         try {
             //Server settings
-           // $mail->SMTPDebug = 1;                                 // Enable verbose debug output
+            // $mail->SMTPDebug = 1;                                 // Enable verbose debug output
             $mail->isSMTP();                                      // Set mailer to use SMTP
             $mail->Host = 'smtp.mail.yahoo.com';  // Specify main and backup SMTP servers
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
@@ -106,7 +106,7 @@ class SendingEmail
             "<html>
 <body style='direction:rtl'>
 	<div style='background: #263238; height: 600px'>
-		<p style='color:white; background: #384248; padding: 20px; font-size: 20px;'>دوره های آموزشی من</p>
+		<p style='color:white; background: #384248; padding: 20px; font-size: 20px;'>دوره یاب</p>
 		<p style='color:#41cdb0; padding-right:20px; text-align: right; font-size: 15px;'>بازخورد از کاربر :</p>
 		<ul style='padding: 20px; padding-right:30px'>
 			<li style='color: #ffcc00;font-size: 20px'>$userId</li>
@@ -122,7 +122,7 @@ class SendingEmail
         $html = "<html>
 <body style='direction:rtl'>
 	<div style='background: #263238; height: 300px'>
-		<p style='color:white; background: #384248; padding: 20px; font-size: 20px;'>دوره های آموزشی من</p>
+		<p style='color:white; background: #384248; padding: 20px; font-size: 20px;'>دوره یاب</p>
 		<p style='color:#41cdb0; padding-right:20px; text-align: right; font-size: 15px;'>کد زیرا در برنامه وارد کنید :</p>
 		<ul style='padding: 20px; padding-right:30px'>
 			<li style='color: #ffcc00;font-size: 20px'>$code</li>

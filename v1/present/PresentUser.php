@@ -16,7 +16,7 @@ class PresentUser
     {
         $apiCode = PresentUser::createApiCode($phone);
         $res = array();
-        if (PresentSmsCode::checkedSmsCode($phone, $code)) {
+        if (PresentVerifyCode::checkedSmsCode($phone, $code)) {
             $model = new User();
             $result = $model->logUp($phone, $name, $apiCode);
             if ($result) {
@@ -35,7 +35,7 @@ class PresentUser
     {
         $apiCode = PresentUser::createApiCode($phone);
         $res = array();
-        if (PresentSmsCode::checkedSmsCode($phone, $code)) {
+        if (PresentVerifyCode::checkedSmsCode($phone, $code)) {
             $model = new User();
             $result = $model->logIn($phone, $apiCode);
             if ($result == 1) {
