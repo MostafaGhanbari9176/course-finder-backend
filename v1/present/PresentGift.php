@@ -54,6 +54,7 @@ class PresentGift
                 $giftData['counter'] = $row['counter'];
                 $giftData['endHours'] = $row['end_hours'];
                 $giftData['endDate'] = $row['end_date'];
+                $giftData['state'] = $row['state'];
                 $res[] = $giftData;
             }
 

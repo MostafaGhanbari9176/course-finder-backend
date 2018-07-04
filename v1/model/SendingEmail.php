@@ -100,6 +100,81 @@ class SendingEmail
         }
     }
 
+    public static function NewsForUser($usersMail, $htmlPage)
+    {
+
+        $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+
+        try {
+            //Server settings
+            // $mail->SMTPDebug = 1;                                 // Enable verbose debug output
+            $mail->isSMTP();                                      // Set mailer to use SMTP
+            $mail->Host = 'smtp.mail.yahoo.com';  // Specify main and backup SMTP servers
+            $mail->SMTPAuth = true;                               // Enable SMTP authentication
+            $mail->Username = 'mahoorsoft1997@yahoo.com';                 // SMTP username
+            $mail->Password = '9157474088';                           // SMTP password
+            $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+            $mail->Port = 465;                                    // TCP port to connect to
+
+            $mail->setFrom('mahoorsoft1997@yahoo.com', 'mahoorsoft1997');
+            $mail->addAddress($usersMail, 'user');     // Add a recipient
+            $mail->isHTML(true);
+            $mail->Subject = 'News From Course Finder';
+            $mail->Body = $htmlPage;
+            $mail->send();
+
+
+        } catch (Exception $e) {
+
+        }
+
+    }
+
+    public static function courseNewsHtmlPage()
+    {
+
+        $courseName = "کاربر ICDL";
+        $tozihat = "دوره هفت مهارت ویژه استخدامی ،شامل مبانی، ویندوز ، اینترنت، ورد،اکسل، اکسس ، پاورپوینت";
+
+        return
+            "
+        <html>
+<body style='direction:rtl'>
+	<div style='background: #263238; height: 600px'>
+		<p style='color:white; background: #384248; padding: 20px; font-size: 20px;'>دوره یاب</p>
+		<p style='color:#41cdb0; padding-right:20px; text-align: right; font-size: 15px;'>ثبت دوره ایی جدید با نام :</p>
+		<ul style='padding: 20px; padding-right:30px'>
+			<li style='color: #ffcc00;font-size: 20px'>$courseName</li>
+			<li style='color: #ffcc00;font-size: 20px'>$tozihat</li>
+			</ul>
+	</div>
+</body>
+</html>
+         ";
+    }
+
+    public static function teacherNewsHtmlPage()
+    {
+
+        $teacherName = "نگارخانه رادنقش";
+        $tozihat = "مرکز هنر تفکر خلاقیت، مشاوره کودک و والدین، برگزاری دوره های تربیت مربی هنر کودک،  هنر درون";
+        return
+            "
+        <html>
+<body style='direction:rtl'>
+	<div style='background: #263238; height: 600px'>
+		<p style='color:white; background: #384248; padding: 20px; font-size: 20px;'>دوره یاب</p>
+		<p style='color:#41cdb0; padding-right:20px; text-align: right; font-size: 15px;'>ثبت آموزشگاهی جدید با نام :</p>
+		<ul style='padding: 20px; padding-right:30px'>
+			<li style='color: #ffcc00;font-size: 20px'>$teacherName</li>
+			<li style='color: #ffcc00;font-size: 20px'>$tozihat</li>
+			</ul>
+	</div>
+</body>
+</html>
+         ";
+    }
+
     private static function feedBackHtmlPage($text, $userId)
     {
         return
@@ -133,3 +208,4 @@ class SendingEmail
         return $html;
     }
 }
+

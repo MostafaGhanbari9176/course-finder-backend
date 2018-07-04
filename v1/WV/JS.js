@@ -28,7 +28,7 @@ function getGiftCodes() {
 
 function createTable(giftData) {
 
-    if (giftData[0]['empty'] === 1) {
+    if (giftData[0]['empty'] === 1 || giftData[0]['state'] === 0) {
         var element = document.body.getElementsByTagName("table")[0];
         document.body.removeChild(element);
         element = document.body.getElementsByTagName("h5")[0];
