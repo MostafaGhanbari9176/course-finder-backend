@@ -52,6 +52,7 @@ class PresentCourse
                 $course['startDate'] = $row['start_date'];
                 $course['id'] = $row['cource_id'];
                 $course['CourseName'] = $row['subject'];
+                $course['vaziat'] = $row['vaziat'];
                 $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
                 $res[] = $course;
             }
@@ -79,6 +80,7 @@ class PresentCourse
             $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
+            $course['vaziat'] = $row['vaziat'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
             $res[] = $course;
         }
@@ -102,6 +104,7 @@ class PresentCourse
                 continue;
             $course = array();
             $course['startDate'] = $row['start_date'];
+            $course['vaziat'] = $row['vaziat'];
             $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
@@ -152,6 +155,7 @@ class PresentCourse
             $course['minOld'] = $row['min_old'];//
             $course['maxOld'] = $row['max_old'];//
             $course['idTabaghe'] = $row['tabaghe_id'];
+            $course['state'] = $row['state'];
             $course['bookMark'] = (new BookMark())->checkBookMark($id, $user->getPhoneByAc($userApi));;
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
             $course['tabaghe'] = (new Tabaghe())->getGroupingSubjectByCourseId($row['cource_id']);
@@ -227,10 +231,11 @@ class PresentCourse
             $resuelt = $course->getCourseById($sabtenam['cource_id']);
 
             while ($row = $resuelt->fetch_assoc()) {
-                if ($row['is_deleted'] == 2 || $sabtenam['is_canceled'] == 2)
+                if ($row['is_deleted'] == 2 || $sabtenam['is_canceled'] == 2 || $row['vaziat'] == 0)
                     continue;
                 $course = array();
                 $course['id'] = $row['cource_id'];
+                $course['vaziat'] = $row['vaziat'];
                 $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
                 $course['isCanceled'] = $sabtenam['is_canceled'];
                 $course['vaziat'] = $sabtenam['vaziat'];
@@ -274,7 +279,7 @@ class PresentCourse
             $item = array();
             $courseResult = $courseModel->getCourseByGroupingId($rowOfGroupList['id']);
             while ($row = $courseResult->fetch_assoc()) {
-                if ($row['vaziat'] == 0 || $row['is_deleted'] !== 0)
+                if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3)
                     continue;
                 $counter++;
                 $course = array();
@@ -285,6 +290,7 @@ class PresentCourse
                     break;
                 }
                 $course['idTabaghe'] = $row['tabaghe_id'];
+                $course['vaziat'] = $row['vaziat'];
                 $course['startDate'] = $row['start_date'];
                 $course['endOfList'] = 0;
                 $course['id'] = $row['cource_id'];
@@ -333,7 +339,7 @@ class PresentCourse
                 $result = $model->getCourseByGroupingId($arr[$i]['subCategory'][$j]);
 
                 while ($row = $result->fetch_assoc()) {
-                    if ($row['vaziat'] == 0 || $row['is_deleted'] !== 0)
+                    if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3)
                         continue;
                     $counter++;
                     $course = array();
@@ -342,6 +348,7 @@ class PresentCourse
 
                     $course['idTabaghe'] = $row['tabaghe_id'];
                     $course['startDate'] = $row['start_date'];
+                    $course['vaziat'] = $row['vaziat'];
                     $course['endOfList'] = 0;
                     $course['id'] = $row['cource_id'];
                     $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
@@ -419,10 +426,11 @@ class PresentCourse
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3)
                 continue;
             $course = array();
             $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
+            $course['vaziat'] = $row['vaziat'];
             $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
@@ -436,6 +444,19 @@ class PresentCourse
             $res[] = $message;
         }
         return $res;
+
+    }
+
+    public static function upDateCourse($teacherApi, $courseId, $startDate, $endDate, $hours, $days, $state)
+    {
+        $teacherId = (new User())->getPhoneByAc($teacherApi);
+        $result = (new Course())->upDateCourse($teacherId, $courseId, $startDate, $endDate, $hours, $days, $state);
+        $res = array();
+        $message = array();
+        $message['code'] = $result;
+        $res[] = $message;
+        return json_encode($res);
+
 
     }
 
@@ -489,6 +510,8 @@ class PresentCourse
                 continue;
             if (!($startDate <= $eD && $eD <= $endDate))
                 continue;
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+                continue;
             $course = array();
             /*            $course['endDate'] = $eD;
                         $course['startDate'] = $sD;
@@ -496,6 +519,7 @@ class PresentCourse
                         $course['maxOld'] = $maOld;*/
             $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
+            $course['vaziat'] = $row['vaziat'];
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
             $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
@@ -532,7 +556,10 @@ class PresentCourse
                 continue;
             if (stripos($day, $d) != 0)
                 continue;
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+                continue;
             $course = array();
+            $course['vaziat'] = $row['vaziat'];
             $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
@@ -568,7 +595,10 @@ class PresentCourse
                 continue;
             if (!($startDate <= $eD && $eD <= $endDate))
                 continue;
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+                continue;
             $course = array();
+            $course['vaziat'] = $row['vaziat'];
             $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];
@@ -607,7 +637,10 @@ class PresentCourse
                 continue;
             if (stripos($day, $d) != 0)
                 continue;
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+                continue;
             $course = array();
+            $course['vaziat'] = $row['vaziat'];
             $course['startDate'] = $row['start_date'];
             $course['id'] = $row['cource_id'];
             $course['CourseName'] = $row['subject'];

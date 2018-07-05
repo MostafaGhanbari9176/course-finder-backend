@@ -156,4 +156,15 @@ class Course
         return $result->get_result();
     }
 
+    public function upDateCourse($teacherId, $courseId, $startDate, $endDate, $hours, $days, $state)
+    {
+
+        $sql = "UPDATE $this->tablename c set c.start_date = ? , c.end_date = ? , c.hours = ? , c.day = ? , c.state = ?  WHERE  c.cource_id = ? && c.teacher_id = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('ssssiis', $startDate, $endDate, $hours, $days, $state, $courseId, $teacherId);
+        if ($result->execute())
+            return 1;
+        return 0;
+    }
+
 }

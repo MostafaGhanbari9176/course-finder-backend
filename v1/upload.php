@@ -13,7 +13,12 @@ if (isset($_FILES['teacher']['name'])) {//5mb                                 5k
     if ($_FILES["teacher"]["size"] > 5242880 || $_FILES["teacher"]["size"] < 5120) {
         $result = 2;
     }
-} else if (isset($_FILES['madrak']['name'])) {
+}if (isset($_FILES['newsVideo']['name'])) {//5mb                                 5kb
+    if ($_FILES["newsVideo"]["size"] > 5242880 || $_FILES["newsVideo"]["size"] < 5120) {
+        $result = 2;
+    }
+}
+else if (isset($_FILES['madrak']['name'])) {
     if ($_FILES["madrak"]["size"] > 5242880 || $_FILES["madrak"]["size"] < 5120) {
         $result = 2;
     }
@@ -35,7 +40,20 @@ if ($result != 2) {
             move_uploaded_file($_FILES["teacher"]["tmp_name"], $target_file);
             $result = 1;
         }
-    } else if (isset($_FILES['madrak']['name'])) {
+    }    if (isset($_FILES['newsVideo']['name'])) {
+        $target_file = $target_dir_teacher . basename($_FILES["newsVideo"]["name"]);
+        if (file_exists($target_file)) {
+            unlink($target_file);
+        }
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        if ($imageFileType != "mkv" && $imageFileType != "mp4" && $imageFileType != "3gp" && $imageFileType != "flv") {
+            $result = 3;
+        } else {
+            move_uploaded_file($_FILES["newsVideo"]["tmp_name"], $target_file);
+            $result = 1;
+        }
+    }
+    else if (isset($_FILES['madrak']['name'])) {
         $target_file = $target_dir_madrak . basename($_FILES["madrak"]["name"]);
         if (file_exists($target_file)) {
             unlink($target_file);

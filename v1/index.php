@@ -455,14 +455,23 @@ $app->get('/getGiftCodes', function (Request $req, Response $res) {
 });
 
 $app->get('/sendEmail/{code}', function (Request $req, Response $res) {
-   SendingEmail::sendRequestForMaster('بازخورد از کاربر : ', $req->getAttribute('code'));
+    SendingEmail::sendRequestForMaster('بازخورد از کاربر : ', $req->getAttribute('code'));
+});
+
+$app->get('/upDateCourse/{teacherApi}/{courseId}/{startDate}/{endDate}/{hours}/{days}/{state}', function (Request $req, Response $res) {
+
+    $result = PresentCourse::upDateCourse($req->getAttribute('teacherApi'), $req->getAttribute('courseId'), $req->getAttribute('startDate'), $req->getAttribute('endDate')
+        , $req->getAttribute('hours'), $req->getAttribute('days'), $req->getAttribute('state'));
+    clearstatcache();
+    $res->getBody()->write($result);
+
+
 });
 
 $app->get('/sendNewsEmail/{email}', function (Request $req, Response $res) {
 
     $sendingEmail = new SendingEmail();
     $sendingEmail->NewsForUser($req->getAttribute('email'), $sendingEmail::courseNewsHtmlPage());
-
 
 
 });
