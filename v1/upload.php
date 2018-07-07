@@ -2,6 +2,7 @@
 require_once 'model/Teacher.php';
 $target_dir_tabaghe = "uploads/tabaghe/";
 $target_dir_teacher = "uploads/teacher/";
+$target_dir_video = "uploads/newsVideo/";
 $target_dir_madrak = "uploads/madrak/";
 $target_dir_course = "uploads/course/";
 $target_file = "";
@@ -41,7 +42,7 @@ if ($result != 2) {
             $result = 1;
         }
     }    if (isset($_FILES['newsVideo']['name'])) {
-        $target_file = $target_dir_teacher . basename($_FILES["newsVideo"]["name"]);
+        $target_file = $target_dir_video . basename($_FILES["newsVideo"]["name"]);
         if (file_exists($target_file)) {
             unlink($target_file);
         }

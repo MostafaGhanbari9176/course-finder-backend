@@ -158,7 +158,7 @@ class PresentCourse
             $course['state'] = $row['state'];
             $course['bookMark'] = (new BookMark())->checkBookMark($id, $user->getPhoneByAc($userApi));;
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
-            $course['tabaghe'] = (new Tabaghe())->getGroupingSubjectByCourseId($row['cource_id']);
+            $course['tabaghe'] = (new Tabaghe())->getRootGroupingSubject($row['tabaghe_id']);
             $res[] = $course;
         }
         if ($res) {
@@ -365,7 +365,7 @@ class PresentCourse
                 }
             }
             if ($courses) {
-                $item['courses'] = $courses;
+                $item['courses'] = self::sortCourse($courses);
                 $item['groupSubject'] = $arr[$i]['subject'];
                 $res[] = $item;
             } else {
@@ -385,6 +385,22 @@ class PresentCourse
             $res[] = $message;
             return json_encode($res);
         }
+    }
+
+    static function sortCourse($course)
+    {
+
+        for ($i = 0; $i < count($course); $i++) {
+            for ($j = $i; $j < count($course); $j++) {
+
+                if ($course[$i]['id'] < $course[$j]['id']) {
+                    $helpArray = $course[$i];
+                    $course[$i] = $course[$j];
+                    $course[$j] = $helpArray;
+                }
+            }
+        }
+        return $course;
     }
 
     static function sortWithCourseNumber($res)
@@ -409,6 +425,12 @@ class PresentCourse
         $item['courses'] = self::getNewCourse();
         $item['groupSubject'] = 'دوره های جدید';
         $res[] = $item;
+        $item['courses'] = self::getEndCourses();
+        $item['groupSubject'] = 'دوره های خاتمه یافته';
+        $res[] = $item;
+        $item['courses'] = self::getFullCapacityCourses();
+        $item['groupSubject'] = 'دوره های تکمیل ظرفیت شده';
+        $res[] = $item;
         if (!$res) {
             $message = array();
             $message ['empty'] = 1;
@@ -427,6 +449,64 @@ class PresentCourse
         while ($row = $resuelt->fetch_assoc()) {
 
             if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3)
+                continue;
+            $course = array();
+            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
+            $course['vaziat'] = $row['vaziat'];
+            $course['startDate'] = $row['start_date'];
+            $course['id'] = $row['cource_id'];
+            $course['CourseName'] = $row['subject'];
+            $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+            $res[] = $course;
+        }
+
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+        return $res;
+
+    }
+
+    private static function getEndCourses()
+    {
+
+        $course = new Course();
+        $resuelt = $course->getEndCourses();
+        $res = array();
+        while ($row = $resuelt->fetch_assoc()) {
+
+            if ($row['is_deleted'] !== 0)
+                continue;
+            $course = array();
+            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
+            $course['vaziat'] = $row['vaziat'];
+            $course['startDate'] = $row['start_date'];
+            $course['id'] = $row['cource_id'];
+            $course['CourseName'] = $row['subject'];
+            $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+            $res[] = $course;
+        }
+
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+        return $res;
+
+    }
+
+    private static function getFullCapacityCourses()
+    {
+
+        $course = new Course();
+        $resuelt = $course->getFullCapacityCourses();
+        $res = array();
+        while ($row = $resuelt->fetch_assoc()) {
+
+            if ($row['is_deleted'] !== 0)
                 continue;
             $course = array();
             $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);

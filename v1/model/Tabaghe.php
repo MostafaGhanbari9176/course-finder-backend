@@ -55,11 +55,11 @@ class Tabaghe
         return 0;
     }
 
-    public function getGroupingSubjectByCourseId($id)
+    public function getRootGroupingSubject($Id)
     {
-        $sql = "SELECT t.subject FROM tabaghe t WHERE t.id = (SELECT c.tabaghe_id FROM cource c WHERE c.cource_id = ?)";
+        $sql = "SELECT t.subject FROM tabaghe t WHERE t.id = (SELECT t.uper_id FROM tabaghe t WHERE t.id = ?)";
         $resuelt = $this->con->prepare($sql);
-        $resuelt->bind_param('i', $id);
+        $resuelt->bind_param('i', $Id);
         if ($resuelt->execute())
             return $resuelt->get_result()->fetch_assoc()['subject'];
         return 0;

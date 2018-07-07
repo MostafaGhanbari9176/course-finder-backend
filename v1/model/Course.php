@@ -39,7 +39,7 @@ class Course
     public function getAllCourse()
     {
 
-        $sql = "SELECT * FROM $this->tablename";
+        $sql = "SELECT * FROM $this->tablename c ORDER BY c.cource_id DESC";
         $result = $this->conn->prepare($sql);
         if ($result->execute())
             return $result->get_result();
@@ -119,7 +119,7 @@ class Course
     public function getCourseByTeacherId($teacherId)
     {
 
-        $sql = "SELECT * FROM $this->tablename c WHERE c.teacher_id = ?";
+        $sql = "SELECT * FROM $this->tablename c WHERE c.teacher_id = ? ORDER BY c.cource_id DESC";
         $result = $this->conn->prepare($sql);
         $result->bind_param('s', $teacherId);
         if ($result->execute())
@@ -139,7 +139,7 @@ class Course
 
     public function getCourseByGroupingId($groupingId)
     {
-        $sql = "SELECT * FROM $this->tablename c WHERE c.tabaghe_id = ?";
+        $sql = "SELECT * FROM $this->tablename c WHERE c.tabaghe_id = ? ORDER BY c.cource_id DESC";
         $result = $this->conn->prepare($sql);
         $result->bind_param('i', $groupingId);
         if ($result->execute())
@@ -154,6 +154,30 @@ class Course
         $result = $this->conn->prepare($sql);
         $result->execute();
         return $result->get_result();
+    }
+
+    public function getEndCourses()
+    {
+        $vaziat = 1;
+        $state = 3;
+        $sql = "SELECT * FROM $this->tablename c WHERE c.state = ? And c.vaziat = ? ORDER BY c.cource_id DESC ";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('ii', $state, $vaziat);
+        $result->execute();
+        return $result->get_result();
+
+    }
+
+    public function getFullCapacityCourses()
+    {
+        $vaziat = 1;
+        $state = 4;
+        $sql = "SELECT * FROM $this->tablename c WHERE c.state = ? And c.vaziat = ? ORDER BY c.cource_id DESC ";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('ii', $state, $vaziat);
+        $result->execute();
+        return $result->get_result();
+
     }
 
     public function upDateCourse($teacherId, $courseId, $startDate, $endDate, $hours, $days, $state)

@@ -470,8 +470,7 @@ $app->get('/upDateCourse/{teacherApi}/{courseId}/{startDate}/{endDate}/{hours}/{
 
 $app->get('/sendNewsEmail/{email}', function (Request $req, Response $res) {
 
-    $sendingEmail = new SendingEmail();
-    $sendingEmail->NewsForUser($req->getAttribute('email'), $sendingEmail::courseNewsHtmlPage());
+    $res->getBody()->write(PresentCourse::courseByrootIdForHomeList());
 
 
 });
