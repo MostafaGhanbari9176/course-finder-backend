@@ -173,4 +173,28 @@ class PresentSabtenam
 
     }
 
+    public static function getNotifyData($teacherApi, $lastId)
+    {
+
+        $teacherId = (new User())->getPhoneByAc($teacherApi);
+        $result = (new Sabtenam())->getNotifyData($teacherId, $lastId);
+        $res = array();
+        while ($row = $result->fetch_assoc()) {
+
+            $notifyData = array();
+            $notifyData['name'] = (new Course())->getCourseName($row['cource_id']);
+            $notifyData['lastId'] = $row['id'];
+            $res [] = $notifyData;
+
+        }
+
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+
+        return json_encode($res);
+    }
+
 }

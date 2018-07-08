@@ -191,4 +191,14 @@ class Course
         return 0;
     }
 
+    public function getNotifyData($lastId)
+    {
+        $vaziat = 1;
+        $sql = "SELECT * FROM $this->tablename c WHERE c.cource_id > ? AND c.vaziat = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('ii', $lastId, $vaziat);
+        $result->execute();
+        return $result->get_result();
+    }
+
 }

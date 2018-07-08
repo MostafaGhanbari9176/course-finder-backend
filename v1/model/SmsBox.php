@@ -75,4 +75,15 @@ class SmsBox
         return 0;
     }
 
+    public function getNotifyData($userId, $lastId)
+    {
+        $vaziat = 1;
+        $seen_flag = 0;
+        $sql = "SELECT * FROM $this->tableName s WHERE s.rs_id = ? AND s.id > ? AND s.vaziat = ? AND s.seen_flag = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('siii', $userId, $lastId, $vaziat, $seen_flag);
+        $result->execute();
+        return $result->get_result();
+    }
+
 }

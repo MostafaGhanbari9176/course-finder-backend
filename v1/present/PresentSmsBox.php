@@ -129,4 +129,26 @@ class PresentSmsBox
         return json_encode($message);
     }
 
+    public static function getNotifyData($userApi, $lastId)
+    {
+        $userId = (new User())->getPhoneByAc($userApi);
+        $result = (new SmsBox())->getNotifyData($userId, $lastId);
+        $res = array();
+        $counter = 0;
+        $lastId = 0;
+        while ($row = $result->fetch_assoc()) {
+            $counter++;
+            $lastId = $row['id'];
+        }
+
+
+        $message = array();
+        $message['lastId'] = $lastId;
+        $message['number'] = $counter;
+        $res[] = $message;
+
+
+        return json_encode($res);
+    }
+
 }

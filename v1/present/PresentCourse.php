@@ -738,4 +738,28 @@ class PresentCourse
         }
     }
 
+    public static function getNotifyData($lastId)
+    {
+
+
+        $result = (new Course())->getNotifyData($lastId);
+        $res = array();
+        while ($row = $result->fetch_assoc()) {
+
+            $notifyData = array();
+            $notifyData['name'] = $row['subject'];
+            $notifyData['lastId'] = $row['cource_id'];
+            $res [] = $notifyData;
+
+        }
+
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+
+        return json_encode($res);
+    }
+
 }

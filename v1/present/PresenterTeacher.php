@@ -278,4 +278,26 @@ class PresenterTeacher
 
     }
 
+    public static function getNotifyData()
+    {
+
+        $result = (new Teacher())->getNotifyData(getJDate(null));
+        $res = array();
+        while ($row = $result->fetch_assoc()) {
+
+            $notifyData = array();
+            $notifyData['apiCode'] = $row['phone'];
+            $res [] = $notifyData;
+
+        }
+
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+
+        return json_encode($res);
+    }
+
 }

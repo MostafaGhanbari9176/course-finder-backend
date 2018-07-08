@@ -84,4 +84,15 @@ class Sabtenam
             return true;
         return false;
     }
+
+    public function getNotifyData($teacherId, $lastId)
+    {
+        $vaziat = 0;
+        $is_canceled = 0;
+        $sql = "SELECT * FROM $this->tableName t WHERE t.teacher_id = ? AND t.id > ? AND t.vaziat = ? AND t.is_canceled = ?";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('siii', $teacherId, $lastId, $vaziat, $is_canceled);
+        $result->execute();
+        return $result->get_result();
+    }
 }

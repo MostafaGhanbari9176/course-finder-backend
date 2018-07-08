@@ -468,12 +468,30 @@ $app->get('/upDateCourse/{teacherApi}/{courseId}/{startDate}/{endDate}/{hours}/{
 
 });
 
-$app->get('/sendNewsEmail/{email}', function (Request $req, Response $res) {
+$app->get('/getSabtenamNotifyData/{apiCode}/{lastId}', function (Request $req, Response $res) {
+    $result = PresentSabtenam::getNotifyData($req->getAttribute('apiCode'), $req->getAttribute('lastId'));
+    $res->getBody()->write($result);
+});
 
-    $res->getBody()->write(PresentCourse::courseByrootIdForHomeList());
+$app->get('/getMessageNotifyData/{apiCode}/{lastId}', function (Request $req, Response $res) {
+    $result = PresentSmsBox::getNotifyData($req->getAttribute('apiCode'), $req->getAttribute('lastId'));
+    $res->getBody()->write($result);
+});
 
+$app->get('/getNewCourseNotifyData/{lastId}', function (Request $req, Response $res) {
+
+    $result = PresentCourse::getNotifyData($req->getAttribute('lastId'));
+    $res->getBody()->write($result);
 
 });
+
+$app->get('/getNewTeacherNotifyData', function (Request $req, Response $res) {
+
+    $result = PresenterTeacher::getNotifyData();
+    $res->getBody()->write($result);
+
+});
+
 
 $app->run();
 

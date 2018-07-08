@@ -93,7 +93,8 @@ class Teacher
         return 0;
     }
 
-    public function getNewTeacher(){
+    public function getNewTeacher()
+    {
 
 //      SELECT TOP 30 * FROM Customers c ORDER BY c.CustomerID DESC
         $sql = " SELECT * FROM $this->tableName t ORDER BY t.`taied_date`  DESC LIMIT 20";
@@ -101,4 +102,15 @@ class Teacher
         $result->execute();
         return $result->get_result();
     }
+
+    public function getNotifyData($todayDate)
+    {
+        $sql = "SELECT * FROM $this->tableName t WHERE t.taied_date = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('s', $todayDate);
+        $result->execute();
+        return $result->get_result();
+    }
+
+
 }
