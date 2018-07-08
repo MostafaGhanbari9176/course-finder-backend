@@ -258,6 +258,8 @@ class PresentCourse
         }
     }
 
+    /////////////
+
     public static function getCourseForListHome($id)
     {
         if ($id == -1)
@@ -279,7 +281,7 @@ class PresentCourse
             $item = array();
             $courseResult = $courseModel->getCourseByGroupingId($rowOfGroupList['id']);
             while ($row = $courseResult->fetch_assoc()) {
-                if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3)
+                if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null))
                     continue;
                 $counter++;
                 $course = array();
@@ -339,7 +341,7 @@ class PresentCourse
                 $result = $model->getCourseByGroupingId($arr[$i]['subCategory'][$j]);
 
                 while ($row = $result->fetch_assoc()) {
-                    if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3)
+                    if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null))
                         continue;
                     $counter++;
                     $course = array();
@@ -431,6 +433,9 @@ class PresentCourse
         $item['courses'] = self::getFullCapacityCourses();
         $item['groupSubject'] = 'دوره های تکمیل ظرفیت شده';
         $res[] = $item;
+        $item['courses'] = self::getStartedCourse();
+        $item['groupSubject'] = 'دوره های شروع شده';
+        $res[] = $item;
         if (!$res) {
             $message = array();
             $message ['empty'] = 1;
@@ -448,7 +453,7 @@ class PresentCourse
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null))
                 continue;
             $course = array();
             $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
@@ -477,7 +482,7 @@ class PresentCourse
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
-            if ($row['is_deleted'] !== 0)
+            if ($row['is_deleted'] !== 0 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null))
                 continue;
             $course = array();
             $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
@@ -502,20 +507,22 @@ class PresentCourse
     {
 
         $course = new Course();
-        $resuelt = $course->getFullCapacityCourses();
+        $resuelt = $course->getAllCourse();
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
-            if ($row['is_deleted'] !== 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
                 continue;
-            $course = array();
-            $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
-            $course['vaziat'] = $row['vaziat'];
-            $course['startDate'] = $row['start_date'];
-            $course['id'] = $row['cource_id'];
-            $course['CourseName'] = $row['subject'];
-            $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
-            $res[] = $course;
+            if ($row['state'] == 4 || $row['capacity'] <= 0) {
+                $course = array();
+                $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
+                $course['vaziat'] = $row['vaziat'];
+                $course['startDate'] = $row['start_date'];
+                $course['id'] = $row['cource_id'];
+                $course['CourseName'] = $row['subject'];
+                $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+                $res[] = $course;
+            }
         }
 
         if (!$res) {
@@ -526,6 +533,39 @@ class PresentCourse
         return $res;
 
     }
+
+    private static function getStartedCourse()
+    {
+
+        $course = new Course();
+        $resuelt = $course->getAllCourse();
+        $res = array();
+        while ($row = $resuelt->fetch_assoc()) {
+
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+                continue;
+            if ($row['start_date'] < getJDate(null) || $row['state'] == 2) {
+                $course = array();
+                $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
+                $course['vaziat'] = $row['vaziat'];
+                $course['startDate'] = $row['start_date'];
+                $course['id'] = $row['cource_id'];
+                $course['CourseName'] = $row['subject'];
+                $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
+                $res[] = $course;
+            }
+        }
+
+        if (!$res) {
+            $message = array();
+            $message['empty'] = 1;
+            $res[] = $message;
+        }
+        return $res;
+
+    }
+
+    ///////////////
 
     public static function upDateCourse($teacherApi, $courseId, $startDate, $endDate, $hours, $days, $state)
     {

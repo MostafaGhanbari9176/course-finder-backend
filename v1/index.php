@@ -34,6 +34,8 @@ header("Pragma: no-cache");
 
 $app = new \Slim\App;
 
+header("Access-Control-Allow-Origin: *");
+
 $app->get('/logUp/{phone}/{name}/{code}', function (Request $req, Response $res) {
 
     $phone = $req->getAttribute('phone');
@@ -106,6 +108,7 @@ $app->get('/getCustomTeacherListData', function (Request $req, Response $res) {
 });
 
 $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
+
 
     $uperId = $req->getAttribute('uperId');
     clearstatcache();
@@ -489,6 +492,13 @@ $app->get('/getNewTeacherNotifyData', function (Request $req, Response $res) {
 
     $result = PresenterTeacher::getNotifyData();
     $res->getBody()->write($result);
+
+});
+
+$app->get('/test', function (Request $req, Response $res) {
+
+
+    $res->getBody()->write("1397-04-16" > getJDate(null));
 
 });
 
