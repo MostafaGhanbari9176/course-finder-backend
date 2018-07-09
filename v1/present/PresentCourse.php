@@ -139,6 +139,8 @@ class PresentCourse
         $result = $course->getCourseById($id);
         $res = array();
         while ($row = $result->fetch_assoc()) {
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+                continue;
             $course = array();
             $course['id'] = $row['cource_id'];
             $course['idTeacher'] = $user->getAcByPhone($row['teacher_id']);
@@ -482,7 +484,7 @@ class PresentCourse
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
-            if ($row['is_deleted'] !== 0 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null))
+            if ($row['is_deleted'] !== 0 )
                 continue;
             $course = array();
             $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
