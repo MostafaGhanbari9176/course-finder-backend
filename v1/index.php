@@ -30,11 +30,11 @@ require 'present/PresentBookMark.php';
 require 'present/PresentGift.php';
 
 
-header("Pragma: no-cache");
+
 
 $app = new \Slim\App;
 
-header("Access-Control-Allow-Origin: *");
+
 
 $app->get('/logUp/{phone}/{name}/{code}', function (Request $req, Response $res) {
 

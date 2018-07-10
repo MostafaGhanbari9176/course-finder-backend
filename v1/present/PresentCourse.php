@@ -484,7 +484,7 @@ class PresentCourse
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
-            if ($row['is_deleted'] !== 0 )
+            if ($row['is_deleted'] !== 0)
                 continue;
             $course = array();
             $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
@@ -784,7 +784,7 @@ class PresentCourse
     {
 
 
-        $result = (new Course())->getNotifyData($lastId);
+        $result = (new Course())->getNotifyData($lastId, getJDate(null));
         $res = array();
         while ($row = $result->fetch_assoc()) {
 

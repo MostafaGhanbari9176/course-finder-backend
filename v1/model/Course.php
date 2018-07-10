@@ -191,12 +191,12 @@ class Course
         return 0;
     }
 
-    public function getNotifyData($lastId)
+    public function getNotifyData($lastId, $todayDate)
     {
         $vaziat = 1;
-        $sql = "SELECT * FROM $this->tablename c WHERE c.cource_id > ? AND c.vaziat = ?";
+        $sql = "SELECT * FROM $this->tablename c WHERE c.cource_id > ? AND c.vaziat = ? AND c.definition_date = ?";
         $result = $this->conn->prepare($sql);
-        $result->bind_param('ii', $lastId, $vaziat);
+        $result->bind_param('iis', $lastId, $vaziat, $todayDate);
         $result->execute();
         return $result->get_result();
     }
