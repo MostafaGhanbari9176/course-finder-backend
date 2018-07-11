@@ -30,10 +30,11 @@ require 'present/PresentBookMark.php';
 require 'present/PresentGift.php';
 
 
-
+header("Pragma: no-cache");
 
 $app = new \Slim\App;
 
+header("Access-Control-Allow-Origin: *");
 
 
 $app->get('/logUp/{phone}/{name}/{code}', function (Request $req, Response $res) {
@@ -52,6 +53,43 @@ $app->get('/logIn/{phone}/{code}', function (Request $req, Response $res) {
     $phone = $req->getAttribute('phone');
     $code = $req->getAttribute('code');
     $result = PresentUser::logIn($phone, $code);
+    clearstatcache();
+    $res->getBody()->write($result);
+
+});
+
+
+$app->post('/logUp', function (Request $req, Response $res) {
+
+    $postParam = $req->getParsedBody();
+    $email = $postParam['email'];
+    $name = $postParam['name'];
+    $verifyCode = $postParam['verifyCode'];
+    $pass = $postParam['pass'];
+    $result = PresentUser::logUPWithPass($email, $name, $verifyCode, $pass);
+    clearstatcache();
+    $res->getBody()->write($result);
+
+});
+
+$app->post('/logIn', function (Request $req, Response $res) {
+
+    $postParam = $req->getParsedBody();
+    $email = $postParam['email'];
+    $pass = $postParam['pass'];
+    $result = PresentUser::logInWithPass($email, $pass);
+    clearstatcache();
+    $res->getBody()->write($result);
+
+});
+
+$app->post('/chosePass', function (Request $req, Response $res) {
+
+    $postParam = $req->getParsedBody();
+    $email = $postParam['email'];
+    $verifyCode = $postParam['verifyCode'];
+    $pass = $postParam['pass'];
+    $result = PresentUser::logUPWithPass($email, $verifyCode, $pass);
     clearstatcache();
     $res->getBody()->write($result);
 
@@ -498,7 +536,7 @@ $app->get('/getNewTeacherNotifyData', function (Request $req, Response $res) {
 $app->get('/test', function (Request $req, Response $res) {
 
 
-    $res->getBody()->write("1397-04-16" > getJDate(null));
+    $res->getBody()->write(round(microtime(true) * 1000)."");
 
 });
 

@@ -21,6 +21,40 @@ class User
 
     }
 
+    public function logUpWithPass($phone, $name, $apiCode, $pass)
+    {
+        $status = 1;
+        $sql = "INSERT INTO $this->tableName (phone, status, name, api_code, pass) VALUES(?,?,?,?,?)";
+        $result = $this->con->prepare($sql);
+        $result->bind_param("sisss", $phone, $status, $name, $apiCode, $pass);
+        if ($result->execute()) {
+            return true;
+        } else
+            return false;
+    }
+
+    public function checkPass($phone, $pass)
+    {
+
+        $sql = "SELECT * FROM $this->tableName u WHERE u.phone = ? AND u.pass = ?";
+        $result = $this->con->prepare($sql);
+        $result->execute();
+        $data = $result->get_result()->fetch_assoc();
+        if (sizeof($data) > 0)
+            return true;
+        return false;
+    }
+
+    public function chosePass($mail, $pass)
+    {
+
+        $sql = "UPDATE $this->tableName u SET u.pass = ? WHERE u.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('ss', $pass, $mail);
+        return $result->execute();
+
+    }
+
     public function logUp($phone, $name, $apiCode)
     {
         $status = 1;
