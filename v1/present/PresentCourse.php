@@ -573,6 +573,7 @@ class PresentCourse
     {
         $teacherId = (new User())->getPhoneByAc($teacherApi);
         $result = (new Course())->upDateCourse($teacherId, $courseId, $startDate, $endDate, $hours, $days, $state);
+        (new Notify())->updateNotifyData($courseId, $days, $startDate, $endDate);
         $res = array();
         $message = array();
         $message['code'] = $result;

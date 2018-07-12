@@ -28,6 +28,7 @@ require 'present/PresentFeedBack.php';
 require 'present/PresentFavorite.php';
 require 'present/PresentBookMark.php';
 require 'present/PresentGift.php';
+require 'present/PresentNotify.php';
 
 
 header("Pragma: no-cache");
@@ -533,10 +534,40 @@ $app->get('/getNewTeacherNotifyData', function (Request $req, Response $res) {
 
 });
 
+$app->get('/notifySetting/{ac}/{courseId}/{weakNotify}/{startNotify}', function (Request $req, Response $res) {
+
+    $result = PresentNotify::saveOrUpDateNotifyData($req->getAttribute('ac'), $req->getAttribute('courseId'), $req->getAttribute('startNotify'), $req->getAttribute('weakNotify'));
+    clearstatcache();
+    $res->getBody()->write($result);
+
+});
+
+$app->get('/getWeakNotifyData/{ac}', function (Request $req, Response $res) {
+
+    $result = PresentNotify::getWeakNotify($req->getAttribute('ac'));
+    $res->getBody()->write($result);
+
+});
+
+$app->get('/getStartNotifyData/{ac}/{tomDate}', function (Request $req, Response $res) {
+
+    $result = PresentNotify::getStartNotify($req->getAttribute('ac'), $req->getAttribute('tomDate'));
+    $res->getBody()->write($result);
+
+});
+
+$app->get('/getSettingNotifyData/{ac}/{courseId}', function (Request $req, Response $res) {
+
+    $result = PresentNotify::getSettingNotify($req->getAttribute('ac'), $req->getAttribute('courseId'));
+    clearstatcache();
+    $res->getBody()->write($result);
+
+});
+
 $app->get('/test', function (Request $req, Response $res) {
 
 
-    $res->getBody()->write(round(microtime(true) * 1000)."");
+    $res->getBody()->write(round(microtime(true) * 1000) . "");
 
 });
 
