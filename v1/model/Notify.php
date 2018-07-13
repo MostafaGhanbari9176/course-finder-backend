@@ -37,10 +37,16 @@ class Notify
     public function updateNotifyData($courseId, $days, $startDate, $endDate)
     {
 
-        $sql = "UPDATE $this->tableName n SET n.start_date = ? , n.days = ? , n.end_date = ? WHERE n.course_id = ?";
+        $sql = "UPDATE $this->tableName n SET n.start_date = ? , n.end_date = ? WHERE n.course_id = ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('sssi', $startDate, $days, $endDate, $courseId);
-        return $result->execute();
+        $result->bind_param('ssi', $startDate, $endDate, $courseId);
+        $result->execute();
+
+        $char = 'a';
+        $sql = "UPDATE $this->tableName n SET n.days = ? WHERE n.course_id = ? AND n.days <> ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('sis', $days, $courseId, $char);
+        $result->execute();
 
     }
 
@@ -56,9 +62,9 @@ class Notify
     public function getWeakNotifyData($userId)
     {
 
-        $sql = "SELECT * FROM $this->tableName WHERE user_id = ? AND end_date > ?";
+        $sql = "SELECT * FROM $this->tableName WHERE user_id = ? AND end_date > ? AND start_date <= ?";
         $result = $this->con->prepare($sql);
-        $result->bind_param('ss', $userId, getJDate(null));
+        $result->bind_param('sss', $userId, getJDate(null), getJDate(null));
         $result->execute();
         return $result->get_result();
     }
