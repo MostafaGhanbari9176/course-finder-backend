@@ -10,7 +10,7 @@ require_once 'model/Sabtenam.php';
 
 class PresentUser
 {
-    public static $versionName = '1.0.5';
+    public static $versionName = '1.0.6';
 
 
     public static function logUPWithPass($phone, $name, $code, $pass)//0-->badCod  1-->ok  2--> badLogUp

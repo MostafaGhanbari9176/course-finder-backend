@@ -19,10 +19,9 @@ class PresentNotify
         $courseData = (new Course())->getCourseById($courseId)->fetch_assoc();
         $userId = (new User())->getPhoneByAc($ac);
         $model = new Notify();
-        if (sizeof($model->getSettingNotify($userId, $courseId)->fetch_assoc()) > 0)
+        $result = $model->saveNotifySettingData($userId, $courseId, $courseData['subject'], $startNotify, $weakNotify == 1 ? $courseData['day'] : 'a', $courseData['start_date'], $courseData['end_date']);
+        if (!$result)
             $model->updateNotifySettingData($userId, $courseId, $startNotify, $weakNotify == 1 ? $courseData['day'] : 'a');
-        else
-            $model->saveNotifySettingData($userId, $courseId, $courseData['subject'], $startNotify, $weakNotify == 1 ? $courseData['day'] : 'a', $courseData['start_date'], $courseData['end_date']);
         $res = array();
         $message = array();
         $message['code'] = 1;
