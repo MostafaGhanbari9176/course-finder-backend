@@ -187,17 +187,6 @@ class PresentUser
 
     }
 
-    public
-    static function updateUser($phone, $name)
-    {
-        $model = new User();
-        $result = $model->updateUser($phone, $name);
-        $res = array();
-        $res["code"] = $result;
-        $message = array();
-        $message[] = $res;
-        return json_encode($message);
-    }
 
     public
     static function getUser($phone)
@@ -235,10 +224,10 @@ class PresentUser
     }
 
     public
-    static function logOut($phone)
+    static function logOut($ac)
     {
         $model = new User();
-        $result = $model->logOut($phone);
+        $result = $model->logOut((new User())->getPhoneByAc($ac));
         $res = array();
         $res['code'] = $result;
         $message = array();

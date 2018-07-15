@@ -154,8 +154,9 @@ $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentGrouping::getTabagheByUperId($uperId));
 });
 
-$app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{minOld}/{maxOld}', function (Request $req, Response $res) {
+$app->get('/addCourse/{ac}/{teacherName}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{minOld}/{maxOld}', function (Request $req, Response $res) {
     $ac = $req->getAttribute('ac');
+    $teacherName = $req->getAttribute('teacherName');
     $subject = $req->getAttribute('subject');
     $tabaghe_id = $req->getAttribute('tabaghe_id');
     $type = $req->getAttribute('type');
@@ -170,7 +171,7 @@ $app->get('/addCourse/{ac}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{shar
     $day = $req->getAttribute('day');
     $hours = $req->getAttribute('hours');
 
-    $resuelt = PresentCourse::addCourse($ac, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet,
+    $resuelt = PresentCourse::addCourse($ac, $teacherName,$subject, $tabaghe_id, $type, $capacity, $mony, $sharayet,
         $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
     clearstatcache();
     $res->getBody()->write($resuelt);
@@ -199,9 +200,9 @@ $app->get('/getCourseById/{id}/{userApi}', function (Request $req, Response $res
     $res->getBody()->write(PresentCourse::getCourseById($req->getAttribute('id'), $req->getAttribute('userApi')));
 });
 
-$app->get('/getCourseByTeacherId/{ac}', function (Request $req, Response $res) {
+$app->get('/getCourseByTeacherId/{phone}', function (Request $req, Response $res) {
     clearstatcache();
-    $res->getBody()->write(PresentCourse::getCourseByTeacherId($req->getAttribute('ac')));
+    $res->getBody()->write(PresentCourse::getCourseByTeacherId($req->getAttribute('phone')));
 });
 
 $app->get('/getUserCourse/{ac}', function (Request $req, Response $res) {

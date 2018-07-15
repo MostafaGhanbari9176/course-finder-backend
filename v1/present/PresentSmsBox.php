@@ -13,9 +13,8 @@ require_once 'model/user.php';
 
 class PresentSmsBox
 {
-    public static function saveSms($text, $tsId, $rsId, $courseId, $howSending)
+    public static function saveSms($text, $tsId, $rsPhone, $courseId, $howSending)
     {
-        $rsPhone = (new User())->getPhoneByAc($rsId);
         $tsPhone = (new User())->getPhoneByAc($tsId);
         $model = new SmsBox();
         $result = $model->saveSms($text, $tsPhone, $rsPhone, $courseId, "00:00", getJDate(null), $howSending);
@@ -52,7 +51,7 @@ class PresentSmsBox
                 continue;
             $sms = array();
             $sms['id'] = $row['id'];
-            $sms['tsId'] = (new User())->getAcByPhone($row['ts_id']);
+            $sms['tsId'] = $row['ts_id'];
             $sms['text'] = $row['text'];
             $sms['date'] = $row['date'];
             $sms['seen'] = $row['seen_flag'];
@@ -85,7 +84,7 @@ class PresentSmsBox
                 continue;
             $sms = array();
             $sms['id'] = $row['id'];
-            $sms['rsId'] = (new User())->getAcByPhone($row['rs_id']);
+            $sms['rsId'] = $row['rs_id'];
             $sms['text'] = $row['text'];
             $sms['date'] = $row['date'];
             $sms['seen'] = $row['seen_flag'];

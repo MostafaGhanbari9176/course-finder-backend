@@ -22,7 +22,7 @@ class PresenterTeacher
         $res = array();
         if ($model->changeUserType($phone, 1)) {
             $teacher = new Teacher();
-            $result = $teacher->addTeacher($phone, $landPhone, self::getDate(), $subject, $tozihat, $type, $lat, $lon, $ac, $address);
+            $result = $teacher->addTeacher($phone, $landPhone, getJDate(null), $subject, $tozihat, $type, $lat, $lon, $ac, $address);
             $res["code"] = $result;
             if ($result == 0)
                 $model->changeUserType($phone, 0);
@@ -46,7 +46,7 @@ class PresenterTeacher
                 continue;
             if ((new Favorite())->checkFavorite($row['phone'], $userId) == 1) {
                 $teacher = array();
-                $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
+                $teacher['ac'] = $row['phone'];
                 $teacher['subject'] = $row['subject'];
                 $teacher['lt'] = $row['lat'];
                 $teacher['lg'] = $row['lon'];
@@ -63,11 +63,9 @@ class PresenterTeacher
 
     }
 
-    public static function getTeacher($teacherApi, $userApi)
+    public static function getTeacher($teacherId, $userApi)
     {
 
-
-        $teacherId = (new User())->getPhoneByAc($teacherApi);
         $userId = (new User())->getPhoneByAc($userApi);
         $result = (new Teacher())->getTeacher($teacherId);
         $res = array();
@@ -102,12 +100,12 @@ class PresenterTeacher
         $rezult = $teacher->getAllTeacher();
         $res = array();
         while ($row = $rezult->fetch_assoc()) {
-            $TeacherRat = PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone']));
+            $TeacherRat = PresentComment::calculateTeacherRat($row['phone']);
             if ($TeacherRat < (float)3.5)
                 continue;
             $teacher = array();
             $teacher['pictureId'] = $row['picture_id'];
-            $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
+            $teacher['ac'] = $row['phone'];
             $teacher['subject'] = $row['subject'];
             $teacher['teacherRat'] = $TeacherRat;
             $res[] = $teacher;
@@ -159,9 +157,9 @@ class PresenterTeacher
                 continue;
             $teacher = array();
             $teacher['pictureId'] = $row['picture_id'];
-            $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
+            $teacher['ac'] = $row['phone'];
             $teacher['subject'] = $row['subject'];
-            $teacher['teacherRat'] = PresentComment::calculateTeacherRat((new User())->getAcByPhone($row['phone']));
+            $teacher['teacherRat'] = PresentComment::calculateTeacherRat($row['phone']);
             $res[] = $teacher;
         }
         if (!$res) {
@@ -197,7 +195,7 @@ class PresenterTeacher
             if ($row['madrak'] != 2)
                 continue;
             $teacher = array();
-            $teacher['ac'] = (new User())->getAcByPhone($row['phone']);
+            $teacher['ac'] = $row['phone'];
             $teacher['subject'] = $row['subject'];
             $teacher['lt'] = $row['lat'];
             $teacher['lg'] = $row['lon'];
@@ -212,18 +210,6 @@ class PresenterTeacher
         return json_encode($res);
     }
 
-    public static function updateTeacher($phone, $landPhone, $madrak, $subject, $address, $cityId)
-    {
-        $teacher = new Teacher();
-        $rezult = $teacher->updateTeacher($phone, $landPhone, $subject, $address, $cityId, $madrak);
-        $res = array();
-        $res['code'] = $rezult;
-        $message = array();
-        $message[] = $res;
-        return json_encode($message);
-
-
-    }
 
     public static function updateMadrakState($ac)
     {
@@ -255,18 +241,12 @@ class PresenterTeacher
             $res['code'] = -1;
         } else if ($rezult == 2) {
             $res['ms'] = base64_encode((base64_encode("barok")));
-            $res['code'] = (new PresentComment())->calculateTeacherRat($ac);
+            $res['code'] = (new PresentComment())->calculateTeacherRat((new User())->getPhoneByAc($ac));
         }
         //  $res['code'] = $rezult;
         $message = array();
         $message[] = $res;
         return json_encode($message);
-    }
-
-    static function getDate()
-    {
-
-        return gregorian_to_jalali(date("Y"), date("m"), date("d"), '-');
     }
 
     static function getCityId($phone)

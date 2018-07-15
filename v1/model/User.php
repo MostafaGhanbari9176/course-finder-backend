@@ -83,18 +83,6 @@ class User
         return (int)2;
     }
 
-    public function updateUser($phone, $name)
-    {
-        $sql = "UPDATE $this->tableName u SET name = ? WHERE u.phone = ?";
-        $result = $this->con->prepare($sql);
-        $result->bind_param("ss", $name, $phone);
-        if ($result->execute()) {
-            return (int)1;
-        } else {
-            return (int)0;
-        }
-    }
-
     public function getUser($phone)
     {
         $sql = "SELECT * FROM $this->tableName u WHERE u.phone = ?";
@@ -174,6 +162,26 @@ class User
         $result->bind_param("s", $phone);
         $result->execute();
         return $result->get_result()->fetch_assoc()['name'];
+    }
+
+    public function saveCellPhone($phone, $cellPhone)
+    {
+        $sql = "UPDATE $this->tableName u SET u.cell_phone = ? WHERE u.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('ss', $cellPhone, $phone);
+        $result->execute();
+    }
+
+    public function getCellPhone($phone)
+    {
+        $sql = "SELECT u.cell_phone From $this->tableName u WHERE u.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param('s', $phone);
+        $result->execute();
+        $data = $result->get_result()->fetch_assoc();
+        if (sizeof($data) > 0)
+            return $data['cell_phone'];
+        return 0;
     }
 
 }

@@ -20,12 +20,12 @@ class Sabtenam
         mysqli_set_charset($this->conn, "UTF8");
     }
 
-    public function add($idCourse, $idTeacer, $idUser, $date, $cellPhone)
+    public function add($idCourse, $idTeacer, $idUser, $date)
     {
 
-        $sql = "INSERT INTO $this->tableName (cource_id, teacher_id, user_id, date, cell_phone) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO $this->tableName (cource_id, teacher_id, user_id, date) VALUES (?, ?, ?, ?)";
         $rezuelt = $this->conn->prepare($sql);
-        $rezuelt->bind_param('issss', $idCourse, $idTeacer, $idUser, $date, $cellPhone);
+        $rezuelt->bind_param('isss', $idCourse, $idTeacer, $idUser, $date);
         if ($rezuelt->execute())
             return 1;
         return 0;

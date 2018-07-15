@@ -13,12 +13,12 @@ require_once 'model/Course.php';
 
 class PresentSabtenam
 {
-    public static function add($idCourse, $acTeacher, $acUser, $cellPhone)
+    public static function add($idCourse, $idTeacher, $acUser, $cellPhone)
     {
-        $idTeacher = (new User())->getPhoneByAc($acTeacher);
         $idUser = (new User())->getPhoneByAc($acUser);
         $sabtenam = new Sabtenam();
-        $result = $sabtenam->add($idCourse, $idTeacher, $idUser, getJDate(null), $cellPhone);
+        $result = $sabtenam->add($idCourse, $idTeacher, $idUser, getJDate(null));
+        (new User())->saveCellPhone($idUser, $cellPhone);
         $res = array();
         $res["code"] = $result;
         $message = array();
@@ -140,9 +140,9 @@ class PresentSabtenam
             $user = array();
             $user['sabtenamId'] = $row['id'];
             $user['name'] = (new User())->getUserName($row['user_id']);
-            $user['apiCode'] = (new User())->getAcByPhone($row['user_id']);
+            $user['apiCode'] = $row['user_id'];
             $user['status'] = $row['vaziat'];
-            $user['cellPhone'] = $row['cell_phone'];
+            $user['cellPhone'] = (new User())->getCellPhone($idTeacher);
             $user['isCanceled'] = $row['is_canceled'];
             $res[] = $user;
         }

@@ -20,11 +20,11 @@ class Course
         mysqli_set_charset($this->conn, "UTF8");
     }
 
-    public function addCourse($teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld)
+    public function addCourse($teacher_id, $subject, $teacherName, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld)
     {
-        $sql = "INSERT INTO $this->tablename (teacher_id, subject, tabaghe_id, type, capacity, mony, sharayet, tozihat, definition_date, start_date, end_date, day, hours, min_old, max_old) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO $this->tablename (teacher_id, subject, tabaghe_id, type, capacity, mony, sharayet, tozihat, definition_date, start_date, end_date, day, hours, min_old, max_old,teacher_name) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $result = $this->conn->prepare($sql);
-        $result->bind_param('ssiiiisssssssii', $teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, getJDate(null), $start_date, $end_date, $day, $hours, $minOld, $maxOld);
+        $result->bind_param('ssiiiisssssssiis', $teacher_id, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, getJDate(null), $start_date, $end_date, $day, $hours, $minOld, $maxOld, $teacherName);
         if ($result->execute()) {
             $sql2 = "SELECT c.cource_id FROM  $this->tablename c WHERE c.teacher_id = ? ORDER BY c.cource_id DESC LIMIT 1";
             $result2 = $this->conn->prepare($sql2);
@@ -43,17 +43,6 @@ class Course
         $result = $this->conn->prepare($sql);
         if ($result->execute())
             return $result->get_result();
-        return 0;
-    }
-
-    public function updateDeletedFlag($courseId, $code)
-    {
-
-        $sql = "UPDATE $this->tablename c SET is_deleted = ? WHERE c.cource_id = ?";
-        $result = $this->conn->prepare($sql);
-        $result->bind_param('ii', $code, $courseId);
-        if ($result->execute())
-            return 1;
         return 0;
     }
 
