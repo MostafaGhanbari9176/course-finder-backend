@@ -38,21 +38,21 @@ $app = new \Slim\App;
 header("Access-Control-Allow-Origin: *");
 
 
-$app->get('/logUp/{phone}/{name}/{code}', function (Request $req, Response $res) {
-
-    $phone = $req->getAttribute('phone');
-    $name = $req->getAttribute('name');
-    $code = $req->getAttribute('code');
+$app->post('/logUp', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $phone = $postParam['email'];
+    $name = $postParam['name'];
+    $code = $postParam['code'];
     $result = PresentUser::logUp($phone, $name, $code);
     clearstatcache();
     $res->getBody()->write($result);
 
 });
 
-$app->get('/logIn/{phone}/{code}', function (Request $req, Response $res) {
-
-    $phone = $req->getAttribute('phone');
-    $code = $req->getAttribute('code');
+$app->post('/logIn', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $phone = $postParam['email'];
+    $code = $postParam['code'];
     $result = PresentUser::logIn($phone, $code);
     clearstatcache();
     $res->getBody()->write($result);
@@ -60,7 +60,7 @@ $app->get('/logIn/{phone}/{code}', function (Request $req, Response $res) {
 });
 
 
-$app->post('/logUp', function (Request $req, Response $res) {
+$app->post('/SiteLogUp', function (Request $req, Response $res) {
 
     $postParam = $req->getParsedBody();
     $email = $postParam['email'];
@@ -73,7 +73,7 @@ $app->post('/logUp', function (Request $req, Response $res) {
 
 });
 
-$app->post('/logIn', function (Request $req, Response $res) {
+$app->post('/SiteLogIn', function (Request $req, Response $res) {
 
     $postParam = $req->getParsedBody();
     $email = $postParam['email'];
@@ -96,27 +96,33 @@ $app->post('/chosePass', function (Request $req, Response $res) {
 
 });
 
-$app->get('/createAndSaveSmsCode/{phone}', function (Request $request, Response $response) {
+$app->post('/createAndSaveSmsCode', function (Request $request, Response $response) {
+    $postParam = $request->getParsedBody();
+    $phone = $postParam['email'];
+    $result = PresentVerifyCode::createAndSaveSmsCode($phone);
     clearstatcache();
-    $response->getBody()->write(PresentVerifyCode::SendVerifyCode($request->getAttribute('phone')));
+    $response->getBody()->write($result);
 });
 
-$app->get('/logOut/{phone}', function (Request $request, Response $response) {
+$app->post('/logOut', function (Request $request, Response $response) {
+
+    $postParam = $request->getParsedBody();
+    $email = $postParam['email'];
     clearstatcache();
-    $response->getBody()->write(PresentUser::logOut($request->getAttribute('phone')));
+    $response->getBody()->write(PresentUser::logOut($request->getAttribute($email)));
 
 });
 
-$app->get('/addTeacher/{ac}/{landPhone}/{subject}/{tozihat}/{type}/{lat}/{lon}/{address}', function (Request $req, Response $res) {
-
-    $ac = $req->getAttribute('ac');
-    $landPhone = $req->getAttribute('landPhone');
-    $lat = $req->getAttribute('lat');
-    $subject = $req->getAttribute('subject');
-    $tozihat = $req->getAttribute('tozihat');
-    $type = $req->getAttribute('type');
-    $long = $req->getAttribute('lon');
-    $address = $req->getAttribute('address');
+$app->post('/addTeacher', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $ac = $postParam['ac'];
+    $landPhone = $postParam['landPhone'];
+    $lat = $postParam['lat'];
+    $subject = $postParam['subject'];
+    $tozihat = $postParam['tozihat'];
+    $type = $postParam['type'];
+    $long = $postParam['lon'];
+    $address = $postParam['address'];
     clearstatcache();
     $result = PresenterTeacher::addTeacher($ac, $landPhone, $subject, $tozihat, $type, $lat, $long, $address);
     $res->getBody()->write($result);
@@ -154,24 +160,25 @@ $app->get('/getTabaghe/{uperId}', function (Request $req, Response $res) {
     $res->getBody()->write(PresentGrouping::getTabagheByUperId($uperId));
 });
 
-$app->get('/addCourse/{ac}/{teacherName}/{subject}/{tabaghe_id}/{type}/{capacity}/{mony}/{sharayet}/{tozihat}/{start_date}/{end_date}/{day}/{hours}/{minOld}/{maxOld}', function (Request $req, Response $res) {
-    $ac = $req->getAttribute('ac');
-    $teacherName = $req->getAttribute('teacherName');
-    $subject = $req->getAttribute('subject');
-    $tabaghe_id = $req->getAttribute('tabaghe_id');
-    $type = $req->getAttribute('type');
-    $capacity = $req->getAttribute('capacity');
-    $mony = $req->getAttribute('mony');
-    $sharayet = $req->getAttribute('sharayet');
-    $minOld = $req->getAttribute('minOld');
-    $maxOld = $req->getAttribute('maxOld');
-    $tozihat = $req->getAttribute('tozihat');
-    $start_date = $req->getAttribute('start_date');
-    $end_date = $req->getAttribute('end_date');
-    $day = $req->getAttribute('day');
-    $hours = $req->getAttribute('hours');
+$app->post('/addCourse', function (Request $req, Response $res) {
+    $posParam = $req->getParsedBody();
+    $ac = $posParam['ac'];
+    $teacherName = $posParam['teacherName'];
+    $subject = $posParam['subject'];
+    $tabaghe_id = $posParam['tabagheId'];
+    $type = $posParam['type'];
+    $capacity = $posParam['capacity'];
+    $mony = $posParam['mony'];
+    $sharayet = $posParam['sharayet'];
+    $minOld = $posParam['minOld'];
+    $maxOld = $posParam['maxOld'];
+    $tozihat = $posParam['tozihat'];
+    $start_date = $posParam['startDate'];
+    $end_date = $posParam['endDate'];
+    $day = $posParam['day'];
+    $hours = $posParam['hours'];
 
-    $resuelt = PresentCourse::addCourse($ac, $teacherName,$subject, $tabaghe_id, $type, $capacity, $mony, $sharayet,
+    $resuelt = PresentCourse::addCourse($ac, $teacherName, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet,
         $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
     clearstatcache();
     $res->getBody()->write($resuelt);
@@ -568,7 +575,7 @@ $app->get('/getSettingNotifyData/{ac}/{courseId}', function (Request $req, Respo
 $app->get('/test', function (Request $req, Response $res) {
 
 
-    $res->getBody()->write(round(microtime(true) * 1000) . "");
+    $res->getBody()->write("wizard 1997" xor "wizard 1997");
 
 });
 

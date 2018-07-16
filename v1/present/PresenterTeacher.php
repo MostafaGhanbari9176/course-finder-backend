@@ -22,7 +22,7 @@ class PresenterTeacher
         $res = array();
         if ($model->changeUserType($phone, 1)) {
             $teacher = new Teacher();
-            $result = $teacher->addTeacher($phone, $landPhone, getJDate(null), $subject, $tozihat, $type, $lat, $lon, $ac, $address);
+            $result = $teacher->addTeacher($phone, $landPhone, getJDate(null), $subject, $tozihat, $type, $lat, $lon, $phone, $address);
             $res["code"] = $result;
             if ($result == 0)
                 $model->changeUserType($phone, 0);

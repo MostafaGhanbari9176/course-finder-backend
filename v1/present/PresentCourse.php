@@ -107,6 +107,7 @@ class PresentCourse
             $course['vaziat'] = $row['vaziat'];
             $course['idTeacher'] = $row['teacher_id'];
             $course['id'] = $row['cource_id'];
+            $course['empty'] = 0;
             $course['CourseName'] = $row['subject'];
             $course['MasterName'] = (new Course())->getTeacherSubject($row['cource_id']);
             $res[] = $course;
