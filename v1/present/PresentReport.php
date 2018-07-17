@@ -12,12 +12,13 @@ class PresentReport
 
     public static function saveAReport($signText, $reportText, $spamId, $spamerId, $reporterAc)
     {
-        $model = new Report();
-        $reporterId = (new User())->getPhoneByAc($reporterAc);
-        $rezult = $model->saveAReport($signText, $reportText, $spamId, $spamerId, $reporterId);
         $res = array();
         $message = array();
-        $message['code'] = $rezult;
+        $model = new Report();
+        $reporterId = (new User())->getPhoneByAc($reporterAc);
+        if (strlen($reporterId) != 0)
+            $model->saveAReport($signText, $reportText, $spamId, $spamerId, $reporterId);
+        $message['code'] = 1;
         $res[] = $message;
         return json_encode($res);
     }

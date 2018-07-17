@@ -17,13 +17,12 @@ class PresentComment
     {
         $userId = (new User())->getPhoneByAc($acUser);
         $commentId = self::checkAvailable($userId, $courseId);
-        if (!($commentId)) {
-            $model = new Comment();
+        $model = new Comment();
+        if (!($commentId))
             $result = $model->saveComment($commentText, $userId, $courseId, $teacherId, $teacherRat, getJDate(null));
-        } else {
-            $model = new Comment();
+        else
             $result = $model->upDateComment($commentId, $commentText, $userId, $courseId, $teacherId, $teacherRat, getJDate(null));
-        }
+
         $res = array();
         $res['code'] = $result;
         $message = array();
@@ -117,7 +116,7 @@ class PresentComment
             if ($row['vaziat'] == 0)
                 continue;
             $comment['id'] = $row['id'];
-            $comment['userId'] =$row['user_id'];
+            $comment['userId'] = $row['user_id'];
             $comment['courseName'] = (new Course())->getCourseName($row['course_id']);
             $comment['userName'] = (new User())->getUserName($row['user_id']);
             $comment['startDate'] = (new Course())->getCourseById($row['course_id'])->fetch_assoc()['start_date'];//

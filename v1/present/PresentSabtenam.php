@@ -57,18 +57,19 @@ class PresentSabtenam
     {
         $model = new Sabtenam();
         $result = 0;
-        if ($model->updatecanceledFlag($sabteNameId, $code)) {
-            $result = 1;
-            if ($code == 1) {
-                (new Course())->incrementCapacity($courseId);
-                PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
+        $smsRes = PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
+        if ($smsRes == '[{"code":1}]' || $rsId === "aaa") {
+            if ($model->updatecanceledFlag($sabteNameId, $code)) {
+                $result = 1;
+                if ($code == 1)
+                    (new Course())->incrementCapacity($courseId);
             }
         }
         $res = array();
-        $res['code'] = $result;
-        $message = array();
-        $message[] = $res;
-        return json_encode($message);
+        $msg = array();
+        $msg['code'] = $result;
+        $res[] = $msg;
+        return json_encode($res);
     }
 
     public
@@ -78,15 +79,18 @@ class PresentSabtenam
         $model = new Sabtenam();
         $course = new Course();
         for ($i = 0; $i < sizeof($students); $i++) {
-            $model->updatecanceledFlag($students[$i]['sabtenamId'], 1);
-            $course->incrementCapacity($students[$i]['courseId']);
-            PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
+            $smsRes = PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
+            if ($smsRes == '[{"code":1}]') {
+                $model->updatecanceledFlag($students[$i]['sabtenamId'], 1);
+                $course->incrementCapacity($students[$i]['courseId']);
+            }
+
         }
         $res = array();
-        $res['code'] = 1;
-        $message = array();
-        $message[] = $res;
-        return json_encode($message);
+        $msg = array();
+        $msg['code'] = 1;
+        $res[] = $msg;
+        return json_encode($res);
 
     }
 
@@ -96,9 +100,12 @@ class PresentSabtenam
 
         $model = new Sabtenam();
         $result = 0;
-        if ($model->confirmStudent($SabtenamId)) {
-            $result = (new Course())->decrementCapacity($courseId);
-            PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
+        $smsRes = PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
+        if ($smsRes == '[{"code":1}]') {
+            if ($model->confirmStudent($SabtenamId)) {
+                $result = 1;
+                (new Course())->decrementCapacity($courseId);
+            }
         }
         $res = array();
         $res['code'] = $result;
@@ -117,15 +124,17 @@ class PresentSabtenam
         $sabtenam = new Sabtenam();
         $course = new Course();
         for ($i = 0; $i < sizeof($students); $i++) {
-            $sabtenam->confirmStudent($students[$i]['sabtenamId']);
-            $course->decrementCapacity($students[$i]['courseId']);
-            PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
+            $smsRes = PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
+            if ($smsRes == '[{"code":1}]') {
+                $sabtenam->confirmStudent($students[$i]['sabtenamId']);
+                $course->decrementCapacity($students[$i]['courseId']);
+            }
         }
         $res = array();
-        $res['code'] = 1;
-        $message = array();
-        $message[] = $res;
-        return json_encode($message);
+        $msg = array();
+        $msg['code'] = 1;
+        $res[] = $msg;
+        return json_encode($res);
 
     }
 

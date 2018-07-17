@@ -15,14 +15,17 @@ class PresentSmsBox
 {
     public static function saveSms($text, $tsId, $rsPhone, $courseId, $howSending)
     {
-        $tsPhone = (new User())->getPhoneByAc($tsId);
-        $model = new SmsBox();
-        $result = $model->saveSms($text, $tsPhone, $rsPhone, $courseId, "00:00", getJDate(null), $howSending);
         $res = array();
-        $res['code'] = $result;
         $message = array();
-        $message[] = $res;
-        return json_encode($message);
+        $result = 1;
+        $tsPhone = (new User())->getPhoneByAc($tsId);
+        if (strlen($tsPhone) == 0)
+            $result = 0;
+        else
+            (new SmsBox())->saveSms($text, $tsPhone, $rsPhone, $courseId, date("H"), getJDate(null), $howSending);
+        $message['code'] = $result;
+        $res[] = $message;
+        return json_encode($res);
     }
 
     public
@@ -117,15 +120,16 @@ class PresentSmsBox
         return json_encode($message);
     }
 
-    public static function deleteSms($id)
+    public static function deleteSms($id, $api)
     {
-        $model = new SmsBox();
-        $result = $model->deleteSms($id);
         $res = array();
-        $res['code'] = $result;
         $message = array();
-        $message[] = $res;
-        return json_encode($message);
+        if (strlen((new User())->getPhoneByAc($api)) == 0)
+            $message['code'] = 0;
+        else
+            $message['code'] = (new SmsBox())->deleteSms($id);
+        $res[] = $message;
+        return json_encode($res);
     }
 
     public static function getNotifyData($userApi, $lastId)
