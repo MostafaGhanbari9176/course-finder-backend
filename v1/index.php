@@ -35,8 +35,6 @@ header("Pragma: no-cache");
 
 $app = new \Slim\App;
 
-header("Access-Control-Allow-Origin: *");
-
 
 $app->post('/logUp', function (Request $req, Response $res) {
     $postParam = $req->getParsedBody();
@@ -479,44 +477,52 @@ $app->get('/checkUpdate', function (Request $req, Response $res) {
 
 });
 
-$app->get('/SaveFavorite/{teacherApi}/{userApi}', function (Request $req, Response $res) {
-    $result = PresentFavorite::saveFavorite($req->getAttribute('teacherApi'), $req->getAttribute('userApi'));
+$app->post('/SaveFavorite', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentFavorite::saveFavorite($postParam['teacherApi'], $postParam['userApi']);
     clearstatcache();
     $res->getBody()->write($result);
 });
 
-$app->get('/RemoveFavorite/{teacherApi}/{userApi}', function (Request $req, Response $res) {
-    $result = PresentFavorite::removeFavorite($req->getAttribute('teacherApi'), $req->getAttribute('userApi'));
+$app->post('/RemoveFavorite', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentFavorite::removeFavorite($postParam['teacherApi'], $postParam['userApi']);
     clearstatcache();
     $res->getBody()->write($result);
 });
 
-$app->get('/SaveBookMark/{courseId}/{userApi}', function (Request $req, Response $res) {
-    $result = PresentBookMark::saveBookMark($req->getAttribute('courseId'), $req->getAttribute('userApi'));
+$app->post('/SaveBookMark', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentBookMark::saveBookMark($postParam['courseId'], $postParam['userApi']);
     clearstatcache();
     $res->getBody()->write($result);
 });
 
-$app->get('/RemoveBookMark/{courseId}/{userApi}', function (Request $req, Response $res) {
-    $result = PresentBookMark::removeBookMark($req->getAttribute('courseId'), $req->getAttribute('userApi'));
+$app->post('/RemoveBookMark', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentBookMark::removeBookMark($postParam['courseId'], $postParam['userApi']);
     clearstatcache();
     $res->getBody()->write($result);
 });
 
-$app->get('/getFavoriteTeachers/{userApi}', function (Request $req, Response $res) {
-    $result = PresenterTeacher::getFavoriteTeachers($req->getAttribute('userApi'));
+$app->post('/getFavoriteTeachers', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresenterTeacher::getFavoriteTeachers($postParam['userApi']);
     clearstatcache();
     $res->getBody()->write($result);
 });
 
-$app->get('/getBookMarkCourses/{userApi}', function (Request $req, Response $res) {
-    $result = PresentCourse::getBookMarkCourses($req->getAttribute('userApi'));
+$app->post('/getBookMarkCourses', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentCourse::getBookMarkCourses($postParam['userApi']);
     clearstatcache();
     $res->getBody()->write($result);
 });
 
-$app->get('/checkGiftCode/{giftCode}/{userApi}', function (Request $req, Response $res) {
-    $result = PresentGift::checkGift($req->getAttribute('giftCode'), $req->getAttribute('userApi'));
+$app->post('/checkGiftCode', function (Request $req, Response $res) {
+
+    $postParam = $req->getParsedBody();
+    $result = PresentGift::checkGift($postParam['giftCode'], $postParam['userApi']);
     clearstatcache();
     $res->getBody()->write($result);
 });
@@ -531,23 +537,25 @@ $app->get('/sendEmail/{code}', function (Request $req, Response $res) {
     SendingEmail::sendRequestForMaster('بازخورد از کاربر : ', $req->getAttribute('code'));
 });
 
-$app->get('/upDateCourse/{teacherApi}/{courseId}/{startDate}/{endDate}/{hours}/{days}/{state}', function (Request $req, Response $res) {
-
-    $result = PresentCourse::upDateCourse($req->getAttribute('teacherApi'), $req->getAttribute('courseId'), $req->getAttribute('startDate'), $req->getAttribute('endDate')
-        , $req->getAttribute('hours'), $req->getAttribute('days'), $req->getAttribute('state'));
+$app->post('/upDateCourse', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentCourse::upDateCourse($postParam['teacherApi'], $postParam['courseId'], $postParam['startDate'], $postParam['endDate']
+        , $postParam['hours'], $postParam['days'], $postParam['state']);
     clearstatcache();
     $res->getBody()->write($result);
 
 
 });
 
-$app->get('/getSabtenamNotifyData/{apiCode}/{lastId}', function (Request $req, Response $res) {
-    $result = PresentSabtenam::getNotifyData($req->getAttribute('apiCode'), $req->getAttribute('lastId'));
+$app->post('/getSabtenamNotifyData', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentSabtenam::getNotifyData($postParam['apiCode'], $postParam['lastId']);
     $res->getBody()->write($result);
 });
 
-$app->get('/getMessageNotifyData/{apiCode}/{lastId}', function (Request $req, Response $res) {
-    $result = PresentSmsBox::getNotifyData($req->getAttribute('apiCode'), $req->getAttribute('lastId'));
+$app->post('/getMessageNotifyData', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentSmsBox::getNotifyData($postParam['apiCode'], $postParam['lastId']);
     $res->getBody()->write($result);
 });
 
@@ -565,31 +573,31 @@ $app->get('/getNewTeacherNotifyData', function (Request $req, Response $res) {
 
 });
 
-$app->get('/notifySetting/{ac}/{courseId}/{weakNotify}/{startNotify}', function (Request $req, Response $res) {
-
-    $result = PresentNotify::saveOrUpDateNotifyData($req->getAttribute('ac'), $req->getAttribute('courseId'), $req->getAttribute('startNotify'), $req->getAttribute('weakNotify'));
+$app->post('/notifySetting', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentNotify::saveOrUpDateNotifyData($postParam['apiCode'], $postParam['courseId'], $postParam['startNotify'], $postParam['weakNotify']);
     clearstatcache();
     $res->getBody()->write($result);
 
 });
 
-$app->get('/getWeakNotifyData/{ac}', function (Request $req, Response $res) {
-
-    $result = PresentNotify::getWeakNotify($req->getAttribute('ac'));
+$app->post('/getWeakNotifyData', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentNotify::getWeakNotify($postParam['apiCode']);
     $res->getBody()->write($result);
 
 });
 
-$app->get('/getStartNotifyData/{ac}/{tomDate}', function (Request $req, Response $res) {
-
-    $result = PresentNotify::getStartNotify($req->getAttribute('ac'), $req->getAttribute('tomDate'));
+$app->post('/getStartNotifyData', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentNotify::getStartNotify($postParam['apiCode'], $postParam['tomDate']);
     $res->getBody()->write($result);
 
 });
 
-$app->get('/getSettingNotifyData/{ac}/{courseId}', function (Request $req, Response $res) {
-
-    $result = PresentNotify::getSettingNotify($req->getAttribute('ac'), $req->getAttribute('courseId'));
+$app->post('/getSettingNotifyData', function (Request $req, Response $res) {
+    $postParam = $req->getParsedBody();
+    $result = PresentNotify::getSettingNotify($postParam['apiCode'], $postParam['courseId']);
     clearstatcache();
     $res->getBody()->write($result);
 

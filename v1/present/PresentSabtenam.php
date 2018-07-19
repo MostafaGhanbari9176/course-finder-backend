@@ -18,7 +18,8 @@ class PresentSabtenam
         $idUser = (new User())->getPhoneByAc($acUser);
         $sabtenam = new Sabtenam();
         $result = $sabtenam->add($idCourse, $idTeacher, $idUser, getJDate(null));
-        (new User())->saveCellPhone($idUser, $cellPhone);
+        if ($cellPhone != "aaa")
+            (new User())->saveCellPhone($idUser, $cellPhone);
         $res = array();
         $res["code"] = $result;
         $message = array();
