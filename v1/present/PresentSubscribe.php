@@ -49,12 +49,6 @@ class PresentSubscribe
 
     }
 
-    private static function decodingSubId($id)
-    {
-        $data = str_split($id);
-        return $data[9];
-    }
-
     public static function getUserSubscribe($ac)
     {
         $res = array();
@@ -91,13 +85,14 @@ class PresentSubscribe
     {
         $userId = (new User())->getPhoneByAc($ac);
         $subscribe = new Subscribe();
-        $subscribeData = $subscribe->getSubscribe(self::decodingSubId($subscribeId));
-        $result = $subscribe->saveUserBuy($userId, getJDate(null), getJDate($subscribeData['period']), $refId, $subscribeData['remaining_courses'], self::decodingSubId($subscribeId));
+        $subscribeData = $subscribe->getSubscribe($subscribeId);
+        $result = $subscribe->saveUserBuy($userId, getJDate(null), getJDate($subscribeData['period']), $refId, $subscribeData['remaining_courses'], $subscribeId);
         $res = array();
         $message['code'] = $result;
         $res[] = $message;
         return json_encode($res);
 
     }
+
 
 }

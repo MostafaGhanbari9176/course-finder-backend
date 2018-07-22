@@ -21,40 +21,6 @@ class User
 
     }
 
-    public function logUpWithPass($phone, $name, $apiCode, $pass)
-    {
-        $status = 1;
-        $sql = "INSERT INTO $this->tableName (phone, status, name, api_code, pass) VALUES(?,?,?,?,?)";
-        $result = $this->con->prepare($sql);
-        $result->bind_param("sisss", $phone, $status, $name, $apiCode, $pass);
-        if ($result->execute()) {
-            return true;
-        } else
-            return false;
-    }
-
-    public function checkPass($phone, $pass)
-    {
-
-        $sql = "SELECT * FROM $this->tableName u WHERE u.phone = ? AND u.pass = ?";
-        $result = $this->con->prepare($sql);
-        $result->execute();
-        $data = $result->get_result()->fetch_assoc();
-        if (sizeof($data) > 0)
-            return true;
-        return false;
-    }
-
-    public function chosePass($mail, $pass)
-    {
-
-        $sql = "UPDATE $this->tableName u SET u.pass = ? WHERE u.phone = ?";
-        $result = $this->con->prepare($sql);
-        $result->bind_param('ss', $pass, $mail);
-        return $result->execute();
-
-    }
-
     public function logUp($phone, $name, $apiCode)
     {
         $status = 1;
@@ -81,6 +47,18 @@ class User
         if ($this->checkedTypeUser($phone) == 0)
             return (int)1;
         return (int)2;
+    }
+
+    public function updateUser($phone, $name)
+    {
+        $sql = "UPDATE $this->tableName u SET name = ? WHERE u.phone = ?";
+        $result = $this->con->prepare($sql);
+        $result->bind_param("ss", $name, $phone);
+        if ($result->execute()) {
+            return (int)1;
+        } else {
+            return (int)0;
+        }
     }
 
     public function getUser($phone)
@@ -162,26 +140,6 @@ class User
         $result->bind_param("s", $phone);
         $result->execute();
         return $result->get_result()->fetch_assoc()['name'];
-    }
-
-    public function saveCellPhone($phone, $cellPhone)
-    {
-        $sql = "UPDATE $this->tableName u SET u.cell_phone = ? WHERE u.phone = ?";
-        $result = $this->con->prepare($sql);
-        $result->bind_param('ss', $cellPhone, $phone);
-        $result->execute();
-    }
-
-    public function getCellPhone($phone)
-    {
-        $sql = "SELECT u.cell_phone From $this->tableName u WHERE u.phone = ?";
-        $result = $this->con->prepare($sql);
-        $result->bind_param('s', $phone);
-        $result->execute();
-        $data = $result->get_result()->fetch_assoc();
-        if (sizeof($data) > 0)
-            return $data['cell_phone'];
-        return 0;
     }
 
 }

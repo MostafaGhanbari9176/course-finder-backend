@@ -83,6 +83,16 @@ class Teacher
 
     }
 
+    public function updateTeacher($phone, $landPhone, $subjecy, $address, $cityId, $madrak)
+    {
+        $sql = "UPDATE $this->tableName u SET land_phone = ?, subject = ?, address = ?, madrak = ?, city_id = ? WHERE u.phone = ?";
+        $rezult = $this->con->prepare($sql);
+        $rezult->bind_param('sssiis', $landPhone, $subjecy, $address, $madrak, $cityId, $phone);
+        if ($rezult->execute())
+            return 1;
+        return 0;
+    }
+
     public function getNewTeacher()
     {
 

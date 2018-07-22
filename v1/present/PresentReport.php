@@ -10,15 +10,15 @@ require_once 'model/Report.php';
 class PresentReport
 {
 
-    public static function saveAReport($signText, $reportText, $spamId, $spamerId, $reporterAc)
+    public static function saveAReport($signText, $reportText, $spamId, $spamerAc, $reporterAc)
     {
+        $model = new Report();
+        $spamerId = (new User())->getPhoneByAc($spamerAc);
+        $reporterId = (new User())->getPhoneByAc($reporterAc);
+        $rezult = $model->saveAReport($signText, $reportText, $spamId, $spamerId, $reporterId);
         $res = array();
         $message = array();
-        $model = new Report();
-        $reporterId = (new User())->getPhoneByAc($reporterAc);
-        if (strlen($reporterId) != 0)
-            $model->saveAReport($signText, $reportText, $spamId, $spamerId, $reporterId);
-        $message['code'] = 1;
+        $message['code'] = $rezult;
         $res[] = $message;
         return json_encode($res);
     }

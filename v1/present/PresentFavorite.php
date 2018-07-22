@@ -11,10 +11,11 @@ require_once 'model/User.php';
 
 class PresentFavorite
 {
-    public static function saveFavorite($teacherId, $userApi)
+    public static function saveFavorite($teacherApi, $userApi)
     {
         $user = new User();
         $userId = $user->getPhoneByAc($userApi);
+        $teacherId = $user->getPhoneByAc($teacherApi);
         $result = (new Favorite())->saveFavorite($teacherId, $userId);
         $res = array();
         $message = array();
@@ -23,10 +24,11 @@ class PresentFavorite
         return json_encode($res);
     }
 
-    public static function removeFavorite($teacherId, $userApi)
+    public static function removeFavorite($teacherApi, $userApi)
     {
         $user = new User();
         $userId = $user->getPhoneByAc($userApi);
+        $teacherId = $user->getPhoneByAc($teacherApi);
         $result = (new Favorite())->removeFavorite($teacherId, $userId);
         $res = array();
         $message = array();

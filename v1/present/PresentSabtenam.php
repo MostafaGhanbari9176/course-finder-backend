@@ -13,13 +13,12 @@ require_once 'model/Course.php';
 
 class PresentSabtenam
 {
-    public static function add($idCourse, $idTeacher, $acUser, $cellPhone)
+    public static function add($idCourse, $acTeacher, $acUser, $cellPhone)
     {
+        $idTeacher = (new User())->getPhoneByAc($acTeacher);
         $idUser = (new User())->getPhoneByAc($acUser);
         $sabtenam = new Sabtenam();
-        $result = $sabtenam->add($idCourse, $idTeacher, $idUser, getJDate(null));
-        if ($cellPhone != "aaa")
-            (new User())->saveCellPhone($idUser, $cellPhone);
+        $result = $sabtenam->add($idCourse, $idTeacher, $idUser, getJDate(null), $cellPhone);
         $res = array();
         $res["code"] = $result;
         $message = array();
@@ -58,19 +57,18 @@ class PresentSabtenam
     {
         $model = new Sabtenam();
         $result = 0;
-        $smsRes = PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
-        if ($smsRes == '[{"code":1}]' || $rsId === "aaa") {
-            if ($model->updatecanceledFlag($sabteNameId, $code)) {
-                $result = 1;
-                if ($code == 1)
-                    (new Course())->incrementCapacity($courseId);
+        if ($model->updatecanceledFlag($sabteNameId, $code)) {
+            $result = 1;
+            if ($code == 1) {
+                (new Course())->incrementCapacity($courseId);
+                PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
             }
         }
         $res = array();
-        $msg = array();
-        $msg['code'] = $result;
-        $res[] = $msg;
-        return json_encode($res);
+        $res['code'] = $result;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
     }
 
     public
@@ -80,18 +78,15 @@ class PresentSabtenam
         $model = new Sabtenam();
         $course = new Course();
         for ($i = 0; $i < sizeof($students); $i++) {
-            $smsRes = PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
-            if ($smsRes == '[{"code":1}]') {
-                $model->updatecanceledFlag($students[$i]['sabtenamId'], 1);
-                $course->incrementCapacity($students[$i]['courseId']);
-            }
-
+            $model->updatecanceledFlag($students[$i]['sabtenamId'], 1);
+            $course->incrementCapacity($students[$i]['courseId']);
+            PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
         }
         $res = array();
-        $msg = array();
-        $msg['code'] = 1;
-        $res[] = $msg;
-        return json_encode($res);
+        $res['code'] = 1;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
 
     }
 
@@ -101,12 +96,9 @@ class PresentSabtenam
 
         $model = new Sabtenam();
         $result = 0;
-        $smsRes = PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
-        if ($smsRes == '[{"code":1}]') {
-            if ($model->confirmStudent($SabtenamId)) {
-                $result = 1;
-                (new Course())->decrementCapacity($courseId);
-            }
+        if ($model->confirmStudent($SabtenamId)) {
+            $result = (new Course())->decrementCapacity($courseId);
+            PresentSmsBox::saveSms($message, $tsId, $rsId, $courseId, 1);
         }
         $res = array();
         $res['code'] = $result;
@@ -125,17 +117,15 @@ class PresentSabtenam
         $sabtenam = new Sabtenam();
         $course = new Course();
         for ($i = 0; $i < sizeof($students); $i++) {
-            $smsRes = PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
-            if ($smsRes == '[{"code":1}]') {
-                $sabtenam->confirmStudent($students[$i]['sabtenamId']);
-                $course->decrementCapacity($students[$i]['courseId']);
-            }
+            $sabtenam->confirmStudent($students[$i]['sabtenamId']);
+            $course->decrementCapacity($students[$i]['courseId']);
+            PresentSmsBox::saveSms($message, $students[$i]['ac'], $students[$i]['userId'], $students[$i]['courseId'], 1);
         }
         $res = array();
-        $msg = array();
-        $msg['code'] = 1;
-        $res[] = $msg;
-        return json_encode($res);
+        $res['code'] = 1;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
 
     }
 
@@ -150,9 +140,9 @@ class PresentSabtenam
             $user = array();
             $user['sabtenamId'] = $row['id'];
             $user['name'] = (new User())->getUserName($row['user_id']);
-            $user['apiCode'] = $row['user_id'];
+            $user['apiCode'] = (new User())->getAcByPhone($row['user_id']);
             $user['status'] = $row['vaziat'];
-            $user['cellPhone'] = (new User())->getCellPhone($idTeacher);
+            $user['cellPhone'] = $row['cell_phone'];
             $user['isCanceled'] = $row['is_canceled'];
             $res[] = $user;
         }

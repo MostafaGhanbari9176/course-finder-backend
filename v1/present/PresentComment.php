@@ -13,16 +13,17 @@ require_once 'model/LikeSaver.php';
 class PresentComment
 {
 
-    public static function saveComment($commentText, $acUser, $courseId, $teacherId, $teacherRat)
+    public static function saveComment($commentText, $acUser, $courseId, $acTeacher, $teacherRat)
     {
         $userId = (new User())->getPhoneByAc($acUser);
-        $commentId = self::checkAvailable($userId, $courseId);
-        $model = new Comment();
-        if (!($commentId))
+        $teacherId = (new User())->getPhoneByAc($acTeacher);
+        if (!(self::checkAvailable($userId, $courseId))) {
+            $model = new Comment();
             $result = $model->saveComment($commentText, $userId, $courseId, $teacherId, $teacherRat, getJDate(null));
-        else
-            $result = $model->upDateComment($commentId, $commentText, $userId, $courseId, $teacherId, $teacherRat, getJDate(null));
-
+        } else {
+            $model = new Comment();
+            $result = $model->upDateComment(self::checkAvailable($userId, $courseId), $commentText, $userId, $courseId, $teacherId, $teacherRat, getJDate(null));
+        }
         $res = array();
         $res['code'] = $result;
         $message = array();
@@ -30,16 +31,16 @@ class PresentComment
         return json_encode($message);
     }////////////checked
 
-    public static function saveCourseRat($acUser, $courseId, $teacherId, $courseRat)
+    public static function saveCourseRat($acUser, $courseId, $acTeacher, $courseRat)
     {
         $userId = (new User())->getPhoneByAc($acUser);
-        $commentId = self::checkAvailable($userId, $courseId);
-        if (!($commentId)) {
+        $teacherId = (new User())->getPhoneByAc($acTeacher);
+        if (!(self::checkAvailable($userId, $courseId))) {
             $model = new Comment();
             $result = $model->saveCourseRat($userId, $courseId, $teacherId, $courseRat);
         } else {
             $model = new Comment();
-            $result = $model->upDateCourseRat($commentId, $courseRat);
+            $result = $model->upDateCourseRat(self::checkAvailable($userId, $courseId), $courseRat);
         }
         $res = array();
         $res['code'] = $result;
@@ -104,19 +105,19 @@ class PresentComment
     }
 
     public
-    static function getCommentByTeacherId($teacherId)
+    static function getCommentByTeacherId($acTeacher)
     {
-
+        $teacherId = (new User())->getPhoneByAc($acTeacher);
         $comment = new Comment();
         $resuelt = $comment->getCommentByTeacherId($teacherId);
         $res = array();
-        $totalRat = self::calculateTeacherRat($teacherId);
+        $totalRat = self::calculateTeacherRat($acTeacher);
         while ($row = $resuelt->fetch_assoc()) {
             $comment = array();
             if ($row['vaziat'] == 0)
                 continue;
             $comment['id'] = $row['id'];
-            $comment['userId'] = $row['user_id'];
+            $comment['userId'] = (new User())->getAcByPhone($row['user_id']);
             $comment['courseName'] = (new Course())->getCourseName($row['course_id']);
             $comment['userName'] = (new User())->getUserName($row['user_id']);
             $comment['startDate'] = (new Course())->getCourseById($row['course_id'])->fetch_assoc()['start_date'];//
@@ -152,9 +153,9 @@ class PresentComment
     }
 
     public
-    static function calculateTeacherRat($teacherId)
+    static function calculateTeacherRat($acTeacher)
     {
-
+        $teacherId = (new User())->getPhoneByAc($acTeacher);
         $comment = new Comment();
         $resuelt = $comment->getTeacherRat($teacherId);
         $count = 0;
@@ -199,9 +200,10 @@ class PresentComment
        }////////////checked*/
 
     public
-    static function upDateComment($id, $commentText, $acUser, $courseId, $teacherId, $teacherRat)
+    static function upDateComment($id, $commentText, $acUser, $courseId, $acTeacher, $teacherRat)
     {////////////checked
         $userId = (new User())->getPhoneByAc($acUser);
+        $teacherId = (new User())->getPhoneByAc($acTeacher);
         $model = new Comment();
         $result = $model->upDateComment($id, $commentText, $userId, $courseId, $teacherId, $teacherRat, getJDate(null));
         $res = array();

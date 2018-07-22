@@ -13,19 +13,17 @@ require_once 'model/user.php';
 
 class PresentSmsBox
 {
-    public static function saveSms($text, $tsId, $rsPhone, $courseId, $howSending)
+    public static function saveSms($text, $tsId, $rsId, $courseId, $howSending)
     {
-        $res = array();
-        $message = array();
-        $result = 1;
+        $rsPhone = (new User())->getPhoneByAc($rsId);
         $tsPhone = (new User())->getPhoneByAc($tsId);
-        if (strlen($tsPhone) == 0)
-            $result = 0;
-        else
-            (new SmsBox())->saveSms($text, $tsPhone, $rsPhone, $courseId, date("H"), getJDate(null), $howSending);
-        $message['code'] = $result;
-        $res[] = $message;
-        return json_encode($res);
+        $model = new SmsBox();
+        $result = $model->saveSms($text, $tsPhone, $rsPhone, $courseId, "00:00", getJDate(null), $howSending);
+        $res = array();
+        $res['code'] = $result;
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
     }
 
     public
@@ -54,7 +52,7 @@ class PresentSmsBox
                 continue;
             $sms = array();
             $sms['id'] = $row['id'];
-            $sms['tsId'] = $row['ts_id'];
+            $sms['tsId'] = (new User())->getAcByPhone($row['ts_id']);
             $sms['text'] = $row['text'];
             $sms['date'] = $row['date'];
             $sms['seen'] = $row['seen_flag'];
@@ -87,7 +85,7 @@ class PresentSmsBox
                 continue;
             $sms = array();
             $sms['id'] = $row['id'];
-            $sms['rsId'] = $row['rs_id'];
+            $sms['rsId'] = (new User())->getAcByPhone($row['rs_id']);
             $sms['text'] = $row['text'];
             $sms['date'] = $row['date'];
             $sms['seen'] = $row['seen_flag'];
@@ -120,16 +118,15 @@ class PresentSmsBox
         return json_encode($message);
     }
 
-    public static function deleteSms($id, $api)
+    public static function deleteSms($id)
     {
+        $model = new SmsBox();
+        $result = $model->deleteSms($id);
         $res = array();
+        $res['code'] = $result;
         $message = array();
-        if (strlen((new User())->getPhoneByAc($api)) == 0)
-            $message['code'] = 0;
-        else
-            $message['code'] = (new SmsBox())->deleteSms($id);
-        $res[] = $message;
-        return json_encode($res);
+        $message[] = $res;
+        return json_encode($message);
     }
 
     public static function getNotifyData($userApi, $lastId)
