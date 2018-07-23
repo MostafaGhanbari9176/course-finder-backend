@@ -1,10 +1,10 @@
 <?php
 require_once 'model/Teacher.php';
-$target_dir_tabaghe = "uploads/tabaghe/";
-$target_dir_teacher = "uploads/teacher/";
-$target_dir_video = "uploads/newsVideo/";
-$target_dir_madrak = "uploads/madrak/";
-$target_dir_course = "uploads/course/";
+$target_dir_tabaghe = "../v1/uploads/tabaghe/";
+$target_dir_teacher = "../v1/uploads/teacher/";
+$target_dir_video =  "../v1/uploads/newsVideo/";
+$target_dir_madrak = "../v1/uploads/madrak/";
+$target_dir_course = "../v1/uploads/course/";
 $target_file = "";
 $result = 0;
 $res = array();
