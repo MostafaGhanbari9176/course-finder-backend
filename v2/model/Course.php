@@ -145,13 +145,13 @@ class Course
         return $result->get_result();
     }
 
-    public function getEndCourses()
+    public function getEndCourses($todayDate)
     {
         $vaziat = 1;
         $state = 3;
-        $sql = "SELECT * FROM $this->tablename c WHERE c.state = ? And c.vaziat = ? ORDER BY c.cource_id DESC ";
+        $sql = "SELECT * FROM $this->tablename c WHERE (c.state = ? OR c.end_date < ? ) And ( c.vaziat = ? ) ORDER BY c.cource_id DESC ";
         $result = $this->conn->prepare($sql);
-        $result->bind_param('ii', $state, $vaziat);
+        $result->bind_param('isi', $state, $todayDate, $vaziat);
         $result->execute();
         return $result->get_result();
 

@@ -17,7 +17,7 @@ require_once 'present/PresentGrouping.php';
 class PresentCourse
 {
 
-    public static function addCourse($ac, $teacherName,$subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld)
+    public static function addCourse($ac, $teacherName, $subject, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld)
     {
         $res = array();
         $teacher_id = (new User())->getPhoneByAc($ac);
@@ -28,7 +28,7 @@ class PresentCourse
 
             (new Subscribe())->decrementRemainingCourse($teacher_id);
             $course = new Course();
-            $result = $course->addCourse($teacher_id, $subject, $teacherName,$tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
+            $result = $course->addCourse($teacher_id, $subject, $teacherName, $tabaghe_id, $type, $capacity, $mony, $sharayet, $tozihat, $start_date, $end_date, $day, $hours, $minOld, $maxOld);
             $res['code'] = $result;
             $res['sub'] = base64_encode((base64_encode("YoEkS")));
         }
@@ -470,7 +470,7 @@ class PresentCourse
     {
 
         $course = new Course();
-        $resuelt = $course->getEndCourses();
+        $resuelt = $course->getEndCourses(getJDate(null));
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
@@ -536,7 +536,7 @@ class PresentCourse
 
             if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
                 continue;
-            if ($row['start_date'] < getJDate(null) || $row['state'] == 2) {
+            if (($row['start_date'] < getJDate(null) && $row['end_date'] > getJDate(null)) || $row['state'] == 2) {
                 $course = array();
                 $course['idTeacher'] = $row['teacher_id'];
                 $course['vaziat'] = $row['vaziat'];

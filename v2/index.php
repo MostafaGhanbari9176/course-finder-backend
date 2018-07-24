@@ -88,7 +88,7 @@ $app->post('/chosePass', function (Request $req, Response $res) {
     $email = $postParam['email'];
     $verifyCode = $postParam['verifyCode'];
     $pass = $postParam['pass'];
-    $result = PresentUser::logUPWithPass($email, $verifyCode, $pass);
+    $result = PresentUser::chosePass($email, $verifyCode, $pass);
     clearstatcache();
     $res->getBody()->write($result);
 

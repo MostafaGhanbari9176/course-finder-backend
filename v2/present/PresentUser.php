@@ -17,6 +17,7 @@ class PresentUser
     {
         $apiCode = PresentUser::createApiCode($phone);
         $res = array();
+        $res["apiCode"] = 0;
         if (PresentVerifyCode::checkedSmsCode($phone, $code)) {
             $model = new User();
             $result = $model->logUpWithPass($phone, $name, $apiCode, $pass);
@@ -30,19 +31,19 @@ class PresentUser
 
         } else
             $res["userType"] = 0;
-        $res["apiCode"] = 0;
         $message = array();
         $message[] = $res;
         return json_encode($message);
     }
 
 
-    public static function logInWithPass($phone, $pass)//0-->badCod  1-->okAndIsUser  2-->okAndIsTeacher  3--> badLogIn
+    public static function logInWithPass($phone, $pass)//0-->badCod or badLogIn
     {
 
         $res = array();
-        if (self::checkPass($phone, $pass)) {
-            $result = (new User())->getUser($phone)->fetch_assoc();
+        $user = new User();
+        if ($user->checkPass($phone, $pass) != -1) {
+            $result = $user->getUser($phone)->fetch_assoc();
             if ($result['type'] == 0) {
                 $res["apiCode"] = $result['api_code'];
                 $res["name"] = $result['name'];
@@ -63,7 +64,7 @@ class PresentUser
     }
 
 
-    public function chosePass($email, $verifyCode, $pass)
+    public static function chosePass($email, $verifyCode, $pass)
     {
 
         $res = array();
@@ -112,13 +113,6 @@ class PresentUser
         $res[] = $user;
 
         return json_encode($res);
-
-    }
-
-    private static function checkPass($phone, $pass)
-    {
-
-        return $result = (new User())->checkPass($phone, $pass);
 
     }
 

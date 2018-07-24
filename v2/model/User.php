@@ -38,11 +38,12 @@ class User
 
         $sql = "SELECT * FROM $this->tableName u WHERE u.phone = ? AND u.pass = ?";
         $result = $this->con->prepare($sql);
+        $result->bind_param('ss', $phone, $pass);
         $result->execute();
         $data = $result->get_result()->fetch_assoc();
         if (sizeof($data) > 0)
-            return true;
-        return false;
+            return $data['pass'];
+        return -1;
     }
 
     public function chosePass($mail, $pass)

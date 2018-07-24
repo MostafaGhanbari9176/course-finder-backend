@@ -480,7 +480,7 @@ class PresentCourse
     {
 
         $course = new Course();
-        $resuelt = $course->getEndCourses();
+        $resuelt = $course->getEndCourses(getJDate(null));
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
@@ -546,7 +546,7 @@ class PresentCourse
 
             if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
                 continue;
-            if ($row['start_date'] < getJDate(null) || $row['state'] == 2) {
+            if (($row['start_date'] < getJDate(null) && $row['end_date'] > getJDate(null)) || $row['state'] == 2) {
                 $course = array();
                 $course['idTeacher'] = (new User())->getAcByPhone($row['teacher_id']);
                 $course['vaziat'] = $row['vaziat'];
