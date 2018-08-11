@@ -97,7 +97,7 @@ $app->post('/chosePass', function (Request $req, Response $res) {
 $app->post('/createAndSaveSmsCode', function (Request $request, Response $response) {
     $postParam = $request->getParsedBody();
     $phone = $postParam['email'];
-    $result = PresentVerifyCode::createAndSaveSmsCode($phone);
+    $result = PresentVerifyCode::SendVerifyCode($phone);
     clearstatcache();
     $response->getBody()->write($result);
 });
