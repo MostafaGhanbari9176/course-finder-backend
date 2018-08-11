@@ -29,7 +29,7 @@ require 'present/PresentFavorite.php';
 require 'present/PresentBookMark.php';
 require 'present/PresentGift.php';
 
-
+header("Access-Control-Allow-Origin: *");
 header("Pragma: no-cache");
 
 $app = new \Slim\App;

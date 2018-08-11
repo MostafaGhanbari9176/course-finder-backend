@@ -254,6 +254,10 @@ class PresentUser
         for ($i = count($min) - 1; $i >= 0; $i--) {
             $apiCode = $apiCode . $phone[$i] . $milliseconds[$i];
         }
+        $apiCode = str_replace('@','m', $apiCode);
+        $apiCode = str_replace('.','b', $apiCode);
+        $apiCode = str_replace('-','c', $apiCode);
+        $apiCode = str_replace('_','a', $apiCode);
         return $apiCode;
     }
 }

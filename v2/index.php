@@ -30,7 +30,7 @@ require 'present/PresentBookMark.php';
 require 'present/PresentGift.php';
 require 'present/PresentNotify.php';
 
-
+header("Access-Control-Allow-Origin: *");
 header("Pragma: no-cache");
 
 $app = new \Slim\App;
@@ -606,8 +606,15 @@ $app->post('/getSettingNotifyData', function (Request $req, Response $res) {
 $app->get('/test', function (Request $req, Response $res) {
 
 
-    $res->getBody()->write("wizard 1997" xor "wizard 1997");
+    $res->getBody()->write(PresentUser::createApiCode("godhelot1@-_.gmail.com"));
 
+});
+
+$app->get('/getAllTabaghe', function (Request $req, Response $res) {
+
+    $result = PresentGrouping::getAllGrouping(-1);
+    //echo "arr size = " . sizeof($result);
+    $res->getBody()->write(json_encode($result));
 });
 
 
