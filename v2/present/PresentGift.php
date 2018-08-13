@@ -84,7 +84,7 @@ class PresentGift
 
     private static function buy($subId, $userApi)
     {
-        PresentSubscribe::saveUserBuy($userApi, "هدیه", $subId);
+        PresentSubscribe::saveUserBuy($userApi, "هدیه", "123456789".$subId);
         return 1;
     }
 }
