@@ -46,7 +46,7 @@ class Teacher
 
     public function getAllTeacher()
     {
-        $sql = "SELECT * FROM $this->tableName ";
+        $sql = "SELECT * FROM $this->tableName t ORDER BY t.`taied_date`  DESC";
         $rezult = $this->con->prepare($sql);
         if ($rezult->execute())
             return $rezult->get_result();

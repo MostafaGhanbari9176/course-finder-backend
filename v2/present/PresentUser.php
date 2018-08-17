@@ -10,9 +10,6 @@ require_once 'model/Sabtenam.php';
 
 class PresentUser
 {
-    public static $versionName = '1.0.7';
-
-
     public static function logUPWithPass($phone, $name, $code, $pass)//0-->badCod  1-->ok  2--> badLogUp
     {
         $apiCode = PresentUser::createApiCode($phone);
@@ -175,7 +172,7 @@ class PresentUser
         $res = array();
         $user = array();
         $user['code'] = $result;
-        $user['versionName'] = self::$versionName;
+        $user['versionName'] = PresentVersionNAme::getVersionNAme();
         $res[] = $user;
         return json_encode($res);
 

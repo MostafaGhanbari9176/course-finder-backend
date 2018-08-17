@@ -82,8 +82,8 @@ if ($result != 2) {
     }
 }
 
-$res = array();
-$res["code"] = $result;
-$message = array();
-$message[] = $res;
-echo json_encode($message);
+    $res = array();
+    $res["code"] = $result;
+    $message = array();
+    $message[] = $res;
+    echo json_encode($message);

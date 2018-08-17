@@ -5,5 +5,5 @@ header("Content-type:application/vnd.android.package-archive");
 header("Content-Disposition:attachment;filename="."CourseFinder".".apk");
 
 // The PDF source is in original.pdf
-readfile("apk/CourseFinder.apk");
+readfile("apk/MGApp.apk");
 

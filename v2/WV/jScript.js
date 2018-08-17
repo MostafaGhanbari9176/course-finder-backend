@@ -28,27 +28,16 @@ function getGiftCodes() {
 
 function createTable(giftData) {
 
+    console.log(giftData);
     if (giftData[0]['empty'] === 1 || giftData[0]['state'] === 0) {
-        var element = document.body.getElementsByTagName("table")[0];
-        document.body.removeChild(element);
-        element = document.body.getElementsByTagName("h5")[0];
+        var element = document.body.getElementsByTagName("div")[0];
         document.body.removeChild(element);
     }
     else {
-        var table = document.getElementById('giftCodesTable');
-        var txtCounter = document.getElementById('counter');
+        var txtCounter = document.getElementById('count');
+        var txtCode = document.getElementById('code');
         txtCounter.innerHTML = giftData[0]['counter'];
-        for (var i = 0; i < giftData.length; i++) {
+        txtCode.innerHTML = giftData[0]['giftCode'];
 
-            var row = document.createElement("TR");
-            var col1 = document.createElement("TD");
-            col1.appendChild(document.createTextNode(giftData[i]['giftCode']))
-            row.appendChild(col1);
-            var col2 = document.createElement("TD");
-            col2.appendChild(document.createTextNode(giftData[i]['counter']))
-            row.appendChild(col2);
-            table.appendChild(row);
-        }
     }
-
 }

@@ -29,6 +29,7 @@ require 'present/PresentFavorite.php';
 require 'present/PresentBookMark.php';
 require 'present/PresentGift.php';
 require 'present/PresentNotify.php';
+require_once 'present/PresentVersionNAme.php';
 
 header("Access-Control-Allow-Origin: *");
 header("Pragma: no-cache");
@@ -468,7 +469,7 @@ $app->get('/saveFeedBack/{ac}/{feedBackText}', function (Request $req, Response 
 
 $app->get('/checkUpdate', function (Request $req, Response $res) {
     $message = array();
-    $message['versionName'] = PresentUser::$versionName;
+    $message['versionName'] = PresentVersionNAme::getVersionNAme();
     $message['code'] = "0";
     $response = array();
     $response[] = $message;
@@ -606,7 +607,7 @@ $app->post('/getSettingNotifyData', function (Request $req, Response $res) {
 $app->get('/test', function (Request $req, Response $res) {
 
 
-    $res->getBody()->write(PresentUser::createApiCode("godhelot1@-_.gmail.com"));
+    $res->getBody()->write(PresentVersionNAme::getVersionNAme());
 
 });
 
