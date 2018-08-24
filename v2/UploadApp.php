@@ -12,7 +12,7 @@ $result = 0;
 $res = array();
 
 if (isset($_FILES['uploadingMGApp']['name'])) {
-    if ($_FILES["uploadingMGApp"]["size"] > 5242880 || $_FILES["uploadingMGApp"]["size"] < 2242880) {
+    if ($_FILES["uploadingMGApp"]["size"] <    5242880 && $_FILES["uploadingMGApp"]["size"] > 2242880) {
         $target_file = $targetDir . basename($_FILES["uploadingMGApp"]["name"]);
         if (file_exists($target_file)) {
             unlink($target_file);

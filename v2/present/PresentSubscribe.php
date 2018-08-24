@@ -100,4 +100,16 @@ class PresentSubscribe
 
     }
 
+    public static function checkUserBuy($ac)
+    {
+
+        $userId = (new User())->getPhoneByAc($ac);
+        $endDate = (new Subscribe())->getUserBuyDate($userId);
+        $res = array();
+        $message = array();
+        $message['endBuyDate'] = $endDate;
+        $res[] = $message;
+        return json_encode($res);
+    }
+
 }

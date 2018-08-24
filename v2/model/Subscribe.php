@@ -89,5 +89,18 @@ class Subscribe
         $result->execute();
     }
 
+    public function getUserBuyDate($userId)
+    {
+
+        $sql = "SELECT s.end_buy_date FROM $this->buyTableName s WHERE s.user_id = ? ORDER BY s.id DESC LIMIT 1";
+        $result = $this->conn->prepare($sql);
+        $result->bind_param('s', $userId);
+        $result->execute();
+        $arr = $result->get_result()->fetch_assoc();
+        if(sizeof($arr) > 0)
+            return $arr['end_buy_date'];
+        return "0000-00-00";
+
+    }
 
 }

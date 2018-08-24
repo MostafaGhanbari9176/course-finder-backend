@@ -44,7 +44,7 @@ class PresentCourse
         $resuelt = $course->getAllCourse();
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             if ((new BookMark())->checkBookMark($row['cource_id'], $userId) == 1) {
                 $course = array();
@@ -73,7 +73,7 @@ class PresentCourse
         $resuelt = $course->getAllCourse();
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             $course = array();
             $course['idTeacher'] = $row['teacher_id'];
@@ -100,7 +100,7 @@ class PresentCourse
         $resuelt = $course->getCourseByGroupingId($groupingId);
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             $course = array();
             $course['startDate'] = $row['start_date'];
@@ -273,7 +273,7 @@ class PresentCourse
             $item = array();
             $courseResult = $courseModel->getCourseByGroupingId($rowOfGroupList['id']);
             while ($row = $courseResult->fetch_assoc()) {
-                if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null))
+                if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null) /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                     continue;
                 $counter++;
                 $course = array();
@@ -333,7 +333,7 @@ class PresentCourse
                 $result = $model->getCourseByGroupingId($arr[$i]['subCategory'][$j]);
 
                 while ($row = $result->fetch_assoc()) {
-                    if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null))
+                    if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null) /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                         continue;
                     $counter++;
                     $course = array();
@@ -445,7 +445,7 @@ class PresentCourse
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null))
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 || $row['state'] == 4 || $row['state'] == 3 || $row['capacity'] <= 0 || $row['start_date'] < getJDate(null) /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             $course = array();
             $course['idTeacher'] = $row['teacher_id'];
@@ -474,7 +474,7 @@ class PresentCourse
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
-            if ($row['is_deleted'] !== 0)
+            if ($row['is_deleted'] !== 0 /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             $course = array();
             $course['idTeacher'] = $row['teacher_id'];
@@ -503,7 +503,7 @@ class PresentCourse
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             if ($row['state'] == 4 || $row['capacity'] <= 0) {
                 $course = array();
@@ -534,7 +534,7 @@ class PresentCourse
         $res = array();
         while ($row = $resuelt->fetch_assoc()) {
 
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             if (($row['start_date'] < getJDate(null) && $row['end_date'] > getJDate(null)) || $row['state'] == 2) {
                 $course = array();
@@ -623,7 +623,7 @@ class PresentCourse
                 continue;
             if (!($startDate <= $eD && $eD <= $endDate))
                 continue;
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             $course = array();
             /*            $course['endDate'] = $eD;
@@ -669,7 +669,7 @@ class PresentCourse
                 continue;
             if (stripos($day, $d) != 0)
                 continue;
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0/* || ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             $course = array();
             $course['vaziat'] = $row['vaziat'];
@@ -708,7 +708,7 @@ class PresentCourse
                 continue;
             if (!($startDate <= $eD && $eD <= $endDate))
                 continue;
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             $course = array();
             $course['vaziat'] = $row['vaziat'];
@@ -750,7 +750,7 @@ class PresentCourse
                 continue;
             if (stripos($day, $d) != 0)
                 continue;
-            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0)
+            if ($row['is_deleted'] !== 0 || $row['vaziat'] == 0 /*|| ((new Subscribe())->getUserBuyDate($row['teacher_id'])) < getJDate(null)*/)
                 continue;
             $course = array();
             $course['vaziat'] = $row['vaziat'];

@@ -611,6 +611,14 @@ $app->get('/test', function (Request $req, Response $res) {
 
 });
 
+$app->post('/checkUserBuy', function (Request $req, Response $res){
+
+    $postParam = $req->getParsedBody();
+    $result = PresentSubscribe::checkUserBuy($postParam['apiCode']);
+    $res->getBody()->write($result);
+
+});
+
 $app->get('/getAllTabaghe', function (Request $req, Response $res) {
 
     $result = PresentGrouping::getAllGrouping(-1);

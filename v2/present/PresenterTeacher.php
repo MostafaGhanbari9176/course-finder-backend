@@ -42,7 +42,7 @@ class PresenterTeacher
         $rezult = $teacher->getAllTeacher();
         $res = array();
         while ($row = $rezult->fetch_assoc()) {
-            if ($row['madrak'] != 2)
+            if ($row['madrak'] != 2 /*|| ((new Subscribe())->getUserBuyDate($row['phone'])) < getJDate(null)*/)
                 continue;
             if ((new Favorite())->checkFavorite($row['phone'], $userId) == 1) {
                 $teacher = array();
@@ -101,7 +101,7 @@ class PresenterTeacher
         $res = array();
         while ($row = $rezult->fetch_assoc()) {
             $TeacherRat = PresentComment::calculateTeacherRat($row['phone']);
-            if ($TeacherRat < (float)3.5)
+            if ($TeacherRat < (float)3.5/* || ((new Subscribe())->getUserBuyDate($row['phone'])) < getJDate(null)*/ || $row['madrak'] != 2)
                 continue;
             $teacher = array();
             $teacher['pictureId'] = $row['picture_id'];
@@ -153,7 +153,7 @@ class PresenterTeacher
         $result = $model->getNewTeacher();
         $res = array();
         while ($row = $result->fetch_assoc()) {
-            if ($row['madrak'] != 2)
+            if ($row['madrak'] != 2 /*|| ((new Subscribe())->getUserBuyDate($row['phone'])) < getJDate(null)*/)
                 continue;
             $teacher = array();
             $teacher['pictureId'] = $row['picture_id'];
@@ -192,7 +192,7 @@ class PresenterTeacher
         $rezult = $teacher->getAllTeacher();
         $res = array();
         while ($row = $rezult->fetch_assoc()) {
-            if ($row['madrak'] != 2)
+            if ($row['madrak'] != 2 /*|| ((new Subscribe())->getUserBuyDate($row['phone'])) < getJDate(null)*/)
                 continue;
             $teacher = array();
             $teacher['ac'] = $row['phone'];
