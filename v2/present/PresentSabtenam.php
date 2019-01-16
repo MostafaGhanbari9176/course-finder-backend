@@ -142,17 +142,18 @@ class PresentSabtenam
     public
     static function getRegistrationsName($courseId, $acTeacher)
     {
-        $idTeacher = (new User())->getPhoneByAc($acTeacher);
+        $userModel = new User();
+        $idTeacher = ($userModel)->getPhoneByAc($acTeacher);
         $sabtenam = new Sabtenam();
         $resuelt1 = $sabtenam->getByTeacherIdAndCourseId($idTeacher, $courseId);
         $res = array();
         while ($row = $resuelt1->fetch_assoc()) {
             $user = array();
             $user['sabtenamId'] = $row['id'];
-            $user['name'] = (new User())->getUserName($row['user_id']);
+            $user['name'] = ($userModel)->getUserName($row['user_id']);
             $user['apiCode'] = $row['user_id'];
             $user['status'] = $row['vaziat'];
-            $user['cellPhone'] = (new User())->getCellPhone($idTeacher);
+            $user['cellPhone'] = ($userModel)->getCellPhone($row['user_id']);
             $user['isCanceled'] = $row['is_canceled'];
             $res[] = $user;
         }

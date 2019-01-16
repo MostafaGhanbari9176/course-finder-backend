@@ -21,12 +21,12 @@ class User
 
     }
 
-    public function logUpWithPass($phone, $name, $apiCode, $pass)
+    public function logUpWithPass($phone, $name, $apiCode, $pass, $joinDate)
     {
         $status = 1;
-        $sql = "INSERT INTO $this->tableName (phone, status, name, api_code, pass) VALUES(?,?,?,?,?)";
+        $sql = "INSERT INTO $this->tableName (phone, status, name, api_code, pass ,join_date) VALUES(?,?,?,?,?,?)";
         $result = $this->con->prepare($sql);
-        $result->bind_param("sisss", $phone, $status, $name, $apiCode, $pass);
+        $result->bind_param("sissss", $phone, $status, $name, $apiCode, $pass, $joinDate);
         if ($result->execute()) {
             return true;
         } else
@@ -56,12 +56,12 @@ class User
 
     }
 
-    public function logUp($phone, $name, $apiCode)
+    public function logUp($phone, $name, $apiCode, $joinDate)
     {
         $status = 1;
-        $sql = "INSERT INTO $this->tableName (phone, status, name, api_code) VALUES(?,?,?,?)";
+        $sql = "INSERT INTO $this->tableName (phone, status, name, api_code, join_date) VALUES(?,?,?,?,?)";
         $result = $this->con->prepare($sql);
-        $result->bind_param("siss", $phone, $status, $name, $apiCode);
+        $result->bind_param("sisss", $phone, $status, $name, $apiCode, $joinDate);
         if ($result->execute()) {
             return true;
         } else

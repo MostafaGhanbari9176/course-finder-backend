@@ -17,17 +17,23 @@ class PresentUser
         $res["apiCode"] = 0;
         if (PresentVerifyCode::checkedSmsCode($phone, $code)) {
             $model = new User();
-            $result = $model->logUpWithPass($phone, $name, $apiCode, $pass);
+            $result = $model->logUpWithPass($phone, $name, $apiCode, $pass, getJDate(null));
             if ($result) {
-                $res["userType"] = 0;
                 $res["apiCode"] = $apiCode;
-            } else {
+                $res["name"] = $name;
+                $res["email"] = $phone;
                 $res["userType"] = 0;
-                $res["apiCode"] = 2;
+            } else {
+                $model->chosePass($phone, $pass);
+                return self::logInWithPass($phone, $pass);
             }
 
-        } else
+        } else {
+            $res["apiCode"] = 0;
+            $res["name"] = 0;
+            $res["email"] = 0;
             $res["userType"] = 0;
+        }
         $message = array();
         $message[] = $res;
         return json_encode($message);
@@ -83,33 +89,41 @@ class PresentUser
     private static function getTeacher($phone)
     {
 
+        $User = new User();
         $teacherData = (new Teacher())->getTeacher($phone)->fetch_assoc();
-        $subData = (new Subscribe())->getUserSubscribe($phone);
-
+        $sub = new Subscribe();
+        $buyData = $sub->getUserSubscribe($phone);
+        $subData = $sub->getSubscribe($buyData['subscribe_id']);
         $buy = array();
 
-        $buy['id'] = $subData['id'];
+
         $buy['vaziat'] = PresentSubscribe::haveASubscription($phone);
-        $buy['buyDate'] = $subData['buy_date'];
-        $buy['endBuyDate'] = $subData['end_buy_date'];
-        $buy['remainingCourses'] = $subData['remaining_courses'];
-        $buy['refId'] = $subData['ref_id'];
+        $buy['buyDate'] = $buyData['buy_date'];
+        $buy['endBuyDate'] = $buyData['end_buy_date'];
+        $buy['remainingCourses'] = $buyData['remaining_courses'];
+        $buy['refId'] = $buyData['ref_id'];
+        $buy['subSubject'] = $subData['subject'];
+        $buy['subDescription'] = $subData['description'];
+        $buy['subPrice'] = $subData['price'];
 
         $res = array();
         $user = array();
-        $user['apiCode'] = (new User())->getAcByPhone($phone);
+        $user['apiCode'] = $User->getAcByPhone($phone);
         $user['address'] = $teacherData['address'];
         $user['email'] = $teacherData['phone'];
         $user['subject'] = $teacherData['subject'];
         $user['landPhone'] = $teacherData['land_phone'];
         $user['madrak'] = $teacherData['madrak'];
         $user['MasterType'] = $teacherData['type'];
+        $user['userName'] = $User->getUserName($phone);
         $res["userType"] = 1;
         $user['sub'] = $buy;
 
-        $res[] = $user;
+        $res['user'] = $user;
 
-        return json_encode($res);
+        $message = array();
+        $message[] = $res;
+        return json_encode($message);
 
     }
 
@@ -119,7 +133,7 @@ class PresentUser
         $res = array();
         if (PresentVerifyCode::checkedSmsCode($phone, $code)) {
             $model = new User();
-            $result = $model->logUp($phone, $name, $apiCode);
+            $result = $model->logUp($phone, $name, $apiCode, getJDate(null));
             if ($result) {
                 $res["code"] = 1;
                 $res["apiCode"] = $apiCode;
@@ -251,10 +265,10 @@ class PresentUser
         for ($i = count($min) - 1; $i >= 0; $i--) {
             $apiCode = $apiCode . $phone[$i] . $milliseconds[$i];
         }
-        $apiCode = str_replace('@','m', $apiCode);
-        $apiCode = str_replace('.','b', $apiCode);
-        $apiCode = str_replace('-','c', $apiCode);
-        $apiCode = str_replace('_','a', $apiCode);
+        $apiCode = str_replace('@', 'm', $apiCode);
+        $apiCode = str_replace('.', 'b', $apiCode);
+        $apiCode = str_replace('-', 'c', $apiCode);
+        $apiCode = str_replace('_', 'a', $apiCode);
         return $apiCode;
     }
 }
