@@ -47,7 +47,8 @@ class BookMark
         $result = $this->con->prepare($sql);
         $result->bind_param('is', $courseId, $userId);
         $result->execute();
-        if (sizeof($result->get_result()->fetch_assoc()))
+        $arr = $result->get_result()->fetch_assoc();
+        if ($arr != null && sizeof($arr))
             return 1;
         return 0;
     }

@@ -17,7 +17,7 @@ class PresentSubscribe
         $row = $subs->getUserSubscribe($userId);
         if ($row['vaziat'] == 1 && $row['user_id'] == $userId && $row['remaining_courses'] > 0 && $row['end_buy_date'] >= getJDate(null))
             $have = 1;
-        if (sizeof($row) > 0 && $have == 0)
+        if ($row != null && sizeof($row) > 0 && $have == 0)
             $subs->updateVaziat($row['id'], 0);
         return $have;
     }

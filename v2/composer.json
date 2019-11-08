@@ -1,5 +1,10 @@
 {
     "require": {
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-mcrypt": "*",
+        "ext-mysqli": "*",
+        "ext-json": "*",
         "phpmailer/phpmailer": "^6.0",
         "league/oauth2-client": "^2.3"
     }

@@ -9,17 +9,17 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-require '.././libs/vendor/autoload.php';
+require '../libs/vendor/autoload.php';
 require 'present/PresentOstan.php';
 require 'present/PresentCity.php';
 require 'present/PresentUser.php';
 require 'present/PresentVerifyCode.php';
 require 'present/PresenterTeacher.php';
 require 'present/PresentGrouping.php';
-require 'Present/PresentCourse.php';
-require 'Present/PresentSabtenam.php';
-require_once 'Present/PresentSubscribe.php';
-require 'Present/PresentComment.php';
+require 'present/PresentCourse.php';
+require 'present/PresentSabtenam.php';
+require_once 'present/PresentSubscribe.php';
+require 'present/PresentComment.php';
 require 'jdf.php';
 require 'present/PresentSmsBox.php';
 require 'present/PresentReport.php';
@@ -34,8 +34,14 @@ require_once 'present/PresentVersionNAme.php';
 header("Access-Control-Allow-Origin: *");
 header("Pragma: no-cache");
 
+/*$settings = [
+    'settings' => [
+        'displayErrorDetails' => true,
+    ],
+];
+$app = new \Slim\App($settings);
+*/
 $app = new \Slim\App;
-
 
 $app->post('/logUp', function (Request $req, Response $res) {
     $postParam = $req->getParsedBody();
@@ -535,7 +541,7 @@ $app->get('/getGiftCodes', function (Request $req, Response $res) {
 });
 
 $app->get('/sendEmail/{code}', function (Request $req, Response $res) {
-    SendingEmail::sendRequestForMaster('بازخورد از کاربر : ', $req->getAttribute('code'));
+    SendingEmail::sendVerifyCode('بازخورد از کاربر : ', $req->getAttribute('code'));
 });
 
 $app->post('/upDateCourse', function (Request $req, Response $res) {

@@ -16,8 +16,8 @@ class PresentSabtenam
     public static function add($idCourse, $idTeacher, $acUser, $cellPhone)
     {
         $idUser = (new User())->getPhoneByAc($acUser);
-        $sabtenam = new Sabtenam();
-        $result = $sabtenam->add($idCourse, $idTeacher, $idUser, getJDate(null));
+        //$sabtenam = new Sabtenam();
+        $result = (new Sabtenam())->add($idCourse, $idTeacher, $idUser, getJDate(null));
         if ($cellPhone != "aaa")
             (new User())->saveCellPhone($idUser, $cellPhone);
         $res = array();

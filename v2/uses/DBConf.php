@@ -8,10 +8,10 @@
 
 
 
-define("DB_HOST", "localHost");
-define("DB_USER", "root");
-define("DB_PASSWORD", "");
-define("DB_NAME", "city_need");
+define("DB_HOST", 'localhost');
+define("DB_USER", 'doreyabz_db');
+define("DB_PASSWORD", '104mostafa204');
+define("DB_NAME", 'doreyabz_db');
 
 /*define("DB_HOST", "localhost");
 define("DB_USER", "city_need");

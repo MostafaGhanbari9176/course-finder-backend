@@ -20,10 +20,10 @@ class PresentGift
         $userSub = (new Subscribe())->getUserSubscribe($userId);
         $gift = new Gift();
         $giftData = $gift->getGifData($giftCode);
-        if (sizeof($giftData) > 0 && self::checkGiftValidation($giftData)) {
+        if ($giftData != null && sizeof($giftData) > 0 && self::checkGiftValidation($giftData)) {
             $subId = $giftData['subscribe_id'];
 
-            if (sizeof($userSub) > 0) {
+            if ($userSub != null && sizeof($userSub) > 0) {
                 if ($subId == $userSub['subscribe_id'])
                     $code = -1;
                 else {

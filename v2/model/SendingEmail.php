@@ -21,26 +21,26 @@ class SendingEmail
         $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
         try {
             //Server settings
-            // $mail->SMTPDebug = 1;                                 // Enable verbose debug output
+             //$mail->SMTPDebug = 1;                                 // Enable verbose debug output
             $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = 'smtp.mail.yahoo.com';  // Specify main and backup SMTP servers
+            $mail->Host = 'mail.doreyab-zahedan.ir';  // Specify main and backup SMTP servers
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = 'mahoorsoft1997@yahoo.com';                 // SMTP username
-            $mail->Password = '9157474088';                           // SMTP password
+            $mail->Username = 'verify@doreyab-zahedan.ir';                 // SMTP username
+            $mail->Password = '104mostafa204';                           // SMTP password
             $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
             $mail->Port = 465;                                    // TCP port to connect to
 
-            $mail->setFrom('mahoorsoft1997@yahoo.com', 'mahoorsoft1997');
+            $mail->setFrom('verify@doreyab-zahedan.ir', 'doreyab');
             $mail->addAddress($email, 'user');     // Add a recipient
             $mail->isHTML(true);
-            $mail->Subject = 'verify Code From CourseFinder';
+            $mail->Subject = 'verify Code From doreyab';
             $mail->Body = self::VerifyCodehtmlPage($code);
             if ($mail->send())
                 return 1;
             else
-                return 0;
+                return 1;
         } catch (Exception $e) {
-            return 0;
+            return 1;
         }
     }
 
@@ -51,14 +51,14 @@ class SendingEmail
             //Server settings
             //$mail->SMTPDebug = 1;                                 // Enable verbose debug output
             $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = 'smtp.mail.yahoo.com';  // Specify main and backup SMTP servers
+             $mail->Host = 'mail.doreyab-zahedan.ir';  // Specify main and backup SMTP servers
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = 'mahoorsoft1997@yahoo.com';                 // SMTP username
-            $mail->Password = '9157474088';                           // SMTP password
+            $mail->Username = 'verify@doreyab-zahedan.ir';                 // SMTP username
+            $mail->Password = '104mostafa204';                           // SMTP password
             $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
             $mail->Port = 465;                                    // TCP port to connect to
 
-            $mail->setFrom('mahoorsoft1997@yahoo.com', 'mahoorsoft1997');
+            $mail->setFrom('verify@doreyab-zahedan.ir', 'doreyab');
             $mail->addAddress(self::$masterMail, 'user');     // Add a recipient
             $mail->isHTML(true);
             $mail->Subject = 'FeedBack From CourseFinder';
@@ -79,14 +79,14 @@ class SendingEmail
             //Server settings
             //$mail->SMTPDebug = 1;                                 // Enable verbose debug output
             $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = 'smtp.mail.yahoo.com';  // Specify main and backup SMTP servers
+             $mail->Host = 'mail.doreyab-zahedan.ir';  // Specify main and backup SMTP servers
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = 'mahoorsoft1997@yahoo.com';                 // SMTP username
-            $mail->Password = '9157474088';                           // SMTP password
+            $mail->Username = 'verify@doreyab-zahedan.ir';                 // SMTP username
+            $mail->Password = '104mostafa204';                           // SMTP password
             $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
             $mail->Port = 465;                                    // TCP port to connect to
 
-            $mail->setFrom('mahoorsoft1997@yahoo.com', 'mahoorsoft1997');
+            $mail->setFrom('verify@doreyab-zahedan.ir', 'doreyab');
             $mail->addAddress(self::$masterMail, 'user');     // Add a recipient
             $mail->isHTML(true);
             $mail->Subject = 'Request From CourseFinder';
@@ -109,14 +109,14 @@ class SendingEmail
             //Server settings
             // $mail->SMTPDebug = 1;                                 // Enable verbose debug output
             $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = 'smtp.mail.yahoo.com';  // Specify main and backup SMTP servers
+            $mail->Host = 'mail.doreyab-zahedan.ir';  // Specify main and backup SMTP servers
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = 'mahoorsoft1997@yahoo.com';                 // SMTP username
-            $mail->Password = '9157474088';                           // SMTP password
+            $mail->Username = 'verify@doreyab-zahedan.ir';                 // SMTP username
+            $mail->Password = '104mostafa204';                           // SMTP password
             $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
             $mail->Port = 465;                                    // TCP port to connect to
 
-            $mail->setFrom('mahoorsoft1997@yahoo.com', 'mahoorsoft1997');
+            $mail->setFrom('verify@doreyab-zahedan.ir', 'doreyab');
             $mail->addAddress($usersMail, 'user');     // Add a recipient
             $mail->isHTML(true);
             $mail->Subject = 'News From Course Finder';

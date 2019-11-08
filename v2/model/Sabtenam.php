@@ -26,7 +26,7 @@ class Sabtenam
         $sql = "INSERT INTO $this->tableName (cource_id, teacher_id, user_id, date) VALUES (?, ?, ?, ?)";
         $rezuelt = $this->conn->prepare($sql);
         $rezuelt->bind_param('isss', $idCourse, $idTeacer, $idUser, $date);
-        if ($rezuelt->execute())
+       if ($rezuelt->execute())
             return 1;
         return 0;
     }

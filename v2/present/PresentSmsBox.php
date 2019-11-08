@@ -8,7 +8,7 @@
 
 require_once 'model/SmsBox.php';
 require_once 'model/Teacher.php';
-require_once 'model/user.php';
+require_once 'model/User.php';
 
 
 class PresentSmsBox
